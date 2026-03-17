@@ -66,7 +66,7 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             <a
               href="#get-started"
-              className="hidden md:inline-block bg-teal text-dusk text-sm font-medium px-5 py-2.5 rounded-lg hover:brightness-110 transition-all duration-200"
+              className="hidden md:inline-block cta-teal px-5 py-2.5 text-sm"
             >
               Get your You.md
             </a>
