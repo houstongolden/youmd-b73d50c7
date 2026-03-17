@@ -1,17 +1,28 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useInView } from "framer-motion";
 import FadeUp from "@/components/FadeUp";
 
 const codeLines = [
   'name: "Alex Chen"',
   'role: "Product designer & founder"',
-  'tone: "Direct, warm, no jargon"',
-  'context: "Building a dev tool startup, Series A"',
+  'location: "San Francisco"',
+  'voice: "Direct, warm, no jargon"',
+  'goals:',
+  '  current: "Ship v2 by March"',
+  '  next: "Close funding round"',
+  'tools:',
+  '  primary: "Cursor, Claude Code"',
+  '  infra: "Vercel, Supabase"',
   'preferences:',
   '  format: "Bullet points over paragraphs"',
-  '  length: "Concise — never more than 3 paragraphs"',
-  'goals:',
-  '  current: "Ship v2 by March, close funding round"',
+  '  length: "Concise — max 3 paragraphs"',
+];
+
+const callouts = [
+  { label: "Identity & context", desc: "Name, role, location — the basics agents need." },
+  { label: "Voice profile", desc: "Tone, style, and communication preferences." },
+  { label: "Goals & priorities", desc: "What you're working on now and next." },
+  { label: "Tool preferences", desc: "Your stack, so agents know what to reach for." },
 ];
 
 const TypewriterCode = () => {
@@ -41,7 +52,7 @@ const TypewriterCode = () => {
 
   const renderLine = (line: string) => {
     const colonIdx = line.indexOf(":");
-    if (colonIdx === -1) return <span className="text-sand/40">{line}</span>;
+    if (colonIdx === -1) return <span className="text-foreground/40">{line}</span>;
 
     const key = line.slice(0, colonIdx);
     const rest = line.slice(colonIdx);
@@ -50,26 +61,26 @@ const TypewriterCode = () => {
 
     return (
       <>
-        <span className={isIndented ? "text-sand/35" : "text-sand/50"}>{key}</span>
+        <span className={isIndented ? "text-foreground/35" : "text-foreground/55"}>{key}</span>
         {quoteMatch ? (
           <>
-            <span className="text-sand/20">: </span>
+            <span className="text-foreground/20">: </span>
             <span className="text-teal">"{quoteMatch[1]}"</span>
           </>
         ) : (
-          <span className="text-sand/20">{rest}</span>
+          <span className="text-foreground/20">{rest}</span>
         )}
       </>
     );
   };
 
   return (
-    <div ref={ref} className="bg-dusk rounded-2xl p-6 md:p-10 overflow-x-auto">
-      <div className="flex items-center gap-2 mb-6 pb-4 border-b border-sand/8">
-        <div className="w-2.5 h-2.5 rounded-full bg-sand/15" />
-        <div className="w-2.5 h-2.5 rounded-full bg-sand/15" />
-        <div className="w-2.5 h-2.5 rounded-full bg-sand/15" />
-        <span className="ml-3 text-sand/25 text-xs font-mono">you.md</span>
+    <div ref={ref} className="glass rounded-2xl p-6 md:p-10 overflow-x-auto" style={{ background: "hsl(var(--glass-bg) / 0.25)", border: "1px solid hsl(var(--glass-border) / 0.3)" }}>
+      <div className="flex items-center gap-2 mb-6 pb-4 border-b border-foreground/8">
+        <div className="w-2.5 h-2.5 rounded-full bg-foreground/12" />
+        <div className="w-2.5 h-2.5 rounded-full bg-foreground/12" />
+        <div className="w-2.5 h-2.5 rounded-full bg-foreground/12" />
+        <span className="ml-3 text-foreground/25 text-xs font-mono">you.md</span>
       </div>
       <pre className="font-mono text-sm leading-[2] min-h-[280px]">
         <code>
@@ -86,15 +97,30 @@ const TypewriterCode = () => {
 };
 
 const WhatsInside = () => (
-  <section id="spec" className="py-24 md:py-32 bg-mauve/20">
-    <div className="max-w-4xl mx-auto px-6">
+  <section id="spec" className="py-24 md:py-32 bg-secondary">
+    <div className="max-w-5xl mx-auto px-6">
       <FadeUp>
         <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest mb-3">What's inside</p>
-        <p className="text-muted-foreground text-sm mb-10">A preview of a sample you.md identity bundle.</p>
+        <p className="text-muted-foreground text-sm mb-12">A preview of a sample you.md identity bundle.</p>
       </FadeUp>
-      <FadeUp delay={0.1}>
-        <TypewriterCode />
-      </FadeUp>
+
+      <div className="grid md:grid-cols-5 gap-8 md:gap-12">
+        <div className="md:col-span-3">
+          <FadeUp delay={0.1}>
+            <TypewriterCode />
+          </FadeUp>
+        </div>
+        <div className="md:col-span-2 flex flex-col gap-6 justify-center">
+          {callouts.map((c, i) => (
+            <FadeUp key={c.label} delay={0.15 + i * 0.05}>
+              <div>
+                <h4 className="text-foreground text-sm font-medium mb-1">{c.label}</h4>
+                <p className="text-muted-foreground text-sm leading-relaxed">{c.desc}</p>
+              </div>
+            </FadeUp>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 );

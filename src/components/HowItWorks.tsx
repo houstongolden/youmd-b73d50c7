@@ -1,13 +1,13 @@
 import FadeUp from "@/components/FadeUp";
 
 const steps = [
-  { number: "01", label: "Build", description: "Run the CLI to answer a few questions and shape your identity file." },
-  { number: "02", label: "Publish", description: "Your You.md is hosted at youmd.com/you — versioned and always current." },
-  { number: "03", label: "Share", description: "Drop your URL into any agent. Instant context, every time." },
+  { number: "01", label: "Run the CLI", description: "npx init youmd — answer a few prompts about yourself." },
+  { number: "02", label: "Get your URL", description: "Your bundle publishes to youmd.com/username." },
+  { number: "03", label: "Drop it anywhere", description: "Paste your URL into any agent, framework, or tool." },
 ];
 
 const HowItWorks = () => (
-  <section id="how-it-works" className="py-24 md:py-32 bg-background">
+  <section id="how-it-works" className="py-24 md:py-32 bg-white/40">
     <div className="max-w-5xl mx-auto px-6">
       <FadeUp>
         <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest mb-16">How it works</p>

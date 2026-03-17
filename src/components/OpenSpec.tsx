@@ -7,7 +7,7 @@ const OpenSpec = () => (
         <FadeUp>
           <p className="text-foreground text-center text-base md:text-lg font-display font-light leading-relaxed max-w-2xl mx-auto">
             <span className="font-mono text-teal text-sm">you-md/v1</span> is an open spec.{" "}
-            Anyone can read, implement, or extend it.
+            Read it, fork it, build on it.
           </p>
           <div className="text-center mt-5">
             <a
