@@ -42,6 +42,9 @@
     --golden: 39 89% 72%;
     --dusk: 30 14% 9%;
 
+    --glass-bg: 0 0% 100%;
+    --glass-border: 0 0% 100%;
+
     --sidebar-background: 27 33% 91%;
     --sidebar-foreground: 30 14% 9%;
     --sidebar-primary: 172 43% 65%;
@@ -73,9 +76,24 @@ html {
   }
 }
 
+/* Liquid glass surface */
+.glass {
+  background: hsl(var(--glass-bg) / 0.12);
+  border: 1px solid hsl(var(--glass-border) / 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-strong {
+  background: hsl(var(--glass-bg) / 0.18);
+  border: 1px solid hsl(var(--glass-border) / 0.25);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
 /* Teal glow on CTA hover */
 .cta-teal {
-  @apply bg-teal text-dusk font-medium rounded-lg transition-all duration-200;
+  @apply bg-teal text-dusk font-medium rounded-full transition-all duration-200;
   box-shadow: 0 0 0 0 hsl(var(--teal) / 0);
 }
 
@@ -85,12 +103,38 @@ html {
 }
 
 .cta-ghost {
-  @apply border text-sand font-medium rounded-lg transition-all duration-200 backdrop-blur-sm;
-  border-color: hsl(var(--sand) / 0.25);
+  @apply font-medium rounded-full transition-all duration-200;
+  color: hsl(var(--sand));
+  border: 1px solid hsl(var(--sand) / 0.2);
 }
 
 .cta-ghost:hover {
-  border-color: hsl(var(--sand) / 0.5);
+  border-color: hsl(var(--sand) / 0.45);
+  background: hsl(var(--sand) / 0.06);
+}
+
+/* CLI pill */
+.cli-pill {
+  @apply font-mono text-sm rounded-full transition-all duration-200 cursor-pointer select-none;
+  background: hsl(var(--glass-bg) / 0.12);
+  border: 1px solid hsl(var(--glass-border) / 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.cli-pill:hover {
+  background: hsl(var(--glass-bg) / 0.18);
+  box-shadow: 0 0 20px 2px hsl(var(--teal) / 0.2);
+}
+
+/* Blinking cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
 }
 
 /* Selection color */
