@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import heroWarm from "@/assets/hero-beam.png";
-import heroCool from "@/assets/hero-beam-cool.png";
 
 const CliPill = () => {
   const [copied, setCopied] = useState(false);
@@ -16,17 +15,17 @@ const CliPill = () => {
   return (
     <div className="flex flex-col items-center gap-3">
       <button onClick={handleCopy} className="cli-pill cli-glow flex items-center gap-3 px-6 py-3.5">
-        <span className="text-sand/50">$</span>
-        <span className="text-sand">npx init youmd</span>
+        <span className="text-foreground/50">$</span>
+        <span className="text-foreground">npx init youmd</span>
         <span className="cursor-blink text-teal">▌</span>
-        <span className="ml-2 text-sand/40 hover:text-sand/70 transition-colors">
+        <span className="ml-2 text-foreground/40 hover:text-foreground/70 transition-colors">
           {copied ? <Check size={14} className="text-teal" /> : <Copy size={14} />}
         </span>
       </button>
       {copied ? (
         <span className="text-teal text-xs font-mono">Copied ✓</span>
       ) : (
-        <span className="text-sand/30 text-[11px] tracking-wide">
+        <span className="text-foreground/30 text-[11px] tracking-wide">
           Claims your username · Builds your bundle · Publishes in 60 seconds
         </span>
       )}
@@ -36,26 +35,20 @@ const CliPill = () => {
 
 const Hero = () => {
   const { scrollY } = useScroll();
-  const coolOpacity = useTransform(scrollY, [0, 600], [0, 1]);
   const parallaxY = useTransform(scrollY, [0, 800], [0, 80]);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-end overflow-hidden">
-      {/* Warm hero — position figure visible */}
+    <section className="relative min-h-[110vh] flex flex-col items-center justify-end overflow-hidden">
+      {/* Hero image — warm only */}
       <motion.div className="absolute inset-0" style={{ y: parallaxY }}>
         <img
           src={heroWarm}
           alt="A figure standing in a warm beam of light"
-          className="w-full h-full object-cover object-[center_35%]"
+          className="w-full h-full object-cover object-[center_30%]"
         />
       </motion.div>
 
-      {/* Cool hero — scroll reveal */}
-      <motion.div className="absolute inset-0" style={{ opacity: coolOpacity, y: parallaxY }}>
-        <img src={heroCool} alt="" className="w-full h-full object-cover object-[center_35%]" />
-      </motion.div>
-
-      {/* Soft warm gradient at bottom — NOT dark, just warmth */}
+      {/* Soft warm gradient at bottom */}
       <div
         className="absolute inset-x-0 bottom-0 h-[60%]"
         style={{
