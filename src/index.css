@@ -72,3 +72,28 @@ html {
     line-height: 1.15;
   }
 }
+
+/* Teal glow on CTA hover */
+.cta-teal {
+  @apply bg-teal text-dusk font-medium rounded-lg transition-all duration-200;
+  box-shadow: 0 0 0 0 hsl(var(--teal) / 0);
+}
+
+.cta-teal:hover {
+  box-shadow: 0 0 24px 4px hsl(var(--teal) / 0.35);
+  filter: brightness(1.08);
+}
+
+.cta-ghost {
+  @apply border text-sand font-medium rounded-lg transition-all duration-200 backdrop-blur-sm;
+  border-color: hsl(var(--sand) / 0.25);
+}
+
+.cta-ghost:hover {
+  border-color: hsl(var(--sand) / 0.5);
+}
+
+/* Selection color */
+::selection {
+  background: hsl(var(--teal) / 0.3);
+}
