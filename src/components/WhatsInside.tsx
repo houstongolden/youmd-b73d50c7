@@ -64,7 +64,7 @@ const TypewriterCode = () => {
   };
 
   return (
-    <div ref={ref} className="glass-strong rounded-2xl p-6 md:p-10 overflow-x-auto">
+    <div className="bg-dusk rounded-2xl p-6 md:p-10 overflow-x-auto">
       <div className="flex items-center gap-2 mb-6 pb-4 border-b border-sand/8">
         <div className="w-2.5 h-2.5 rounded-full bg-sand/15" />
         <div className="w-2.5 h-2.5 rounded-full bg-sand/15" />
