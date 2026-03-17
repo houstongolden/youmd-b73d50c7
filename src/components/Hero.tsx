@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import heroWarm from "@/assets/hero-beam.png";
 import heroCool from "@/assets/hero-beam-cool.png";
@@ -29,24 +28,26 @@ const Hero = () => {
       </motion.div>
 
       {/* Bottom gradient for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-dusk/60 via-transparent to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-dusk/70 via-dusk/30 to-transparent" />
 
       {/* Content overlay */}
-      <div className="relative z-10 text-center pb-20 md:pb-28 px-6 max-w-3xl">
+      <div className="relative z-10 text-center pb-16 md:pb-24 px-6 max-w-3xl">
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          className="text-sand text-4xl md:text-6xl lg:text-7xl font-display font-light tracking-tight mb-5 drop-shadow-lg"
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+          className="text-sand text-4xl md:text-6xl lg:text-[4.5rem] font-display font-light tracking-tight mb-6 leading-[1.08]"
         >
-          Your identity file for the agent internet.
+          Your identity file for
+          <br />
+          the agent internet.
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.35 }}
-          className="text-sand/70 text-base md:text-lg mb-10 max-w-xl mx-auto drop-shadow-md"
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.35 }}
+          className="text-sand/60 text-base md:text-lg mb-10 max-w-lg mx-auto leading-relaxed"
         >
           You.md is a structured identity bundle — context, preferences, voice, and goals — that travels with you across every AI interaction.
         </motion.p>
@@ -54,19 +55,13 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }}
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.5 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <a
-            href="#get-started"
-            className="bg-teal text-dusk font-medium px-7 py-3 rounded-lg text-sm hover:brightness-110 transition-all duration-200"
-          >
+          <a href="#get-started" className="cta-teal px-7 py-3 text-sm">
             Get your You.md
           </a>
-          <a
-            href="#spec"
-            className="border border-sand/30 text-sand font-medium px-7 py-3 rounded-lg text-sm hover:border-sand/50 transition-all duration-200 backdrop-blur-sm"
-          >
+          <a href="#spec" className="cta-ghost px-7 py-3 text-sm">
             See the spec
           </a>
         </motion.div>

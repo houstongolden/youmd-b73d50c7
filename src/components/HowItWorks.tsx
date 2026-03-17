@@ -1,20 +1,4 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-
-const FadeUp = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: "easeOut", delay }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+import FadeUp from "@/components/FadeUp";
 
 const steps = [
   { number: "01", label: "Build", description: "Answer a few questions to shape your identity file." },
@@ -26,16 +10,22 @@ const HowItWorks = () => (
   <section id="how-it-works" className="py-24 md:py-32 bg-background">
     <div className="max-w-5xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest mb-4">How it works</p>
+        <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest mb-16">How it works</p>
       </FadeUp>
 
-      <div className="grid md:grid-cols-3 gap-16 mt-12">
+      <div className="relative grid md:grid-cols-3 gap-12 md:gap-8">
+        {/* Connector line (desktop) */}
+        <div className="hidden md:block absolute top-8 left-[16.67%] right-[16.67%] h-px bg-border" />
+
         {steps.map((step, i) => (
-          <FadeUp key={step.number} delay={i * 0.1}>
-            <div>
-              <span className="text-teal font-mono text-sm">{step.number}</span>
-              <div className="w-8 h-px bg-border mt-3 mb-4" />
-              <h3 className="text-foreground text-lg font-display font-normal mb-2">{step.label}</h3>
+          <FadeUp key={step.number} delay={i * 0.12}>
+            <div className="relative">
+              {/* Step dot */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className="relative z-10 w-4 h-4 rounded-full border-2 border-teal bg-background" />
+                <span className="text-teal font-mono text-xs tracking-wider">{step.number}</span>
+              </div>
+              <h3 className="text-foreground text-xl font-display font-normal mb-2 tracking-tight">{step.label}</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
             </div>
           </FadeUp>

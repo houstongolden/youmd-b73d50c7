@@ -1,20 +1,4 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-
-const FadeUp = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: "easeOut", delay }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+import FadeUp from "@/components/FadeUp";
 
 const integrations = [
   "Claude Code",
@@ -25,19 +9,19 @@ const integrations = [
 ];
 
 const Integrations = () => (
-  <section className="py-24 md:py-32 bg-background">
+  <section className="py-20 md:py-28 bg-background border-t border-border/50">
     <div className="max-w-5xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest mb-4">Integrations</p>
-        <p className="text-muted-foreground text-sm mt-2 mb-12">Works where you work.</p>
+        <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest mb-3">Integrations</p>
+        <p className="text-muted-foreground text-sm mb-14">Works where you work.</p>
       </FadeUp>
 
       <FadeUp delay={0.1}>
-        <div className="flex flex-wrap items-center gap-8 md:gap-14">
-          {integrations.map((name) => (
+        <div className="flex flex-wrap items-center gap-x-12 md:gap-x-20 gap-y-6">
+          {integrations.map((name, i) => (
             <span
               key={name}
-              className="text-foreground/40 font-display text-lg md:text-xl font-light tracking-tight"
+              className="text-foreground/30 hover:text-foreground/60 font-display text-xl md:text-2xl font-light tracking-tight transition-colors duration-200 cursor-default"
             >
               {name}
             </span>
