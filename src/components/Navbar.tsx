@@ -14,8 +14,6 @@ const Navbar = () => {
 
   const handleScroll = useCallback(() => {
     setScrolled(window.scrollY > 40);
-
-    // Find active section
     const offsets = sections.map(({ id }) => {
       const el = document.getElementById(id);
       if (!el) return { id, top: Infinity };
@@ -30,7 +28,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Lock body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -38,23 +35,23 @@ const Navbar = () => {
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ease-out ${
-          scrolled ? "bg-dusk/70 backdrop-blur-md" : "bg-transparent"
-        }`}
-      >
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-5">
-          <a href="/" className="text-sand font-display text-lg font-medium tracking-tight">
+      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4">
+        <div
+          className={`glass rounded-full flex items-center justify-between gap-6 px-5 py-3 w-full max-w-3xl transition-all duration-300 ${
+            scrolled ? "glass-strong" : ""
+          }`}
+        >
+          <a href="/" className="text-sand font-display text-base font-medium tracking-tight whitespace-nowrap">
             You.md
           </a>
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-8">
             {sections.map(({ id, label }) => (
               <a
                 key={id}
                 href={`#${id}`}
-                className={`text-sm transition-colors duration-200 ${
+                className={`text-xs tracking-wide transition-colors duration-200 ${
                   activeSection === id ? "text-teal" : "text-sand/60 hover:text-sand"
                 }`}
               >
@@ -63,21 +60,19 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <a
               href="#get-started"
-              className="hidden md:inline-block cta-teal px-5 py-2.5 text-sm"
+              className="hidden md:inline-block cta-teal px-5 py-2 text-xs"
             >
               Get your You.md
             </a>
-
-            {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="md:hidden text-sand p-1"
               aria-label="Toggle menu"
             >
-              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
@@ -85,7 +80,7 @@ const Navbar = () => {
 
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-dusk/95 backdrop-blur-lg flex flex-col items-center justify-center gap-8 animate-fade-in">
+        <div className="fixed inset-0 z-40 bg-dusk/95 backdrop-blur-lg flex flex-col items-center justify-center gap-8">
           {sections.map(({ id, label }) => (
             <a
               key={id}
@@ -101,7 +96,7 @@ const Navbar = () => {
           <a
             href="#get-started"
             onClick={() => setMobileOpen(false)}
-            className="bg-teal text-dusk font-medium px-7 py-3 rounded-lg text-sm mt-4"
+            className="cta-teal px-7 py-3 text-sm mt-4"
           >
             Get your You.md
           </a>

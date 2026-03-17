@@ -9,19 +9,19 @@ const integrations = [
 ];
 
 const Integrations = () => (
-  <section className="py-20 md:py-28 bg-background border-t border-border/50">
+  <section className="py-20 md:py-28 bg-background">
     <div className="max-w-5xl mx-auto px-6">
       <FadeUp>
         <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest mb-3">Integrations</p>
-        <p className="text-muted-foreground text-sm mb-14">Works where you work.</p>
+        <p className="text-muted-foreground text-sm mb-14">Works where agents work.</p>
       </FadeUp>
 
       <FadeUp delay={0.1}>
         <div className="flex flex-wrap items-center gap-x-12 md:gap-x-20 gap-y-6">
-          {integrations.map((name, i) => (
+          {integrations.map((name) => (
             <span
               key={name}
-              className="text-foreground/30 hover:text-foreground/60 font-display text-xl md:text-2xl font-light tracking-tight transition-colors duration-200 cursor-default"
+              className="text-foreground/25 hover:text-foreground/50 font-display text-xl md:text-2xl font-light tracking-tight transition-colors duration-300 cursor-default"
             >
               {name}
             </span>
