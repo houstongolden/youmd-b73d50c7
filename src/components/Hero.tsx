@@ -15,7 +15,7 @@ const CliPill = () => {
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <button onClick={handleCopy} className="cli-pill flex items-center gap-3 px-6 py-3">
+      <button onClick={handleCopy} className="cli-pill cli-glow flex items-center gap-3 px-6 py-3.5">
         <span className="text-sand/50">$</span>
         <span className="text-sand">npx init youmd</span>
         <span className="cursor-blink text-teal">▌</span>
@@ -23,11 +23,10 @@ const CliPill = () => {
           {copied ? <Check size={14} className="text-teal" /> : <Copy size={14} />}
         </span>
       </button>
-      {copied && (
+      {copied ? (
         <span className="text-teal text-xs font-mono">Copied ✓</span>
-      )}
-      {!copied && (
-        <span className="text-sand/30 text-xs">
+      ) : (
+        <span className="text-sand/30 text-[11px] tracking-wide">
           Claims your username · Builds your bundle · Publishes in 60 seconds
         </span>
       )}
@@ -38,25 +37,40 @@ const CliPill = () => {
 const Hero = () => {
   const { scrollY } = useScroll();
   const coolOpacity = useTransform(scrollY, [0, 600], [0, 1]);
-  const parallaxY = useTransform(scrollY, [0, 800], [0, 120]);
+  const parallaxY = useTransform(scrollY, [0, 800], [0, 80]);
 
   return (
-    <section className="relative h-screen flex items-end justify-center overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-end overflow-hidden">
+      {/* Warm hero — position figure visible */}
       <motion.div className="absolute inset-0" style={{ y: parallaxY }}>
-        <img src={heroWarm} alt="A figure standing in a warm beam of light" className="w-full h-full object-cover scale-110" />
+        <img
+          src={heroWarm}
+          alt="A figure standing in a warm beam of light"
+          className="w-full h-full object-cover object-[center_35%]"
+        />
       </motion.div>
+
+      {/* Cool hero — scroll reveal */}
       <motion.div className="absolute inset-0" style={{ opacity: coolOpacity, y: parallaxY }}>
-        <img src={heroCool} alt="" className="w-full h-full object-cover scale-110" />
+        <img src={heroCool} alt="" className="w-full h-full object-cover object-[center_35%]" />
       </motion.div>
 
-      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-dusk/70 via-dusk/30 to-transparent" />
+      {/* Soft warm gradient at bottom — NOT dark, just warmth */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[60%]"
+        style={{
+          background: "linear-gradient(to top, hsl(27 33% 91% / 0.85) 0%, hsl(27 33% 91% / 0.5) 35%, transparent 100%)"
+        }}
+      />
 
-      <div className="relative z-10 text-center pb-16 md:pb-20 px-6 max-w-3xl">
+      {/* Content — below the figure */}
+      <div className="relative z-10 text-center pb-12 md:pb-16 px-6 max-w-3xl">
         <motion.h1
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
-          className="text-sand text-4xl md:text-6xl lg:text-[4.5rem] font-display font-light tracking-tight mb-6 leading-[1.08]"
+          className="text-foreground text-4xl md:text-6xl lg:text-[4.5rem] font-display font-light mb-5 leading-[1.08]"
+          style={{ letterSpacing: "0.01em" }}
         >
           Your identity file for
           <br />
@@ -64,19 +78,19 @@ const Hero = () => {
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.35 }}
-          className="text-sand/55 text-base md:text-lg mb-10 max-w-lg mx-auto leading-relaxed"
+          className="text-foreground/50 text-base md:text-lg mb-10 max-w-lg mx-auto leading-relaxed"
         >
           You.md is a structured identity bundle — context, preferences, voice, and goals — that travels with you across every AI interaction.
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.5 }}
-          className="mb-6"
+          className="mb-5"
         >
           <CliPill />
         </motion.div>
@@ -86,7 +100,7 @@ const Hero = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.7 }}
         >
-          <a href="#spec" className="text-sand/40 text-sm hover:text-sand/60 transition-colors duration-200">
+          <a href="#spec" className="text-foreground/35 text-sm hover:text-foreground/55 transition-colors duration-200">
             Read the spec →
           </a>
         </motion.div>

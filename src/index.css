@@ -76,22 +76,53 @@ html {
   }
 }
 
-/* Liquid glass surface */
+/* Liquid glass — ultra-light frosted */
 .glass {
+  background: hsl(var(--glass-bg) / 0.08);
+  border: 1px solid hsl(var(--glass-border) / 0.15);
+  border-bottom: 1px solid hsl(var(--glass-border) / 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-scrolled {
   background: hsl(var(--glass-bg) / 0.12);
-  border: 1px solid hsl(var(--glass-border) / 0.2);
+  border: 1px solid hsl(var(--glass-border) / 0.18);
+  border-bottom: 1px solid hsl(var(--glass-border) / 0.12);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
-.glass-strong {
-  background: hsl(var(--glass-bg) / 0.18);
+/* CLI pill — frosted glass terminal */
+.cli-pill {
+  @apply font-mono text-sm rounded-full transition-all duration-200 cursor-pointer select-none;
+  background: hsl(var(--glass-bg) / 0.15);
   border: 1px solid hsl(var(--glass-border) / 0.25);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-/* Teal glow on CTA hover */
+.cli-pill:hover {
+  background: hsl(var(--glass-bg) / 0.22);
+  box-shadow: 0 0 24px 4px hsl(var(--teal) / 0.25);
+}
+
+/* Teal pulse glow behind CLI pill */
+@keyframes teal-pulse {
+  0%, 100% { box-shadow: 0 0 16px 4px hsl(var(--teal) / 0.08); }
+  50% { box-shadow: 0 0 28px 8px hsl(var(--teal) / 0.18); }
+}
+
+.cli-glow {
+  animation: teal-pulse 3s ease-in-out infinite;
+}
+
+.cli-glow:hover {
+  animation: none;
+  box-shadow: 0 0 28px 6px hsl(var(--teal) / 0.3);
+}
+
+/* Teal glow CTA */
 .cta-teal {
   @apply bg-teal text-dusk font-medium rounded-full transition-all duration-200;
   box-shadow: 0 0 0 0 hsl(var(--teal) / 0);
@@ -100,31 +131,6 @@ html {
 .cta-teal:hover {
   box-shadow: 0 0 24px 4px hsl(var(--teal) / 0.35);
   filter: brightness(1.08);
-}
-
-.cta-ghost {
-  @apply font-medium rounded-full transition-all duration-200;
-  color: hsl(var(--sand));
-  border: 1px solid hsl(var(--sand) / 0.2);
-}
-
-.cta-ghost:hover {
-  border-color: hsl(var(--sand) / 0.45);
-  background: hsl(var(--sand) / 0.06);
-}
-
-/* CLI pill */
-.cli-pill {
-  @apply font-mono text-sm rounded-full transition-all duration-200 cursor-pointer select-none;
-  background: hsl(var(--glass-bg) / 0.12);
-  border: 1px solid hsl(var(--glass-border) / 0.2);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-.cli-pill:hover {
-  background: hsl(var(--glass-bg) / 0.18);
-  box-shadow: 0 0 20px 2px hsl(var(--teal) / 0.2);
 }
 
 /* Blinking cursor */
