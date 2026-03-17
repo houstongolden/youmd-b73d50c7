@@ -17,19 +17,19 @@ const FadeUp = ({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 };
 
 const codeLines = [
-  { key: "name", value: '"Alex Chen"', color: "text-foreground" },
-  { key: "role", value: '"Product designer & founder"', color: "text-foreground" },
-  { key: "tone", value: '"Direct, warm, no jargon"', color: "text-foreground" },
-  { key: "context", value: '"Building a dev tool startup, Series A"', color: "text-foreground" },
-  { key: "preferences", value: "", color: "" },
-  { key: "  format", value: '"Bullet points over paragraphs"', color: "text-muted-foreground" },
-  { key: "  length", value: '"Concise — never more than 3 paragraphs"', color: "text-muted-foreground" },
-  { key: "goals", value: "", color: "" },
-  { key: "  current", value: '"Ship v2 by March, close funding round"', color: "text-muted-foreground" },
+  { key: "name", value: '"Alex Chen"' },
+  { key: "role", value: '"Product designer & founder"' },
+  { key: "tone", value: '"Direct, warm, no jargon"' },
+  { key: "context", value: '"Building a dev tool startup, Series A"' },
+  { key: "preferences", value: "" },
+  { key: "  format", value: '"Bullet points over paragraphs"' },
+  { key: "  length", value: '"Concise — never more than 3 paragraphs"' },
+  { key: "goals", value: "" },
+  { key: "  current", value: '"Ship v2 by March, close funding round"' },
 ];
 
 const WhatsInside = () => (
-  <section id="spec" className="py-24 md:py-32 bg-mauve/30">
+  <section id="spec" className="py-24 md:py-32 bg-mauve/20">
     <div className="max-w-4xl mx-auto px-6">
       <FadeUp>
         <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest mb-4">What's inside</p>
@@ -41,14 +41,15 @@ const WhatsInside = () => (
             <code>
               {codeLines.map((line, i) => (
                 <div key={i}>
-                  <span className="text-muted-foreground">{line.key}</span>
-                  {line.value && (
+                  <span className="text-sand/40">{line.key}</span>
+                  {line.value ? (
                     <>
-                      <span className="text-muted-foreground">: </span>
+                      <span className="text-sand/30">: </span>
                       <span className="text-teal">{line.value}</span>
                     </>
+                  ) : (
+                    <span className="text-sand/30">:</span>
                   )}
-                  {!line.value && <span className="text-muted-foreground">:</span>}
                 </div>
               ))}
             </code>
