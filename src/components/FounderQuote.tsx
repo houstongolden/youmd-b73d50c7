@@ -1,0 +1,59 @@
+import FadeUp from "@/components/FadeUp";
+
+const FounderQuote = () => (
+  <section className="relative py-20 px-4">
+    <FadeUp>
+      <div className="max-w-3xl mx-auto">
+        {/* Quote block */}
+        <div className="terminal-panel p-8 md:p-12">
+          <div className="terminal-panel-header -mx-8 -mt-8 md:-mx-12 md:-mt-12 mb-8">
+            <div className="terminal-dot" />
+            <div className="terminal-dot" />
+            <div className="terminal-dot" />
+            <span className="font-mono text-[10px] text-muted-foreground/40 ml-2">founder.log</span>
+          </div>
+
+          <div className="font-mono text-[10px] text-muted-foreground/40 mb-4">
+            $ cat /why/youmd.txt
+          </div>
+
+          <blockquote className="font-mono text-sm md:text-base leading-relaxed text-foreground/85 space-y-4">
+            <p>
+              <span className="text-accent">&gt;</span>{" "}
+              I got tired of re-introducing myself to every new agent I worked with.
+              Every session started from scratch — who I am, what I'm building,
+              what matters to me, how I think.
+            </p>
+            <p>
+              <span className="text-accent">&gt;</span>{" "}
+              There was no standard way to give an agent context about you.
+              So I built one. A single file. A CLI. An identity context protocol
+              that lets any agent know you — instantly — without the blank-slate problem.
+            </p>
+            <p>
+              <span className="text-accent">&gt;</span>{" "}
+              Turns out I wasn't the only one. Others had hacked together
+              their own systems, or just lived with it. So I open-sourced it.
+              That's <span className="text-accent font-medium">you.md</span>.
+            </p>
+          </blockquote>
+
+          <div className="mt-8 pt-6 border-t border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded bg-accent-wash border border-border flex items-center justify-center font-mono text-[10px] text-accent font-medium">
+                HG
+              </div>
+              <div>
+                <div className="font-mono text-xs text-foreground/80">Houston Golden</div>
+                <div className="font-mono text-[10px] text-muted-foreground/50">founder · you.md</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </FadeUp>
+    <div className="absolute bottom-0 inset-x-0 section-divider" />
+  </section>
+);
+
+export default FounderQuote;
