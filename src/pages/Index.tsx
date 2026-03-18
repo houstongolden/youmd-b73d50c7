@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import ProfilesShowcase from "@/components/ProfilesShowcase";
 import ProblemStrip from "@/components/ProblemStrip";
 import HowItWorks from "@/components/HowItWorks";
 import WhatsInside from "@/components/WhatsInside";
@@ -12,6 +13,7 @@ const Index = () => (
   <div>
     <Navbar />
     <Hero />
+    <ProfilesShowcase />
     <ProblemStrip />
     <HowItWorks />
     <WhatsInside />
