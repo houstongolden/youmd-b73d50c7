@@ -60,7 +60,7 @@ const CTAFooter = () => {
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <span className="text-muted-foreground/50 font-mono text-[9px]">you-md/v1</span>
+            <span className="text-muted-foreground/50 font-mono text-[9px]">you/v1</span>
           </div>
         </div>
       </footer>

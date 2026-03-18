@@ -4,7 +4,7 @@ import FadeUp from "@/components/FadeUp";
 
 const codeLines = [
   "---",
-  "schema: you-md/v1",
+  "schema: you/v1",
   "name: Alex Chen",
   "username: alexchen",
   "---",

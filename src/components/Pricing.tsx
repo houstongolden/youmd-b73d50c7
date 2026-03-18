@@ -26,7 +26,7 @@ const Pricing = () => (
             </div>
             <div className="space-y-2 font-mono text-[11px] text-muted-foreground mb-5">
               <p>  ✓ CLI bundle creation</p>
-              <p>  ✓ you.md/username publish</p>
+              <p>  ✓ you/username publish</p>
               <p>  ✓ Sharing URL</p>
               <p>  ✓ 3 pipeline runs/mo</p>
             </div>

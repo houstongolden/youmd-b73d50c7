@@ -28,7 +28,7 @@ const OpenSpec = () => (
               href="#"
               className="text-muted-foreground/60 font-mono text-[11px] hover:text-accent transition-colors duration-200"
             >
-              &gt; cat spec.you.md →
+              &gt; cat spec.you →
             </a>
             <a
               href="#"
