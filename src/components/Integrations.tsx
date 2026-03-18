@@ -3,11 +3,11 @@ import FadeUp from "@/components/FadeUp";
 const integrations = ["Claude Code", "Cursor", "CrewAI", "Goose", "Aider"];
 
 const Integrations = () => (
-  <section className="py-20 md:py-28 bg-white/40">
+  <section className="py-20 md:py-28 bg-background/50">
     <div className="max-w-5xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground text-xs font-mono uppercase tracking-widest mb-14">
-          Works where agents work.
+        <p className="text-muted-foreground text-xs font-mono uppercase tracking-[0.2em] mb-16 text-center">
+          Works where agents work
         </p>
       </FadeUp>
 
@@ -16,7 +16,7 @@ const Integrations = () => (
           {integrations.map((name) => (
             <span
               key={name}
-              className="text-foreground/25 hover:text-foreground/50 font-display text-xl md:text-2xl font-light tracking-tight transition-colors duration-300 cursor-default"
+              className="text-foreground/20 hover:text-foreground/45 font-display text-xl md:text-2xl font-light tracking-tight transition-colors duration-300 cursor-default select-none"
             >
               {name}
             </span>

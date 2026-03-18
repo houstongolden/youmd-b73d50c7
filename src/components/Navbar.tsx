@@ -9,14 +9,12 @@ const sections = [
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [pastHero, setPastHero] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleScroll = useCallback(() => {
     const y = window.scrollY;
     setScrolled(y > 40);
-    setPastHero(y > window.innerHeight * 0.85);
     const offsets = sections.map(({ id }) => {
       const el = document.getElementById(id);
       if (!el) return { id, top: Infinity };
@@ -36,19 +34,17 @@ const Navbar = () => {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  // Text color: white over hero, dark over light sections
-  const textColor = "text-foreground";
-  const mutedColor = "text-foreground/60";
-
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4">
         <div
-          className={`rounded-full flex items-center justify-between gap-6 px-5 py-3 w-full max-w-3xl transition-all duration-300 ${
-            scrolled ? "glass-scrolled" : "glass"
+          className={`rounded-full flex items-center justify-between gap-6 px-5 py-2.5 w-full max-w-3xl transition-all duration-500 ${
+            scrolled
+              ? "bg-background/70 backdrop-blur-xl border border-border/40 shadow-sm"
+              : "bg-background/30 backdrop-blur-md border border-border/20"
           }`}
         >
-          <a href="/" className={`${textColor} font-display text-base font-medium tracking-tight whitespace-nowrap transition-colors duration-300`}>
+          <a href="/" className="text-foreground font-display text-base font-medium tracking-tight whitespace-nowrap">
             You.md
           </a>
 
@@ -57,8 +53,8 @@ const Navbar = () => {
               <a
                 key={id}
                 href={`#${id}`}
-                className={`text-xs tracking-wide transition-colors duration-300 ${
-                  activeSection === id ? "text-teal" : `${mutedColor} hover:${textColor}`
+                className={`text-xs tracking-wide transition-colors duration-200 ${
+                  activeSection === id ? "text-teal" : "text-foreground/50 hover:text-foreground/80"
                 }`}
               >
                 {label}
@@ -75,7 +71,7 @@ const Navbar = () => {
             </a>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className={`md:hidden ${textColor} p-1 transition-colors duration-300`}
+              className="md:hidden text-foreground p-1"
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -103,7 +99,7 @@ const Navbar = () => {
             onClick={() => setMobileOpen(false)}
             className="cta-teal px-7 py-3 text-sm mt-4"
           >
-            Get your You.md
+            Claim your username
           </a>
         </div>
       )}
