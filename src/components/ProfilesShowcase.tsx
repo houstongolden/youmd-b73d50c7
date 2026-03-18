@@ -48,12 +48,14 @@ const ProfilesShowcase = () => {
                     <span className="w-1.5 h-1.5 rounded-full bg-success/60 shrink-0" />
 
                     {/* Avatar */}
-                    <img
-                      src={profile.avatarUrl}
-                      alt={profile.name}
-                      className="w-8 h-8 rounded object-cover border border-border group-hover:border-accent/30 transition-colors shrink-0"
-                      loading="lazy"
-                    />
+                    <div className="w-8 h-8 rounded overflow-hidden border border-border group-hover:border-accent/30 transition-colors shrink-0 bg-background">
+                      <AsciiAvatar
+                        src={profile.avatarUrl}
+                        cols={120}
+                        canvasWidth={64}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
