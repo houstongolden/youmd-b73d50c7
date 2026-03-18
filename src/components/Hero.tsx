@@ -26,7 +26,7 @@ const CliPill = () => {
         <span className="text-teal text-xs font-mono">Copied ✓</span>
       ) : (
         <span className="text-foreground/30 text-[11px] tracking-wide">
-          Claims your username · Builds your bundle · Publishes in 60 seconds
+          <span className="font-medium text-foreground/60">you.md</span>/username · Public or private · Readable by any agent or AI search engine
         </span>
       )}
     </div>

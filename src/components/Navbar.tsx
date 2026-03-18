@@ -71,7 +71,7 @@ const Navbar = () => {
               href="#get-started"
               className="hidden md:inline-block cta-teal px-5 py-2 text-xs"
             >
-              Get your You.md
+              Claim your username
             </a>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
