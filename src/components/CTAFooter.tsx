@@ -58,7 +58,10 @@ const CTAFooter = () => {
             <a href="#pricing" className="text-muted-foreground/30 font-mono text-[10px] hover:text-accent transition-colors">&gt; pricing</a>
             <Link to="/profiles" className="text-muted-foreground/30 font-mono text-[10px] hover:text-accent transition-colors">&gt; profiles</Link>
           </div>
-          <span className="text-muted-foreground/20 font-mono text-[9px]">you-md/v1</span>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <span className="text-muted-foreground/20 font-mono text-[9px]">you-md/v1</span>
+          </div>
         </div>
       </footer>
     </>
