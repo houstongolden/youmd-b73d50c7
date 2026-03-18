@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { sampleProfiles, type ActivityItem, type Project, type AgentConnection, type ConnectedSource } from "@/data/sampleProfiles";
 
