@@ -25,6 +25,23 @@ const ProblemStrip = () => {
             Every agent starts from zero. No memory. No context. No you.
             You re-explain yourself every time.
           </p>
+        </FadeUp>
+        <FadeUp delay={0.15}>
+          <div className="mt-10 flex justify-center gap-6 font-mono text-[10px]">
+            {["no memory", "no context", "no identity"].map((item, i) => (
+              <motion.span
+                key={item}
+                className="text-destructive/40 border border-destructive/10 px-3 py-1 rounded"
+                whileInView={{ opacity: [0, 1] }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 + i * 0.1 }}
+              >
+                ✗ {item}
+              </motion.span>
+            ))}
+          </div>
+        </FadeUp>
+        <FadeUp delay={0.25}>
           <p className="text-accent/50 font-mono text-[11px] mt-8">
             one command changes that →
           </p>

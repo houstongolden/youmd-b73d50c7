@@ -23,12 +23,12 @@ const asciiLines = [
   { text: "                   ║░  ░░  ░║", cls: "ascii-soft" },
 ];
 
-/* ── Boot sequence ── */
+/* ── Boot sequence (faster) ── */
 const bootLines = [
   { text: "initializing identity...", delay: 0 },
-  { text: "loading memory...", delay: 600 },
-  { text: "connecting to agent network...", delay: 1200 },
-  { text: "status: ONLINE", delay: 1800, accent: true },
+  { text: "loading memory...", delay: 300 },
+  { text: "connecting to agent network...", delay: 600 },
+  { text: "status: ONLINE", delay: 900, accent: true },
 ];
 
 const BootSequence = () => {
@@ -36,7 +36,7 @@ const BootSequence = () => {
 
   useEffect(() => {
     bootLines.forEach((line, i) => {
-      setTimeout(() => setVisibleCount(i + 1), line.delay + 400);
+      setTimeout(() => setVisibleCount(i + 1), line.delay + 200);
     });
   }, []);
 
@@ -45,8 +45,9 @@ const BootSequence = () => {
       {bootLines.slice(0, visibleCount).map((line, i) => (
         <motion.div
           key={i}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, x: -4 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.2 }}
           className={`font-mono text-[11px] leading-relaxed ${line.accent ? "text-accent font-medium" : "text-muted-foreground"}`}
         >
           {line.accent ? `› ${line.text}` : `  ${line.text}`}
@@ -65,11 +66,11 @@ const CliPill = () => {
   };
 
   return (
-    <button onClick={handleCopy} className="cli-pill flex items-center gap-3 px-5 py-3">
+    <button onClick={handleCopy} className="cli-pill flex items-center gap-3 px-5 py-3 group">
       <span className="text-muted-foreground">$</span>
       <span className="text-accent font-medium">npx youmd init</span>
       <span className="cursor-blink text-accent">█</span>
-      <span className="ml-2 text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors">
+      <span className="ml-2 text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors">
         {copied ? <Check size={13} className="text-success" /> : <Copy size={13} />}
       </span>
     </button>
@@ -97,7 +98,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
           className="mb-10 flex justify-center"
         >
           <BootSequence />
@@ -105,9 +106,9 @@ const Hero = () => {
 
         {/* ASCII Art */}
         <motion.pre
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 2.4 }}
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
           className="font-mono text-[7px] md:text-[10px] lg:text-[11px] leading-[1.3] mb-10 select-none"
         >
           {asciiLines.map((line, i) => (
@@ -119,7 +120,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 2.8 }}
+          transition={{ duration: 0.4, delay: 1.5 }}
           className="mb-4"
         >
           <h1 className="text-foreground text-2xl md:text-4xl font-mono font-light tracking-tight">
@@ -130,7 +131,7 @@ const Hero = () => {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 3.0 }}
+          transition={{ duration: 0.4, delay: 1.7 }}
           className="text-muted-foreground font-mono text-[13px] mb-2 leading-relaxed"
         >
           your identity file
@@ -138,7 +139,7 @@ const Hero = () => {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 3.1 }}
+          transition={{ duration: 0.4, delay: 1.8 }}
           className="text-muted-foreground font-mono text-[13px] mb-10 leading-relaxed"
         >
           for the agent internet
@@ -148,7 +149,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 3.3 }}
+          transition={{ duration: 0.4, delay: 2.0 }}
           className="mb-12"
         >
           <CliPill />
@@ -158,16 +159,16 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 3.5 }}
+          transition={{ duration: 0.5, delay: 2.2 }}
           className="flex items-center justify-center gap-8 font-mono text-[12px]"
         >
-          <a href="#get-started" className="text-muted-foreground/50 hover:text-accent transition-colors">
+          <a href="#get-started" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">
             &gt; enter system
           </a>
-          <a href="#spec" className="text-muted-foreground/50 hover:text-accent transition-colors">
+          <a href="#spec" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">
             &gt; view spec
           </a>
-          <a href="#" className="text-muted-foreground/50 hover:text-accent transition-colors">
+          <a href="#" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">
             &gt; github
           </a>
         </motion.div>
