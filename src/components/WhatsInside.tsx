@@ -52,7 +52,7 @@ const TypewriterCode = () => {
 
   const renderLine = (line: string) => {
     const colonIdx = line.indexOf(":");
-    if (colonIdx === -1) return <span className="text-foreground/40">{line}</span>;
+    if (colonIdx === -1) return <span className="text-foreground/35">{line}</span>;
 
     const key = line.slice(0, colonIdx);
     const rest = line.slice(colonIdx);
@@ -61,11 +61,11 @@ const TypewriterCode = () => {
 
     return (
       <>
-        <span className={isIndented ? "text-foreground/30" : "text-foreground/50"}>{key}</span>
+        <span className={isIndented ? "text-foreground/30" : "text-foreground/55"}>{key}</span>
         {quoteMatch ? (
           <>
             <span className="text-foreground/15">: </span>
-            <span className="text-teal">"{quoteMatch[1]}"</span>
+            <span className="text-teal/90">"{quoteMatch[1]}"</span>
           </>
         ) : (
           <span className="text-foreground/15">{rest}</span>
@@ -77,22 +77,15 @@ const TypewriterCode = () => {
   return (
     <div
       ref={ref}
-      className="rounded-2xl p-6 md:p-10 overflow-x-auto"
-      style={{
-        background: "hsl(0 0% 100% / 0.35)",
-        border: "1px solid hsl(0 0% 100% / 0.5)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        boxShadow: "0 4px 24px -4px hsl(var(--foreground) / 0.04)",
-      }}
+      className="glass-card rounded-2xl p-6 md:p-8 overflow-x-auto"
     >
-      <div className="flex items-center gap-1.5 mb-6 pb-4 border-b border-foreground/6">
-        <div className="w-2 h-2 rounded-full bg-foreground/10" />
-        <div className="w-2 h-2 rounded-full bg-foreground/10" />
-        <div className="w-2 h-2 rounded-full bg-foreground/10" />
-        <span className="ml-3 text-foreground/20 text-xs font-mono">you.md</span>
+      <div className="flex items-center gap-1.5 mb-5 pb-4 border-b border-border/30">
+        <div className="w-[7px] h-[7px] rounded-full bg-foreground/8" />
+        <div className="w-[7px] h-[7px] rounded-full bg-foreground/8" />
+        <div className="w-[7px] h-[7px] rounded-full bg-foreground/8" />
+        <span className="ml-3 text-foreground/20 text-[11px] font-mono">you.md</span>
       </div>
-      <pre className="font-mono text-sm leading-[2] min-h-[280px]">
+      <pre className="font-mono text-[13px] leading-[2] min-h-[260px]">
         <code>
           {lines.map((line, i) => (
             <div key={i}>{renderLine(line)}</div>
@@ -110,22 +103,22 @@ const WhatsInside = () => (
   <section id="spec" className="py-24 md:py-32 bg-secondary">
     <div className="max-w-5xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground text-xs font-mono uppercase tracking-[0.2em] mb-3">What's inside</p>
-        <p className="text-foreground/40 text-sm mb-14">A preview of a sample you.md identity bundle.</p>
+        <p className="text-muted-foreground text-[10px] font-mono uppercase tracking-[0.25em] mb-3">What's inside</p>
+        <p className="text-foreground/35 text-sm mb-14">A preview of a sample you.md identity bundle.</p>
       </FadeUp>
 
-      <div className="grid md:grid-cols-5 gap-8 md:gap-14 items-start">
+      <div className="grid md:grid-cols-5 gap-8 md:gap-12 items-start">
         <div className="md:col-span-3">
           <FadeUp delay={0.1}>
             <TypewriterCode />
           </FadeUp>
         </div>
-        <div className="md:col-span-2 flex flex-col gap-8 md:pt-6">
+        <div className="md:col-span-2 flex flex-col gap-7 md:pt-4">
           {callouts.map((c, i) => (
-            <FadeUp key={c.label} delay={0.15 + i * 0.05}>
-              <div className="border-l-2 border-teal/30 pl-4">
-                <h4 className="text-foreground text-sm font-medium mb-1">{c.label}</h4>
-                <p className="text-muted-foreground text-sm leading-relaxed">{c.desc}</p>
+            <FadeUp key={c.label} delay={0.15 + i * 0.06}>
+              <div className="border-l-[2px] border-teal/25 pl-4 py-0.5">
+                <h4 className="text-foreground text-[13px] font-medium mb-1 tracking-tight">{c.label}</h4>
+                <p className="text-muted-foreground text-[13px] leading-relaxed">{c.desc}</p>
               </div>
             </FadeUp>
           ))}

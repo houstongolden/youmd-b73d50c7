@@ -1,10 +1,10 @@
 import FadeUp from "@/components/FadeUp";
 
 const ProblemStrip = () => (
-  <section className="bg-background py-24 md:py-32">
+  <section className="bg-background py-28 md:py-36">
     <div className="max-w-3xl mx-auto px-6 text-center">
       <FadeUp>
-        <p className="text-foreground text-xl md:text-3xl font-display font-light leading-relaxed tracking-tight">
+        <p className="text-foreground/70 text-xl md:text-[1.75rem] font-display font-light leading-[1.5] tracking-tight">
           Every agent you talk to starts from zero.
           <br className="hidden md:block" />
           <span className="text-teal"> You.md changes that.</span>

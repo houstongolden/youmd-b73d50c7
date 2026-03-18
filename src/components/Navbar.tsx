@@ -36,25 +36,27 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4">
+      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-3 md:pt-4">
         <div
-          className={`rounded-full flex items-center justify-between gap-6 px-5 py-2.5 w-full max-w-3xl transition-all duration-500 ${
+          className={`rounded-full flex items-center justify-between gap-6 px-5 py-2 w-full max-w-2xl transition-all duration-500 ${
             scrolled
-              ? "bg-background/70 backdrop-blur-xl border border-border/40 shadow-sm"
-              : "bg-background/30 backdrop-blur-md border border-border/20"
+              ? "glass-scrolled"
+              : "bg-transparent"
           }`}
         >
-          <a href="/" className="text-foreground font-display text-base font-medium tracking-tight whitespace-nowrap">
+          <a href="/" className="text-foreground font-display text-[15px] font-medium tracking-tight whitespace-nowrap">
             You.md
           </a>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-7">
             {sections.map(({ id, label }) => (
               <a
                 key={id}
                 href={`#${id}`}
-                className={`text-xs tracking-wide transition-colors duration-200 ${
-                  activeSection === id ? "text-teal" : "text-foreground/50 hover:text-foreground/80"
+                className={`text-[11px] uppercase tracking-[0.08em] font-medium transition-colors duration-200 ${
+                  activeSection === id
+                    ? "text-teal"
+                    : "text-foreground/50 hover:text-foreground/80"
                 }`}
               >
                 {label}
@@ -65,23 +67,23 @@ const Navbar = () => {
           <div className="flex items-center gap-3">
             <a
               href="#get-started"
-              className="hidden md:inline-block cta-teal px-5 py-2 text-xs"
+              className="hidden md:inline-block cta-teal px-5 py-1.5 text-[11px] tracking-wide"
             >
               Claim your username
             </a>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden text-foreground p-1"
+              className="md:hidden text-foreground/70 p-1"
               aria-label="Toggle menu"
             >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
       </nav>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-background/95 backdrop-blur-lg flex flex-col items-center justify-center gap-8">
+        <div className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8">
           {sections.map(({ id, label }) => (
             <a
               key={id}
