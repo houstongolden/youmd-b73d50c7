@@ -4,6 +4,7 @@ import ProfilesShowcase from "@/components/ProfilesShowcase";
 import ProblemStrip from "@/components/ProblemStrip";
 import HowItWorks from "@/components/HowItWorks";
 import WhatsInside from "@/components/WhatsInside";
+import PortraitSection from "@/components/PortraitSection";
 import OpenSpec from "@/components/OpenSpec";
 import Integrations from "@/components/Integrations";
 import Pricing from "@/components/Pricing";
@@ -17,6 +18,7 @@ const Index = () => (
     <ProblemStrip />
     <HowItWorks />
     <WhatsInside />
+    <PortraitSection />
     <OpenSpec />
     <Integrations />
     <Pricing />
