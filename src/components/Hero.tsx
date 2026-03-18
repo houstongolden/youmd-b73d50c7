@@ -13,20 +13,20 @@ const CliPill = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-3">
-      <button onClick={handleCopy} className="cli-pill cli-glow flex items-center gap-3 px-7 py-4">
-        <span className="text-foreground/40">$</span>
+    <div className="flex flex-col items-center gap-2.5">
+      <button onClick={handleCopy} className="cli-pill cli-glow flex items-center gap-3 px-6 py-3.5">
+        <span className="text-foreground/35">$</span>
         <span className="text-foreground font-medium">npx init youmd</span>
         <span className="cursor-blink text-teal">▌</span>
-        <span className="ml-2 text-foreground/40 hover:text-foreground/70 transition-colors">
-          {copied ? <Check size={14} className="text-teal" /> : <Copy size={14} />}
+        <span className="ml-1.5 text-foreground/30 hover:text-foreground/60 transition-colors">
+          {copied ? <Check size={13} className="text-teal" /> : <Copy size={13} />}
         </span>
       </button>
       {copied ? (
         <span className="text-teal text-xs font-mono">Copied ✓</span>
       ) : (
-        <span className="text-foreground/35 text-[11px] tracking-wide">
-          <span className="font-medium text-foreground/55">you.md</span>/username · Public or private · Readable by any agent or AI search engine
+        <span className="text-foreground/30 text-[11px] tracking-wide">
+          <span className="font-medium text-foreground/50">you.md</span>/username · Public or private · Readable by any agent
         </span>
       )}
     </div>
@@ -35,38 +35,42 @@ const CliPill = () => {
 
 const Hero = () => {
   const { scrollY } = useScroll();
-  const parallaxY = useTransform(scrollY, [0, 800], [0, 120]);
+  const parallaxY = useTransform(scrollY, [0, 800], [0, 140]);
+  const opacityFade = useTransform(scrollY, [0, 500], [1, 0.4]);
 
   return (
-    <section className="relative min-h-[115vh] flex flex-col items-center justify-end overflow-hidden">
+    <section className="relative min-h-[110vh] flex flex-col items-center justify-end overflow-hidden">
       {/* Hero image with parallax */}
-      <motion.div className="absolute inset-0 -top-[120px]" style={{ y: parallaxY }}>
+      <motion.div
+        className="absolute inset-0 -top-[100px]"
+        style={{ y: parallaxY, opacity: opacityFade }}
+      >
         <img
           src={heroWarm}
           alt="A figure standing in a warm beam of light"
-          className="w-full h-[calc(100%+120px)] object-cover object-[center_20%]"
+          className="w-full h-[calc(100%+100px)] object-cover object-[center_18%]"
         />
       </motion.div>
 
       {/* Seamless gradient fade into sand bg */}
       <div
-        className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none"
+        className="absolute inset-x-0 bottom-0 h-[60%] pointer-events-none"
         style={{
-          background: "linear-gradient(to top, hsl(27 33% 91%) 0%, hsl(27 33% 91% / 0.95) 15%, hsl(27 33% 91% / 0.7) 40%, hsl(27 33% 91% / 0.3) 65%, transparent 100%)"
+          background: "linear-gradient(to top, hsl(27 33% 91%) 0%, hsl(27 33% 91% / 0.97) 12%, hsl(27 33% 91% / 0.8) 35%, hsl(27 33% 91% / 0.4) 60%, hsl(27 33% 91% / 0.1) 80%, transparent 100%)"
         }}
       />
 
       {/* Content */}
-      <div className="relative z-10 text-center pb-14 md:pb-20 px-6 max-w-3xl">
+      <div className="relative z-10 text-center pb-16 md:pb-24 px-6 max-w-3xl">
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
-          className="text-foreground text-3xl md:text-5xl lg:text-[4rem] font-display font-light mb-5 leading-[1.1]"
-          style={{ letterSpacing: "0.01em" }}
+          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.15 }}
+          className="text-foreground text-3xl md:text-5xl lg:text-[3.75rem] font-display font-light mb-6 leading-[1.08]"
+          style={{ letterSpacing: "-0.01em" }}
         >
           The agent internet doesn't know
-          <br />
+          <br className="hidden sm:block" />
           who you are. Yet.
         </motion.h1>
 
@@ -74,16 +78,16 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.35 }}
-          className="text-foreground/45 text-base md:text-lg mb-10 max-w-lg mx-auto leading-relaxed"
+          className="text-foreground/40 text-[15px] md:text-lg mb-12 max-w-md mx-auto leading-relaxed"
         >
-          One command creates your permanent identity file — context, voice, goals — and publishes it to a URL every AI can read. Claim yours before someone else does.
+          One command creates your permanent identity file — context, voice, goals — and publishes it to a URL every AI can read.
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.5 }}
-          className="mb-6"
+          className="mb-8"
         >
           <CliPill />
         </motion.div>
@@ -91,9 +95,9 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.7 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <a href="#spec" className="text-foreground/30 text-sm hover:text-foreground/55 transition-colors duration-200">
+          <a href="#spec" className="text-foreground/25 text-[13px] hover:text-foreground/50 transition-colors duration-300">
             Read the spec →
           </a>
         </motion.div>

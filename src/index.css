@@ -18,11 +18,11 @@
     --primary: 172 43% 65%;
     --primary-foreground: 30 10% 28%;
 
-    --secondary: 272 22% 92%;
+    --secondary: 272 18% 93%;
     --secondary-foreground: 30 10% 28%;
 
-    --muted: 272 22% 92%;
-    --muted-foreground: 30 8% 42%;
+    --muted: 272 18% 93%;
+    --muted-foreground: 30 8% 48%;
 
     --accent: 39 89% 72%;
     --accent-foreground: 30 10% 28%;
@@ -30,14 +30,14 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 30 12% 78%;
+    --border: 30 12% 82%;
     --input: 30 12% 78%;
     --ring: 172 43% 65%;
 
     --radius: 0.5rem;
 
     --sand: 27 33% 91%;
-    --mauve: 272 22% 92%;
+    --mauve: 272 18% 93%;
     --teal: 172 43% 65%;
     --golden: 39 89% 72%;
     --dusk: 30 14% 9%;
@@ -49,7 +49,7 @@
     --sidebar-foreground: 30 10% 28%;
     --sidebar-primary: 172 43% 65%;
     --sidebar-primary-foreground: 30 10% 28%;
-    --sidebar-accent: 272 22% 92%;
+    --sidebar-accent: 272 18% 93%;
     --sidebar-accent-foreground: 30 10% 28%;
     --sidebar-border: 30 12% 78%;
     --sidebar-ring: 172 43% 65%;
@@ -76,61 +76,62 @@ html {
   }
 }
 
-/* Liquid glass — ultra-light frosted */
+/* Liquid glass — refined frosted */
 .glass {
-  background: hsl(var(--glass-bg) / 0.08);
-  border: 1px solid hsl(var(--glass-border) / 0.15);
-  border-bottom: 1px solid hsl(var(--glass-border) / 0.1);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: hsl(var(--glass-bg) / 0.06);
+  border: 1px solid hsl(var(--glass-border) / 0.12);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
 }
 
 .glass-scrolled {
-  background: hsl(var(--glass-bg) / 0.12);
-  border: 1px solid hsl(var(--glass-border) / 0.18);
-  border-bottom: 1px solid hsl(var(--glass-border) / 0.12);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: hsl(var(--glass-bg) / 0.55);
+  border: 1px solid hsl(var(--glass-border) / 0.3);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  box-shadow: 0 1px 12px -4px hsl(var(--foreground) / 0.06);
 }
 
 /* CLI pill — frosted glass terminal */
 .cli-pill {
-  @apply font-mono text-sm rounded-full transition-all duration-200 cursor-pointer select-none;
-  background: hsl(var(--glass-bg) / 0.15);
-  border: 1px solid hsl(var(--glass-border) / 0.25);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  @apply font-mono text-sm rounded-full transition-all duration-300 cursor-pointer select-none;
+  background: hsl(var(--glass-bg) / 0.45);
+  border: 1px solid hsl(var(--glass-border) / 0.5);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 2px 16px -4px hsl(var(--foreground) / 0.06);
 }
 
 .cli-pill:hover {
-  background: hsl(var(--glass-bg) / 0.22);
-  box-shadow: 0 0 24px 4px hsl(var(--teal) / 0.25);
+  background: hsl(var(--glass-bg) / 0.6);
+  border-color: hsl(var(--teal) / 0.3);
+  box-shadow: 0 0 28px 4px hsl(var(--teal) / 0.2);
 }
 
 /* Teal pulse glow behind CLI pill */
 @keyframes teal-pulse {
-  0%, 100% { box-shadow: 0 0 16px 4px hsl(var(--teal) / 0.08); }
-  50% { box-shadow: 0 0 28px 8px hsl(var(--teal) / 0.18); }
+  0%, 100% { box-shadow: 0 2px 16px -4px hsl(var(--foreground) / 0.06), 0 0 16px 2px hsl(var(--teal) / 0.06); }
+  50% { box-shadow: 0 2px 16px -4px hsl(var(--foreground) / 0.06), 0 0 24px 6px hsl(var(--teal) / 0.14); }
 }
 
 .cli-glow {
-  animation: teal-pulse 3s ease-in-out infinite;
+  animation: teal-pulse 3.5s ease-in-out infinite;
 }
 
 .cli-glow:hover {
   animation: none;
-  box-shadow: 0 0 28px 6px hsl(var(--teal) / 0.3);
 }
 
 /* Teal glow CTA */
 .cta-teal {
-  @apply bg-teal text-dusk font-medium rounded-full transition-all duration-200;
-  box-shadow: 0 0 0 0 hsl(var(--teal) / 0);
+  @apply bg-teal text-dusk font-medium rounded-full transition-all duration-300;
+  box-shadow: 0 2px 12px -2px hsl(var(--teal) / 0.25);
 }
 
 .cta-teal:hover {
-  box-shadow: 0 0 24px 4px hsl(var(--teal) / 0.35);
-  filter: brightness(1.08);
+  box-shadow: 0 4px 24px -2px hsl(var(--teal) / 0.4);
+  filter: brightness(1.06);
+  transform: translateY(-1px);
 }
 
 /* Blinking cursor */
@@ -141,6 +142,21 @@ html {
 
 .cursor-blink {
   animation: blink 1s step-end infinite;
+}
+
+/* Glass card — content sections */
+.glass-card {
+  background: hsl(var(--glass-bg) / 0.45);
+  border: 1px solid hsl(var(--glass-border) / 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 2px 20px -6px hsl(var(--foreground) / 0.04);
+}
+
+/* Section divider */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(var(--border) / 0.5), transparent);
 }
 
 /* Selection color */
