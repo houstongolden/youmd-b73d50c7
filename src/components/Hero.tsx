@@ -4,23 +4,28 @@ import { Copy, Check } from "lucide-react";
 
 /* ── ASCII — UFO + Beam + Avatar (orange monochrome shading) ── */
 const asciiLines = [
-  { text: "              █████████████████████", cls: "ascii-strong" },
-  { text: "         █████████████████████████████", cls: "ascii-strong" },
-  { text: "       █████████████████████████████████", cls: "ascii-strong" },
-  { text: "      ███████████████████████████████████", cls: "ascii-strong" },
-  { text: "       ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", cls: "ascii-mid" },
-  { text: "          ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", cls: "ascii-soft" },
-  { text: "             ░░░░░░░░░░░░░░░░░░░░", cls: "ascii-glow" },
-  { text: "", cls: "" },
-  { text: "                   ║░░░░░░░░║", cls: "ascii-soft" },
-  { text: "                   ║░░░░░░░░║", cls: "ascii-soft" },
-  { text: "                   ║░░▒▒▒░░░║", cls: "ascii-mid" },
-  { text: "                   ║░▒████░░║", cls: "ascii-mid" },
-  { text: "                   ║░█    █░║", cls: "ascii-strong" },
-  { text: "                   ║░█ ██ █░║", cls: "ascii-strong" },
-  { text: "                   ║░█ ██ █░║", cls: "ascii-strong" },
-  { text: "                   ║░█____█░║", cls: "ascii-strong" },
-  { text: "                   ║░  ░░  ░║", cls: "ascii-soft" },
+  // UFO — classic dome + wide saucer
+  { text: "                  ▄██████▄", cls: "ascii-strong" },
+  { text: "               ▄████████████▄", cls: "ascii-strong" },
+  { text: "          ▄▄▓▓████████████████▓▓▄▄", cls: "ascii-mid" },
+  { text: "       ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", cls: "ascii-mid" },
+  { text: "     ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", cls: "ascii-soft" },
+  { text: "       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░", cls: "ascii-glow" },
+  // Beam — expanding cone of particles
+  { text: "                ░  ░  ░  ░  ░", cls: "ascii-glow" },
+  { text: "               ░ ░ ▒ ░ ▒ ░ ░", cls: "ascii-glow" },
+  { text: "              ░ ░ ░ ▒ ░ ░ ░ ░", cls: "ascii-glow" },
+  { text: "             ░ ░ ▒ ░ ░ ▒ ░ ░ ░", cls: "ascii-glow" },
+  { text: "            ░ ░ ░ ░ ▒ ░ ░ ░ ░ ░", cls: "ascii-glow" },
+  // Person — stick figure ascending
+  { text: "                   ▄██▄", cls: "ascii-strong" },
+  { text: "                   █  █", cls: "ascii-strong" },
+  { text: "                   ▀██▀", cls: "ascii-strong" },
+  { text: "                 ▄▄████▄▄", cls: "ascii-mid" },
+  { text: "                ▀▀ ████ ▀▀", cls: "ascii-soft" },
+  { text: "                   ████", cls: "ascii-mid" },
+  { text: "                   █  █", cls: "ascii-soft" },
+  { text: "                  ██  ██", cls: "ascii-glow" },
 ];
 
 /* ── Boot sequence (faster) ── */
