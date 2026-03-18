@@ -73,12 +73,12 @@ const TypewriterCode = () => {
   };
 
   return (
-    <div ref={ref} className="overflow-x-auto border border-border rounded">
-      <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-border">
-        <div className="w-2 h-2 rounded-full bg-muted-foreground/10" />
-        <div className="w-2 h-2 rounded-full bg-muted-foreground/10" />
-        <div className="w-2 h-2 rounded-full bg-muted-foreground/10" />
-        <span className="ml-2 text-muted-foreground/30 text-[10px] font-mono">you.md</span>
+    <div ref={ref} className="terminal-panel overflow-x-auto">
+      <div className="terminal-panel-header">
+        <div className="terminal-dot" />
+        <div className="terminal-dot" />
+        <div className="terminal-dot" />
+        <span className="ml-2 text-muted-foreground/30 font-mono text-[10px]">you.md</span>
       </div>
       <div className="p-5">
         <pre className="font-mono text-[11px] md:text-[12px] leading-[1.9] min-h-[200px]">
@@ -100,10 +100,10 @@ const WhatsInside = () => (
   <section id="spec" className="py-24 md:py-32">
     <div className="max-w-xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground/30 text-[10px] font-mono uppercase tracking-widest mb-2">
+        <p className="text-muted-foreground/30 font-mono text-[10px] uppercase tracking-widest mb-2">
           ── what's inside ──
         </p>
-        <p className="text-muted-foreground text-[12px] mb-10">A sample identity bundle.</p>
+        <p className="text-muted-foreground text-[13px] font-body mb-10">A sample identity bundle.</p>
       </FadeUp>
 
       <FadeUp delay={0.1}>
@@ -119,8 +119,8 @@ const WhatsInside = () => (
             { label: "Links", desc: "Verified connections" },
           ].map((item) => (
             <div key={item.label} className="py-3 border-l-2 border-accent/15 pl-3">
-              <p className="text-foreground text-[11px] font-mono mb-0.5">{item.label}</p>
-              <p className="text-muted-foreground/60 text-[10px]">{item.desc}</p>
+              <p className="text-foreground font-mono text-[11px] mb-0.5">{item.label}</p>
+              <p className="text-muted-foreground/60 font-body text-[11px]">{item.desc}</p>
             </div>
           ))}
         </div>

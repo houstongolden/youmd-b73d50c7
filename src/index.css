@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,36 +6,38 @@
 
 @layer base {
   :root {
-    /* Warm paper terminal */
-    --bg: 36 23% 95%;
-    --text: 0 0% 10%;
-    --muted: 30 6% 58%;
+    /* Dark mode is default */
+    --bg: 0 0% 4%;
+    --bg-raised: 0 0% 8%;
+    --text-primary: 30 10% 90%;
+    --text-secondary: 30 5% 42%;
+    --border-color: 0 0% 16%;
 
-    /* Burnt orange monochrome accent system */
-    --accent-900: 20 55% 40%;
+    /* Burnt orange accent system */
     --accent: 20 55% 50%;
-    --accent-700: 20 50% 55%;
-    --accent-500: 20 45% 68%;
-    --accent-300: 20 40% 84%;
+    --accent-dark: 20 60% 39%;
+    --accent-mid: 20 45% 59%;
+    --accent-light: 24 45% 75%;
+    --accent-wash: 20 30% 10%;
 
-    /* Semantic */
+    /* Semantic tokens */
     --background: var(--bg);
-    --foreground: var(--text);
+    --foreground: var(--text-primary);
 
-    --card: 36 20% 92%;
-    --card-foreground: var(--text);
+    --card: var(--bg-raised);
+    --card-foreground: var(--text-primary);
 
-    --popover: 36 20% 92%;
-    --popover-foreground: var(--text);
+    --popover: var(--bg-raised);
+    --popover-foreground: var(--text-primary);
 
     --primary: var(--accent);
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 36 15% 89%;
-    --secondary-foreground: var(--text);
+    --secondary: 0 0% 12%;
+    --secondary-foreground: var(--text-primary);
 
-    --muted-val: 36 12% 86%;
-    --muted-foreground: var(--muted);
+    --muted-val: 0 0% 14%;
+    --muted-foreground: var(--text-secondary);
 
     --accent-color: var(--accent);
     --accent-foreground: 0 0% 100%;
@@ -45,23 +47,43 @@
 
     --success: 130 40% 45%;
 
-    --border: 30 10% 82%;
-    --input: 36 15% 89%;
+    --border: var(--border-color);
+    --input: 0 0% 12%;
     --ring: var(--accent);
 
     --radius: 0.25rem;
 
-    --font-mono: "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", monospace;
+    --font-mono: "JetBrains Mono", "SF Mono", "Consolas", monospace;
+    --font-body: "Inter", -apple-system, system-ui, sans-serif;
 
-    /* Sidebar — not used on landing but needed for shadcn */
+    /* Sidebar */
     --sidebar-background: var(--bg);
-    --sidebar-foreground: var(--text);
+    --sidebar-foreground: var(--text-primary);
     --sidebar-primary: var(--accent);
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 36 15% 89%;
-    --sidebar-accent-foreground: var(--text);
-    --sidebar-border: var(--border);
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: var(--text-primary);
+    --sidebar-border: var(--border-color);
     --sidebar-ring: var(--accent);
+  }
+
+  /* Light mode override */
+  .light {
+    --bg: 36 23% 95%;
+    --bg-raised: 0 0% 100%;
+    --text-primary: 0 0% 10%;
+    --text-secondary: 30 6% 58%;
+    --border-color: 30 10% 88%;
+
+    --accent: 20 55% 50%;
+    --accent-dark: 20 60% 39%;
+    --accent-mid: 20 45% 59%;
+    --accent-light: 24 45% 75%;
+    --accent-wash: 30 30% 94%;
+
+    --secondary: 36 15% 89%;
+    --muted-val: 36 12% 86%;
+    --input: 36 15% 89%;
   }
 }
 
@@ -76,8 +98,8 @@ html {
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: var(--font-mono);
-    line-height: 1.7;
+    font-family: var(--font-body);
+    line-height: 1.65;
     font-size: 14px;
   }
 
@@ -85,11 +107,15 @@ html {
     font-family: var(--font-mono);
     line-height: 1.2;
   }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+  }
 }
 
-/* Terminal panel — light mode */
+/* Terminal panel */
 .terminal-panel {
-  background: hsl(36 20% 92%);
+  background: hsl(var(--bg-raised));
   border: 1px solid hsl(var(--border));
   border-radius: 4px;
 }
@@ -106,14 +132,14 @@ html {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: hsl(var(--muted) / 0.25);
+  background: hsl(var(--muted-foreground) / 0.15);
 }
 
 /* CLI pill */
 .cli-pill {
   font-family: var(--font-mono);
   @apply text-sm rounded transition-all duration-300 cursor-pointer select-none;
-  background: hsl(36 20% 92%);
+  background: hsl(var(--bg-raised));
   border: 1px solid hsl(var(--border));
 }
 
@@ -130,12 +156,12 @@ html {
 }
 
 .cta-primary:hover {
-  background: hsl(var(--accent-900));
+  background: hsl(var(--accent-dark));
 }
 
 .cta-outline {
   border: 1px solid hsl(var(--border));
-  color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
   font-family: var(--font-mono);
   @apply font-medium rounded transition-all duration-300;
 }
@@ -161,22 +187,22 @@ html {
   background: hsl(var(--border));
 }
 
-/* Beam — warm orange glow */
+/* Beam glow */
 @keyframes beam-pulse {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.3; }
+  0%, 100% { opacity: 0.08; }
+  50% { opacity: 0.18; }
 }
 
 .beam-glow {
-  background: radial-gradient(ellipse 60px 400px at center, hsl(var(--accent) / 0.15), hsl(var(--accent-500) / 0.06) 40%, transparent 70%);
+  background: radial-gradient(ellipse 60px 400px at center, hsl(var(--accent) / 0.12), hsl(var(--accent-mid) / 0.04) 40%, transparent 70%);
   animation: beam-pulse 5s ease-in-out infinite;
 }
 
 /* ASCII art color classes */
 .ascii-strong { color: hsl(var(--accent)); }
-.ascii-mid { color: hsl(var(--accent-700)); }
-.ascii-soft { color: hsl(var(--accent-500)); }
-.ascii-glow { color: hsl(var(--accent-300)); }
+.ascii-mid { color: hsl(var(--accent-mid)); }
+.ascii-soft { color: hsl(var(--accent-light)); }
+.ascii-glow { color: hsl(var(--accent-wash)); }
 
 /* Selection */
 ::selection {
@@ -191,11 +217,11 @@ html {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted) / 0.2);
+  background: hsl(var(--muted-foreground) / 0.15);
   border-radius: 3px;
 }
 
-/* Glass for nav */
+/* Glass nav */
 .glass-nav {
   background: hsl(var(--bg) / 0.9);
   border: 1px solid hsl(var(--border));

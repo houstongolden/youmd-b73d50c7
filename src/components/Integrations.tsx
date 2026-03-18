@@ -6,7 +6,7 @@ const Integrations = () => (
   <section className="py-16 md:py-24">
     <div className="max-w-xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground/30 text-[10px] font-mono uppercase tracking-widest mb-10 text-center">
+        <p className="text-muted-foreground/30 font-mono text-[10px] uppercase tracking-widest mb-10 text-center">
           ── compatible agents ──
         </p>
       </FadeUp>

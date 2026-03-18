@@ -6,19 +6,19 @@ const OpenSpec = () => (
       <div className="section-divider mb-12" />
       <FadeUp>
         <div className="text-center py-8">
-          <p className="text-muted-foreground/30 text-[10px] font-mono mb-6 tracking-wider uppercase">
+          <p className="text-muted-foreground/30 font-mono text-[10px] mb-6 tracking-wider uppercase">
             ── open standard ──
           </p>
-          <p className="text-foreground/70 text-[14px] font-mono font-light leading-relaxed">
+          <p className="text-foreground/70 font-mono text-[14px] font-light leading-relaxed">
             <span className="text-accent">you-md/v1</span> is an open spec.
           </p>
-          <p className="text-muted-foreground text-[12px] mt-2">
+          <p className="text-muted-foreground font-body text-[13px] mt-2">
             Read it, fork it, build on it.
           </p>
           <div className="mt-6">
             <a
               href="#"
-              className="text-muted-foreground/40 text-[11px] font-mono hover:text-accent transition-colors"
+              className="text-muted-foreground/40 font-mono text-[11px] hover:text-accent transition-colors"
             >
               &gt; cat spec.you.md →
             </a>
