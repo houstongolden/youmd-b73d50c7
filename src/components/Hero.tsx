@@ -26,7 +26,7 @@ const CliPill = () => {
         <span className="text-teal text-xs font-mono">Copied ✓</span>
       ) : (
         <span className="text-foreground/30 text-[11px] tracking-wide">
-          Claims your username · Builds your bundle · Publishes in 60 seconds
+          <span className="font-medium text-foreground/60">you.md</span>/username · Public or private · Readable by any agent or AI search engine
         </span>
       )}
     </div>
@@ -65,9 +65,9 @@ const Hero = () => {
           className="text-foreground text-4xl md:text-6xl lg:text-[4.5rem] font-display font-light mb-5 leading-[1.08]"
           style={{ letterSpacing: "0.01em" }}
         >
-          Your identity file for
+          The agent internet doesn't know
           <br />
-          the agent internet.
+          who you are. Yet.
         </motion.h1>
 
         <motion.p
@@ -76,7 +76,7 @@ const Hero = () => {
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.35 }}
           className="text-foreground/50 text-base md:text-lg mb-10 max-w-lg mx-auto leading-relaxed"
         >
-          You.md is a structured identity bundle — context, preferences, voice, and goals — that travels with you across every AI interaction.
+          One command creates your permanent identity file — context, voice, goals — and publishes it to a URL every AI can read. Claim yours before someone else does.
         </motion.p>
 
         <motion.div
