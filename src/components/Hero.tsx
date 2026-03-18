@@ -76,7 +76,7 @@ const Hero = () => {
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.35 }}
           className="text-foreground/50 text-base md:text-lg mb-10 max-w-lg mx-auto leading-relaxed"
         >
-          You.md is a structured identity bundle — context, preferences, voice, and goals — that travels with you across every AI interaction.
+          One command creates your permanent identity file — context, voice, goals — and publishes it to a URL every AI can read. Claim yours before someone else does.
         </motion.p>
 
         <motion.div
