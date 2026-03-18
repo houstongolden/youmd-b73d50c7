@@ -40,11 +40,11 @@ const Hero = () => {
   return (
     <section className="relative min-h-[110vh] flex flex-col items-center justify-end overflow-hidden">
       {/* Hero image — warm only */}
-      <motion.div className="absolute inset-0" style={{ y: parallaxY }}>
+      <motion.div className="absolute inset-0 -top-[80px]" style={{ y: parallaxY }}>
         <img
           src={heroWarm}
           alt="A figure standing in a warm beam of light"
-          className="w-full h-full object-cover object-[center_30%]"
+          className="w-full h-[calc(100%+80px)] object-cover object-[center_15%]"
         />
       </motion.div>
 
