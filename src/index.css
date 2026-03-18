@@ -71,8 +71,8 @@
   .light {
     --bg: 36 20% 96%;
     --bg-raised: 0 0% 100%;
-    --text-primary: 0 0% 12%;
-    --text-secondary: 30 6% 40%;
+    --text-primary: 0 0% 8%;
+    --text-secondary: 30 8% 32%;
     --border-color: 30 10% 84%;
 
     --accent: 20 60% 45%;
