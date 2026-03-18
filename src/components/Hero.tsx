@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 
-/* ── ASCII Art ── */
+/* ── Refined ASCII — UFO + Beam + Avatar ── */
 const asciiLines = [
   { text: "              █████████████████████", cls: "ascii-strong" },
   { text: "         █████████████████████████████", cls: "ascii-strong" },
@@ -13,16 +13,15 @@ const asciiLines = [
   { text: "          ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", cls: "ascii-soft" },
   { text: "             ░░░░░░░░░░░░░░░░░░░░", cls: "ascii-glow" },
   { text: "", cls: "" },
-  { text: "                  ╲░░░░░░░░░░░╱", cls: "ascii-glow" },
-  { text: "                   ╲░░░░░░░░░╱", cls: "ascii-glow" },
-  { text: "                   │░░░░░░░░░│", cls: "ascii-glow" },
-  { text: "                   │░░▒▒▒▒░░░│", cls: "ascii-soft" },
-  { text: "                   │░▒████▒░░│", cls: "ascii-mid" },
-  { text: "                   │░█    █░░│", cls: "ascii-strong" },
-  { text: "                   │░█ ██ █░░│", cls: "ascii-strong" },
-  { text: "                   │░█ ██ █░░│", cls: "ascii-strong" },
-  { text: "                   │░█____█░░│", cls: "ascii-strong" },
-  { text: "                   │░░ ░░ ░░░│", cls: "ascii-glow" },
+  { text: "                   ║░░░░░░░░║", cls: "ascii-glow" },
+  { text: "                   ║░░░░░░░░║", cls: "ascii-glow" },
+  { text: "                   ║░░▒▒▒░░░║", cls: "ascii-soft" },
+  { text: "                   ║░▒████░░║", cls: "ascii-mid" },
+  { text: "                   ║░█    █░║", cls: "ascii-strong" },
+  { text: "                   ║░█ ██ █░║", cls: "ascii-strong" },
+  { text: "                   ║░█ ██ █░║", cls: "ascii-strong" },
+  { text: "                   ║░█____█░║", cls: "ascii-strong" },
+  { text: "                   ║░  ░░  ░║", cls: "ascii-glow" },
 ];
 
 /* ── Boot sequence ── */
@@ -88,29 +87,19 @@ const Hero = () => {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* Beam glow */}
+      {/* Beam glow — subtle vertical light */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[80%] beam-glow pointer-events-none" />
 
       <motion.div
         className="relative z-10 text-center px-6 max-w-2xl"
         style={{ opacity: contentOpacity }}
       >
-        {/* Version */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-muted-foreground/40 text-[10px] mb-6 tracking-widest uppercase"
-        >
-          v1.0.0
-        </motion.p>
-
         {/* Boot sequence */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="mb-8 flex justify-center"
+          className="mb-10 flex justify-center"
         >
           <BootSequence />
         </motion.div>
@@ -120,19 +109,19 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 2.4 }}
-          className="text-[8px] md:text-[10px] lg:text-[11px] leading-[1.3] mb-8 select-none"
+          className="text-[7px] md:text-[10px] lg:text-[11px] leading-[1.3] mb-10 select-none"
         >
           {asciiLines.map((line, i) => (
             <div key={i} className={line.cls}>{line.text || "\u00A0"}</div>
           ))}
         </motion.pre>
 
-        {/* Title */}
+        {/* Title — tightened */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 2.8 }}
-          className="mb-3"
+          className="mb-4"
         >
           <h1 className="text-foreground text-2xl md:text-4xl font-mono font-light tracking-tight">
             YOU.MD
@@ -143,43 +132,42 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 3.0 }}
-          className="text-muted-foreground text-[13px] mb-3"
+          className="text-muted-foreground text-[13px] mb-2 leading-relaxed"
         >
-          your identity file for the agent internet
+          your identity file
         </motion.p>
-
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 3.2 }}
-          className="text-muted-foreground/50 text-[11px] mb-10"
+          transition={{ duration: 0.5, delay: 3.1 }}
+          className="text-muted-foreground text-[13px] mb-10 leading-relaxed"
         >
-          agent.md + memory.md + context.md → <span className="text-accent">you.md</span>
+          for the agent internet
         </motion.p>
 
         {/* CLI pill */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 3.4 }}
-          className="mb-10"
+          transition={{ duration: 0.5, delay: 3.3 }}
+          className="mb-12"
         >
           <CliPill />
         </motion.div>
 
-        {/* Command links */}
+        {/* Command links — not buttons */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 3.6 }}
-          className="flex items-center justify-center gap-6 text-[12px]"
+          transition={{ duration: 0.6, delay: 3.5 }}
+          className="flex items-center justify-center gap-8 text-[12px]"
         >
-          <a href="#spec" className="text-muted-foreground/50 hover:text-accent transition-colors">
-            &gt; docs
+          <a href="#get-started" className="text-muted-foreground/50 hover:text-accent transition-colors">
+            &gt; enter system
           </a>
-          <Link to="/profiles" className="text-muted-foreground/50 hover:text-accent transition-colors">
-            &gt; profiles
-          </Link>
+          <a href="#spec" className="text-muted-foreground/50 hover:text-accent transition-colors">
+            &gt; view spec
+          </a>
           <a href="#" className="text-muted-foreground/50 hover:text-accent transition-colors">
             &gt; github
           </a>
