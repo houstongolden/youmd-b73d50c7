@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,92 +6,75 @@
 
 @layer base {
   :root {
-    /* PRD palette — warm ascending to cool to luminous */
+    /* Terminal palette */
+    --void: 220 20% 4%;
+    --ink: 220 16% 8%;
+    --panel: 220 14% 11%;
+    --surface: 220 12% 14%;
+    --border-dim: 220 10% 18%;
+    --mist: 220 8% 45%;
+
+    /* Accent colors — terminal inspired */
+    --green: 142 60% 55%;
+    --cyan: 185 55% 55%;
+    --amber: 38 90% 62%;
     --coral: 7 72% 69%;
+    --red: 0 70% 60%;
+
+    /* Semantic tokens */
+    --background: var(--void);
+    --foreground: 60 10% 85%;
+
+    --card: var(--ink);
+    --card-foreground: 60 10% 85%;
+
+    --popover: var(--ink);
+    --popover-foreground: 60 10% 85%;
+
+    --primary: var(--green);
+    --primary-foreground: var(--void);
+
+    --secondary: var(--panel);
+    --secondary-foreground: 60 10% 85%;
+
+    --muted: var(--panel);
+    --muted-foreground: var(--mist);
+
+    --accent: var(--amber);
+    --accent-foreground: var(--void);
+
+    --destructive: var(--red);
+    --destructive-foreground: 60 10% 85%;
+
+    --border: var(--border-dim);
+    --input: var(--surface);
+    --ring: var(--green);
+
+    --radius: 0.375rem;
+
+    /* Legacy aliases */
+    --sand: 220 20% 4%;
+    --mauve: var(--panel);
+    --teal: var(--cyan);
+    --golden: var(--amber);
+    --dusk: var(--void);
+    --sky: var(--cyan);
+    --light: 60 10% 85%;
+    --gold: var(--amber);
+    --ether: 200 20% 70%;
     --blush: 15 76% 77%;
-    --sky: 196 52% 65%;
-    --ether: 200 42% 81%;
-    --gold: 43 85% 75%;
-    --light: 42 100% 95%;
-    --void: 222 35% 7%;
-    --ink: 224 27% 14%;
-    --mist: 210 18% 60%;
 
-    /* Dark mode default — profiles live in the void */
-    --background: 222 35% 7%;
-    --foreground: 42 100% 95%;
+    --glass-bg: var(--ink);
+    --glass-border: var(--border-dim);
 
-    --card: 224 27% 14%;
-    --card-foreground: 42 100% 95%;
-
-    --popover: 224 27% 14%;
-    --popover-foreground: 42 100% 95%;
-
-    --primary: 7 72% 69%;
-    --primary-foreground: 222 35% 7%;
-
-    --secondary: 224 27% 18%;
-    --secondary-foreground: 42 100% 95%;
-
-    --muted: 224 27% 18%;
-    --muted-foreground: 210 18% 60%;
-
-    --accent: 43 85% 75%;
-    --accent-foreground: 222 35% 7%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 42 100% 95%;
-
-    --border: 224 20% 20%;
-    --input: 224 20% 22%;
-    --ring: 7 72% 69%;
-
-    --radius: 0.5rem;
-
-    /* Legacy aliases for existing components */
-    --sand: 27 33% 91%;
-    --mauve: 272 18% 93%;
-    --teal: 196 52% 65%;
-    --golden: 43 85% 75%;
-    --dusk: 222 35% 7%;
-
-    --glass-bg: 224 27% 14%;
-    --glass-border: 210 18% 30%;
-
-    --sidebar-background: 222 35% 7%;
-    --sidebar-foreground: 42 100% 95%;
-    --sidebar-primary: 7 72% 69%;
-    --sidebar-primary-foreground: 222 35% 7%;
-    --sidebar-accent: 224 27% 18%;
-    --sidebar-accent-foreground: 42 100% 95%;
-    --sidebar-border: 224 20% 20%;
-    --sidebar-ring: 7 72% 69%;
-  }
-
-  /* Landing page overrides — warm sand aesthetic stays for marketing */
-  .landing-page {
-    --background: 27 33% 91%;
-    --foreground: 30 10% 28%;
-    --card: 27 33% 91%;
-    --card-foreground: 30 10% 28%;
-    --popover: 27 33% 91%;
-    --popover-foreground: 30 10% 28%;
-    --primary: 172 43% 65%;
-    --primary-foreground: 30 10% 28%;
-    --secondary: 272 18% 93%;
-    --secondary-foreground: 30 10% 28%;
-    --muted: 272 18% 93%;
-    --muted-foreground: 30 8% 48%;
-    --accent: 39 89% 72%;
-    --accent-foreground: 30 10% 28%;
-    --border: 30 12% 82%;
-    --input: 30 12% 78%;
-    --ring: 172 43% 65%;
-    --teal: 172 43% 65%;
-    --golden: 39 89% 72%;
-    --dusk: 30 14% 9%;
-    --glass-bg: 0 0% 100%;
-    --glass-border: 0 0% 100%;
+    --sidebar-background: var(--void);
+    --sidebar-foreground: 60 10% 85%;
+    --sidebar-primary: var(--green);
+    --sidebar-primary-foreground: var(--void);
+    --sidebar-accent: var(--panel);
+    --sidebar-accent-foreground: 60 10% 85%;
+    --sidebar-border: var(--border-dim);
+    --sidebar-ring: var(--green);
   }
 }
 
@@ -105,86 +88,115 @@ html {
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground font-mono antialiased;
     line-height: 1.7;
+    font-size: 14px;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
-    line-height: 1.15;
+    @apply font-mono;
+    line-height: 1.2;
   }
 }
 
-/* Liquid glass — refined frosted */
+/* Terminal panel */
+.terminal-panel {
+  background: hsl(var(--ink));
+  border: 1px solid hsl(var(--border-dim));
+  border-radius: 8px;
+}
+
+.terminal-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid hsl(var(--border-dim));
+}
+
+.terminal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: hsl(var(--mist) / 0.2);
+}
+
+/* Glass variants for dark terminal */
 .glass {
-  background: hsl(var(--glass-bg) / 0.06);
-  border: 1px solid hsl(var(--glass-border) / 0.12);
-  backdrop-filter: blur(20px) saturate(1.2);
-  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  background: hsl(var(--ink) / 0.6);
+  border: 1px solid hsl(var(--border-dim) / 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .glass-scrolled {
-  background: hsl(var(--glass-bg) / 0.55);
-  border: 1px solid hsl(var(--glass-border) / 0.3);
-  backdrop-filter: blur(24px) saturate(1.3);
-  -webkit-backdrop-filter: blur(24px) saturate(1.3);
-  box-shadow: 0 1px 12px -4px hsl(var(--foreground) / 0.06);
+  background: hsl(var(--ink) / 0.85);
+  border: 1px solid hsl(var(--border-dim));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-/* CLI pill — frosted glass terminal */
+.glass-card {
+  background: hsl(var(--ink) / 0.6);
+  border: 1px solid hsl(var(--border-dim));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-card-dark {
+  background: hsl(var(--ink) / 0.8);
+  border: 1px solid hsl(var(--border-dim));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* CLI pill — terminal native */
 .cli-pill {
-  @apply font-mono text-sm rounded-full transition-all duration-300 cursor-pointer select-none;
-  background: hsl(var(--glass-bg) / 0.45);
-  border: 1px solid hsl(var(--glass-border) / 0.5);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 2px 16px -4px hsl(var(--foreground) / 0.06);
+  @apply font-mono text-sm rounded-lg transition-all duration-300 cursor-pointer select-none;
+  background: hsl(var(--panel));
+  border: 1px solid hsl(var(--border-dim));
 }
 
 .cli-pill:hover {
-  background: hsl(var(--glass-bg) / 0.6);
-  border-color: hsl(var(--teal) / 0.3);
-  box-shadow: 0 0 28px 4px hsl(var(--teal) / 0.2);
+  border-color: hsl(var(--green) / 0.4);
+  box-shadow: 0 0 20px 2px hsl(var(--green) / 0.08);
 }
 
-/* Teal pulse glow behind CLI pill */
-@keyframes teal-pulse {
-  0%, 100% { box-shadow: 0 2px 16px -4px hsl(var(--foreground) / 0.06), 0 0 16px 2px hsl(var(--teal) / 0.06); }
-  50% { box-shadow: 0 2px 16px -4px hsl(var(--foreground) / 0.06), 0 0 24px 6px hsl(var(--teal) / 0.14); }
+/* Green pulse glow */
+@keyframes green-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 16px 2px hsl(var(--green) / 0.08); }
 }
 
 .cli-glow {
-  animation: teal-pulse 3.5s ease-in-out infinite;
+  animation: green-pulse 3s ease-in-out infinite;
 }
 
 .cli-glow:hover {
   animation: none;
 }
 
-/* Teal glow CTA (landing page) */
-.cta-teal {
-  @apply bg-teal text-dusk font-medium rounded-full transition-all duration-300;
-  box-shadow: 0 2px 12px -2px hsl(var(--teal) / 0.25);
+/* CTA buttons */
+.cta-teal, .cta-green {
+  background: hsl(var(--green));
+  color: hsl(var(--void));
+  @apply font-mono font-medium rounded-lg transition-all duration-300;
 }
 
-.cta-teal:hover {
-  box-shadow: 0 4px 24px -2px hsl(var(--teal) / 0.4);
-  filter: brightness(1.06);
-  transform: translateY(-1px);
+.cta-teal:hover, .cta-green:hover {
+  box-shadow: 0 0 20px 2px hsl(var(--green) / 0.25);
+  filter: brightness(1.1);
 }
 
-/* Coral CTA (profile/dark pages) */
 .cta-coral {
   background: hsl(var(--coral));
   color: hsl(var(--void));
-  @apply font-medium rounded-full transition-all duration-300;
-  box-shadow: 0 2px 12px -2px hsl(var(--coral) / 0.3);
+  @apply font-mono font-medium rounded-lg transition-all duration-300;
 }
 
 .cta-coral:hover {
-  box-shadow: 0 4px 24px -2px hsl(var(--coral) / 0.5);
-  filter: brightness(1.08);
-  transform: translateY(-1px);
+  box-shadow: 0 0 20px 2px hsl(var(--coral) / 0.25);
+  filter: brightness(1.1);
 }
 
 /* Blinking cursor */
@@ -197,41 +209,44 @@ html {
   animation: blink 1s step-end infinite;
 }
 
-/* Glass card — content sections */
-.glass-card {
-  background: hsl(var(--glass-bg) / 0.45);
-  border: 1px solid hsl(var(--glass-border) / 0.45);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 2px 20px -6px hsl(var(--foreground) / 0.04);
-}
-
-/* Dark glass card — for profile pages */
-.glass-card-dark {
-  background: hsl(var(--ink) / 0.6);
-  border: 1px solid hsl(var(--mist) / 0.12);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
 /* Section divider */
 .section-divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, hsl(var(--border) / 0.5), transparent);
+  background: hsl(var(--border-dim));
 }
 
-/* Beam of light — the recurring brand motif */
+/* Beam of light motif — subtle vertical glow */
 @keyframes beam-pulse {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.25; }
+  0%, 100% { opacity: 0.06; }
+  50% { opacity: 0.12; }
 }
 
 .beam-glow {
-  background: radial-gradient(ellipse 120px 600px at center, hsl(var(--gold) / 0.15), hsl(var(--coral) / 0.05) 40%, transparent 70%);
-  animation: beam-pulse 4s ease-in-out infinite;
+  background: radial-gradient(ellipse 80px 500px at center, hsl(var(--green) / 0.12), hsl(var(--cyan) / 0.04) 40%, transparent 70%);
+  animation: beam-pulse 5s ease-in-out infinite;
 }
 
-/* Selection color */
+/* Scanline overlay */
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    hsl(var(--void) / 0.03) 2px,
+    hsl(var(--void) / 0.03) 4px
+  );
+  pointer-events: none;
+}
+
+/* Selection */
 ::selection {
-  background: hsl(var(--coral) / 0.3);
+  background: hsl(var(--green) / 0.3);
+}
+
+/* Landing page class no longer needed — everything is dark terminal now */
+.landing-page {
+  /* no overrides */
 }
