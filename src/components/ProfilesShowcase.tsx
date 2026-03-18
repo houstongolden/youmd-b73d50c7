@@ -47,13 +47,19 @@ const ProfilesShowcase = () => {
                     {/* Status dot */}
                     <span className="w-1.5 h-1.5 rounded-full bg-success/60 shrink-0" />
 
-                    {/* Avatar */}
-                    <div className="w-8 h-8 rounded overflow-hidden border border-border group-hover:border-accent/30 transition-colors shrink-0 bg-background">
+                    {/* Avatar — ASCII default, real photo on hover */}
+                    <div className="w-8 h-8 rounded overflow-hidden border border-border group-hover:border-accent/30 transition-colors shrink-0 bg-background relative">
                       <AsciiAvatar
                         src={profile.avatarUrl}
                         cols={120}
                         canvasWidth={64}
                         className="w-full h-full object-cover"
+                      />
+                      <img
+                        src={profile.avatarUrl}
+                        alt={profile.name}
+                        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                        loading="lazy"
                       />
                     </div>
 
