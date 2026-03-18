@@ -14,10 +14,10 @@ const ProblemStrip = () => {
     <section ref={ref} className="py-24 md:py-32 overflow-hidden">
       <motion.div className="max-w-xl mx-auto px-6 text-center" style={{ y }}>
         <FadeUp>
-          <p className="text-muted-foreground/30 font-mono text-[10px] mb-8 tracking-widest uppercase">
+          <p className="text-muted-foreground/60 font-mono text-[10px] mb-8 tracking-widest uppercase">
             ── the problem ──
           </p>
-          <p className="text-foreground/80 font-mono text-[15px] md:text-[17px] font-light leading-[1.8] tracking-tight">
+          <p className="text-foreground/90 font-mono text-[15px] md:text-[17px] font-light leading-[1.8] tracking-tight">
             The agent internet doesn't know who you are.{" "}
             <span className="text-accent">Yet.</span>
           </p>
@@ -31,7 +31,7 @@ const ProblemStrip = () => {
             {["no memory", "no context", "no identity"].map((item, i) => (
               <motion.span
                 key={item}
-                className="text-destructive/40 border border-destructive/10 px-3 py-1 rounded"
+                className="text-destructive/70 border border-destructive/20 px-3 py-1 rounded"
                 whileInView={{ opacity: [0, 1] }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 + i * 0.1 }}
@@ -42,7 +42,7 @@ const ProblemStrip = () => {
           </div>
         </FadeUp>
         <FadeUp delay={0.25}>
-          <p className="text-accent/50 font-mono text-[11px] mt-8">
+          <p className="text-accent/70 font-mono text-[11px] mt-8">
             one command changes that →
           </p>
         </FadeUp>
