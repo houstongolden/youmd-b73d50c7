@@ -42,8 +42,8 @@ const FounderQuote = () => (
 
           <div className="mt-8 pt-6 border-t border-border">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded bg-accent-wash border border-border flex items-center justify-center font-mono text-[10px] text-accent font-medium">
-                HG
+              <div className="w-10 h-10 rounded overflow-hidden border border-border">
+                <AsciiAvatar src={houstonImg} cols={40} canvasWidth={40} className="w-full h-full object-cover" />
               </div>
               <div>
                 <div className="font-mono text-xs text-foreground/80">Houston Golden</div>
