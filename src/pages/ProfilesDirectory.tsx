@@ -12,15 +12,15 @@ const ProfileCard = ({ profile, index }: { profile: typeof sampleProfiles[0]; in
   >
     <Link
       to={`/profile/${profile.username}`}
-      className="terminal-panel p-4 md:p-5 block group hover:border-accent/30 transition-all duration-300 rounded"
+      className="block py-4 border-b border-border group hover:bg-accent-wash/30 transition-colors px-2 -mx-2 rounded"
     >
       <div className="flex items-start gap-4">
-        <div className="w-10 h-10 rounded border border-border flex items-center justify-center text-accent/60 font-mono text-[12px] font-medium shrink-0 group-hover:border-accent/30 transition-colors bg-secondary">
+        <div className="w-8 h-8 rounded border border-border flex items-center justify-center text-accent/50 font-mono text-[11px] font-medium shrink-0 group-hover:border-accent/30 transition-colors">
           {profile.name.split(" ").map(n => n[0]).join("")}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="text-foreground text-[13px] font-mono font-medium tracking-tight truncate">
+            <h3 className="text-foreground font-mono text-[13px] font-medium tracking-tight truncate">
               {profile.name}
             </h3>
             <ArrowRight
@@ -28,23 +28,10 @@ const ProfileCard = ({ profile, index }: { profile: typeof sampleProfiles[0]; in
               className="text-muted-foreground/15 group-hover:text-accent group-hover:translate-x-0.5 transition-all shrink-0"
             />
           </div>
-          <p className="text-muted-foreground text-[11px] font-mono mt-0.5 truncate">{profile.tagline}</p>
-          <div className="flex items-center gap-1 mt-1 text-muted-foreground/40 text-[10px] font-mono">
+          <p className="text-muted-foreground font-body text-[12px] mt-0.5 truncate">{profile.tagline}</p>
+          <div className="flex items-center gap-1 mt-1 text-muted-foreground/40 font-mono text-[10px]">
             <MapPin size={9} />
             <span>{profile.location}</span>
-          </div>
-          <p className="text-muted-foreground/60 text-[11px] mt-2.5 leading-relaxed line-clamp-2 font-mono">
-            {profile.bio.short}
-          </p>
-          <div className="flex flex-wrap gap-1.5 mt-2.5">
-            {profile.topics.slice(0, 3).map((topic) => (
-              <span
-                key={topic}
-                className="text-[9px] font-mono px-2 py-0.5 rounded border border-accent/15 text-accent/50"
-              >
-                {topic}
-              </span>
-            ))}
           </div>
         </div>
       </div>
@@ -53,37 +40,31 @@ const ProfileCard = ({ profile, index }: { profile: typeof sampleProfiles[0]; in
 );
 
 const ProfilesDirectory = () => (
-  <div className="min-h-screen relative">
-    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80px] h-[500px] beam-glow pointer-events-none" />
-
+  <div className="min-h-screen">
     <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:pt-4">
-      <div className="max-w-2xl mx-auto flex items-center justify-between gap-6 px-4 py-2 glass-nav rounded">
-        <Link to="/" className="text-accent font-mono text-[13px] font-medium">
-          you.md
-        </Link>
-        <span className="text-muted-foreground/40 text-[11px] font-mono">
-          /profiles
-        </span>
+      <div className="max-w-[640px] mx-auto flex items-center justify-between px-4 py-2 glass-nav rounded">
+        <Link to="/" className="text-accent font-mono text-[12px]">you.md</Link>
+        <span className="text-muted-foreground/40 font-mono text-[10px]">/profiles</span>
       </div>
     </nav>
 
-    <div className="pt-24 pb-20 px-6 relative z-10">
-      <div className="max-w-2xl mx-auto">
+    <div className="pt-20 pb-20 px-6">
+      <div className="max-w-[640px] mx-auto">
         <FadeUp>
           <div className="mb-10">
-            <p className="text-muted-foreground/40 text-[10px] font-mono uppercase tracking-widest mb-2">
+            <p className="text-muted-foreground/40 font-mono text-[10px] uppercase tracking-widest mb-2">
               directory
             </p>
-            <h1 className="text-foreground text-xl md:text-2xl font-mono font-light tracking-tight mb-3">
+            <h1 className="text-foreground font-mono text-xl md:text-2xl font-light tracking-tight mb-3">
               &gt; ls /profiles
             </h1>
-            <p className="text-muted-foreground text-[11px] leading-relaxed max-w-md font-mono">
-              Identity bundles published to the network. Each readable by any agent on earth.
+            <p className="text-muted-foreground font-body text-[13px] leading-relaxed max-w-md">
+              Identity bundles published to the network. Each readable by any agent.
             </p>
           </div>
         </FadeUp>
 
-        <div className="grid gap-3">
+        <div>
           {sampleProfiles.map((profile, i) => (
             <ProfileCard key={profile.username} profile={profile} index={i} />
           ))}
@@ -95,7 +76,7 @@ const ProfilesDirectory = () => (
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <Link to="/" className="text-muted-foreground/30 text-[11px] font-mono hover:text-accent transition-colors">
+          <Link to="/" className="text-muted-foreground/30 font-mono text-[11px] hover:text-accent transition-colors">
             &gt; cd ~/you.md
           </Link>
         </motion.div>

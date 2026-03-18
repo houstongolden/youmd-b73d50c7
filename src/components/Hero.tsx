@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
-import { Link } from "react-router-dom";
 
-/* ── Refined ASCII — UFO + Beam + Avatar ── */
+/* ── ASCII — UFO + Beam + Avatar (orange monochrome shading) ── */
 const asciiLines = [
   { text: "              █████████████████████", cls: "ascii-strong" },
   { text: "         █████████████████████████████", cls: "ascii-strong" },
@@ -13,15 +12,15 @@ const asciiLines = [
   { text: "          ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", cls: "ascii-soft" },
   { text: "             ░░░░░░░░░░░░░░░░░░░░", cls: "ascii-glow" },
   { text: "", cls: "" },
-  { text: "                   ║░░░░░░░░║", cls: "ascii-glow" },
-  { text: "                   ║░░░░░░░░║", cls: "ascii-glow" },
-  { text: "                   ║░░▒▒▒░░░║", cls: "ascii-soft" },
+  { text: "                   ║░░░░░░░░║", cls: "ascii-soft" },
+  { text: "                   ║░░░░░░░░║", cls: "ascii-soft" },
+  { text: "                   ║░░▒▒▒░░░║", cls: "ascii-mid" },
   { text: "                   ║░▒████░░║", cls: "ascii-mid" },
   { text: "                   ║░█    █░║", cls: "ascii-strong" },
   { text: "                   ║░█ ██ █░║", cls: "ascii-strong" },
   { text: "                   ║░█ ██ █░║", cls: "ascii-strong" },
   { text: "                   ║░█____█░║", cls: "ascii-strong" },
-  { text: "                   ║░  ░░  ░║", cls: "ascii-glow" },
+  { text: "                   ║░  ░░  ░║", cls: "ascii-soft" },
 ];
 
 /* ── Boot sequence ── */
@@ -48,7 +47,7 @@ const BootSequence = () => {
           key={i}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className={`text-[11px] leading-relaxed ${line.accent ? "text-accent font-medium" : "text-muted-foreground"}`}
+          className={`font-mono text-[11px] leading-relaxed ${line.accent ? "text-accent font-medium" : "text-muted-foreground"}`}
         >
           {line.accent ? `› ${line.text}` : `  ${line.text}`}
         </motion.div>
@@ -87,7 +86,7 @@ const Hero = () => {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* Beam glow — subtle vertical light */}
+      {/* Beam glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[80%] beam-glow pointer-events-none" />
 
       <motion.div
@@ -109,14 +108,14 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 2.4 }}
-          className="text-[7px] md:text-[10px] lg:text-[11px] leading-[1.3] mb-10 select-none"
+          className="font-mono text-[7px] md:text-[10px] lg:text-[11px] leading-[1.3] mb-10 select-none"
         >
           {asciiLines.map((line, i) => (
             <div key={i} className={line.cls}>{line.text || "\u00A0"}</div>
           ))}
         </motion.pre>
 
-        {/* Title — tightened */}
+        {/* Title */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -132,7 +131,7 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 3.0 }}
-          className="text-muted-foreground text-[13px] mb-2 leading-relaxed"
+          className="text-muted-foreground font-mono text-[13px] mb-2 leading-relaxed"
         >
           your identity file
         </motion.p>
@@ -140,7 +139,7 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 3.1 }}
-          className="text-muted-foreground text-[13px] mb-10 leading-relaxed"
+          className="text-muted-foreground font-mono text-[13px] mb-10 leading-relaxed"
         >
           for the agent internet
         </motion.p>
@@ -155,12 +154,12 @@ const Hero = () => {
           <CliPill />
         </motion.div>
 
-        {/* Command links — not buttons */}
+        {/* Command links */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 3.5 }}
-          className="flex items-center justify-center gap-8 text-[12px]"
+          className="flex items-center justify-center gap-8 font-mono text-[12px]"
         >
           <a href="#get-started" className="text-muted-foreground/50 hover:text-accent transition-colors">
             &gt; enter system

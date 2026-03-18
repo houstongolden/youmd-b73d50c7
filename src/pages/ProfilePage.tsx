@@ -1,78 +1,21 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, MapPin, ExternalLink, Copy, Check } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { MapPin, ExternalLink, Copy, Check } from "lucide-react";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import { sampleProfiles } from "@/data/sampleProfiles";
-
-const TypewriterBlock = ({ lines, inView }: { lines: string[]; inView: boolean }) => {
-  const [visibleChars, setVisibleChars] = useState(0);
-  const totalChars = lines.join("\n").length;
-
-  useEffect(() => {
-    if (!inView) return;
-    let current = 0;
-    const interval = setInterval(() => {
-      current += 3;
-      if (current >= totalChars) {
-        setVisibleChars(totalChars);
-        clearInterval(interval);
-      } else {
-        setVisibleChars(current);
-      }
-    }, 12);
-    return () => clearInterval(interval);
-  }, [inView, totalChars]);
-
-  const fullText = lines.join("\n");
-  const visibleText = fullText.slice(0, visibleChars);
-  const visibleLines = visibleText.split("\n");
-
-  const renderLine = (line: string) => {
-    if (line === "---") return <span className="text-muted-foreground/20">{line}</span>;
-    if (line === "") return <span>&nbsp;</span>;
-    if (line.startsWith("# ")) return <span className="text-accent font-medium">{line}</span>;
-    if (line.startsWith("## ")) return <span className="text-accent-700">{line}</span>;
-    if (line.startsWith("- **")) {
-      const match = line.match(/^- \*\*(.+?)\*\*(.*)$/);
-      if (match) return <><span className="text-accent/80">- <strong>{match[1]}</strong></span><span className="text-muted-foreground/60">{match[2]}</span></>;
-    }
-    if (line.startsWith("- ")) return <span className="text-foreground/60">{line}</span>;
-    if (line.startsWith("> ")) return <span className="text-muted-foreground/30 italic">{line}</span>;
-    const colonIdx = line.indexOf(":");
-    if (colonIdx > 0 && colonIdx < 20) {
-      const key = line.slice(0, colonIdx);
-      const val = line.slice(colonIdx);
-      return <><span className="text-accent/70">{key}</span><span className="text-muted-foreground/50">{val}</span></>;
-    }
-    return <span className="text-foreground/60">{line}</span>;
-  };
-
-  return (
-    <pre className="font-mono text-[11px] md:text-[12px] leading-[1.9] whitespace-pre-wrap">
-      <code>
-        {visibleLines.map((line, i) => (
-          <div key={i}>{renderLine(line)}</div>
-        ))}
-        {visibleChars < totalChars && <span className="cursor-blink text-accent">█</span>}
-      </code>
-    </pre>
-  );
-};
 
 const ProfilePage = () => {
   const { username } = useParams();
   const profile = sampleProfiles.find((p) => p.username === username);
   const [copied, setCopied] = useState(false);
-  const codeRef = useRef(null);
-  const inView = useInView(codeRef, { once: true, margin: "-50px" });
 
   if (!profile) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <div className="text-center">
-          <p className="text-destructive text-[11px] font-mono mb-2">ERROR 404</p>
-          <h1 className="text-foreground text-xl font-mono font-light mb-3">Profile not found</h1>
-          <p className="text-muted-foreground text-[12px] mb-6">This you.md username doesn't exist yet.</p>
+          <p className="text-destructive font-mono text-[11px] mb-2">✗ ERROR 404</p>
+          <h1 className="text-foreground font-mono text-xl font-light mb-3">Profile not found</h1>
+          <p className="text-muted-foreground font-body text-[13px] mb-6">This you.md username doesn't exist yet.</p>
           <Link to="/profiles" className="cta-primary px-5 py-2 text-[11px] inline-block">
             &gt; ls /profiles
           </Link>
@@ -81,199 +24,185 @@ const ProfilePage = () => {
     );
   }
 
-  const codeLines = [
-    "---",
-    "schema: you-md/v1",
-    `name: ${profile.name}`,
-    `username: ${profile.username}`,
-    "---",
-    "",
-    `# ${profile.name}`,
-    "",
-    profile.tagline,
-    "",
-    "## Now",
-    "",
-    ...profile.now.map((n) => `- ${n}`),
-    "",
-    "## Projects",
-    "",
-    ...profile.projects.map((p) => `- **${p.name}** — ${p.description} (${p.role}, ${p.status})`),
-    "",
-    "## Values",
-    "",
-    ...profile.values.map((v) => `- ${v}`),
-    "",
-    "## Agent Preferences",
-    "",
-    `Tone: ${profile.preferences.tone}`,
-    `Avoid: ${profile.preferences.avoid.join(", ")}`,
-    `Format: ${profile.preferences.format}`,
-    "",
-    "## Links",
-    "",
-    ...profile.links.map((l) => `- ${l.label}: ${l.url}`),
-    "",
-    "---",
-    "",
-    "> Full context: see manifest.json",
-  ];
-
-  const profileUrl = `you.md/${profile.username}`;
-
   const handleCopy = () => {
-    navigator.clipboard.writeText(profileUrl);
+    navigator.clipboard.writeText(`you.md/${profile.username}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="min-h-screen relative">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80px] h-[600px] beam-glow pointer-events-none" />
-
+    <div className="min-h-screen">
+      {/* Minimal nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:pt-4">
-        <div className="max-w-2xl mx-auto flex items-center justify-between gap-6 px-4 py-2 glass-nav rounded">
-          <Link to="/" className="text-accent font-mono text-[13px] font-medium">
-            you.md
-          </Link>
-          <Link to="/profiles" className="text-muted-foreground/50 text-[11px] font-mono hover:text-accent transition-colors">
-            /profiles
-          </Link>
+        <div className="max-w-[640px] mx-auto flex items-center justify-between px-4 py-2 glass-nav rounded">
+          <Link to="/" className="text-accent font-mono text-[12px]">you.md</Link>
+          <Link to="/profiles" className="text-muted-foreground/40 font-mono text-[10px] hover:text-accent transition-colors">/profiles</Link>
         </div>
       </nav>
 
-      <div className="pt-24 pb-20 px-6 relative z-10">
-        <div className="max-w-2xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Link
-              to="/profiles"
-              className="inline-flex items-center gap-1.5 text-muted-foreground/40 text-[11px] font-mono hover:text-accent transition-colors mb-10"
-            >
-              <ArrowLeft size={11} /> &gt; cd ../profiles
-            </Link>
-          </motion.div>
+      {/* Profile content — narrow column, terminal output feel */}
+      <div className="pt-20 pb-20 px-6">
+        <div className="max-w-[640px] mx-auto">
 
+          {/* Name + tagline */}
           <motion.div
-            className="relative mb-6"
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.4 }}
+            className="mb-8"
           >
-            <h1 className="text-foreground text-xl md:text-2xl font-mono font-medium tracking-tight leading-tight">
+            <h1 className="text-foreground font-mono text-xl md:text-2xl font-medium tracking-tight">
               {profile.name}
             </h1>
-            <p className="text-accent/80 text-[12px] font-mono mt-1">{profile.tagline}</p>
-            <div className="flex items-center gap-1 mt-2 text-muted-foreground/40 text-[11px] font-mono">
-              <MapPin size={10} />
-              <span>{profile.location}</span>
+            <p className="text-muted-foreground font-body text-[13px] mt-1">{profile.tagline}</p>
+            <div className="flex items-center gap-4 mt-3">
+              <span className="flex items-center gap-1 text-muted-foreground/50 font-mono text-[11px]">
+                <MapPin size={10} />
+                {profile.location}
+              </span>
+              <button
+                onClick={handleCopy}
+                className="flex items-center gap-1.5 text-accent/60 hover:text-accent font-mono text-[11px] transition-colors"
+              >
+                you.md/{profile.username}
+                {copied ? <Check size={10} className="text-success" /> : <Copy size={10} />}
+              </button>
             </div>
           </motion.div>
 
+          <div className="section-divider mb-8" />
+
+          {/* Bio */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="mb-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="mb-8"
           >
-            <button
-              onClick={handleCopy}
-              className="terminal-panel px-4 py-2 flex items-center gap-3 group hover:border-accent/30 transition-all rounded"
+            <p className="text-foreground/80 font-body text-[13px] leading-[1.7]">
+              {profile.bio.medium}
+            </p>
+          </motion.div>
+
+          {/* NOW */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.15 }}
+            className="mb-8"
+          >
+            <h2 className="text-accent font-mono text-[12px] uppercase tracking-wider mb-3">## Now</h2>
+            <div className="space-y-1.5">
+              {profile.now.map((item) => (
+                <p key={item} className="text-foreground/70 font-mono text-[12px]">- {item}</p>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* PROJECTS */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8"
+          >
+            <h2 className="text-accent font-mono text-[12px] uppercase tracking-wider mb-3">## Projects</h2>
+            <div className="space-y-3">
+              {profile.projects.map((p) => (
+                <div key={p.name}>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-foreground font-mono text-[12px] font-medium">{p.name}</span>
+                    <span className="text-muted-foreground/40 font-mono text-[10px]">{p.role}</span>
+                    <span className={`font-mono text-[9px] ${p.status === 'active' ? 'text-success' : 'text-accent/50'}`}>
+                      {p.status}
+                    </span>
+                  </div>
+                  <p className="text-muted-foreground font-body text-[12px] mt-0.5">{p.description}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* VALUES */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.25 }}
+            className="mb-8"
+          >
+            <h2 className="text-accent font-mono text-[12px] uppercase tracking-wider mb-3">## Values</h2>
+            <div className="space-y-1.5">
+              {profile.values.map((v) => (
+                <p key={v} className="text-foreground/70 font-mono text-[12px]">- {v}</p>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* AGENT PREFERENCES */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="mb-8"
+          >
+            <h2 className="text-accent font-mono text-[12px] uppercase tracking-wider mb-3">## Agent Preferences</h2>
+            <div className="space-y-1">
+              <p className="font-mono text-[12px]">
+                <span className="text-accent/60">Tone:</span>{" "}
+                <span className="text-muted-foreground">{profile.preferences.tone}</span>
+              </p>
+              <p className="font-mono text-[12px]">
+                <span className="text-accent/60">Avoid:</span>{" "}
+                <span className="text-muted-foreground">{profile.preferences.avoid.join(", ")}</span>
+              </p>
+              <p className="font-mono text-[12px]">
+                <span className="text-accent/60">Format:</span>{" "}
+                <span className="text-muted-foreground">{profile.preferences.format}</span>
+              </p>
+            </div>
+          </motion.div>
+
+          <div className="section-divider mb-8" />
+
+          {/* LINKS */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35 }}
+            className="mb-16"
+          >
+            <div className="space-y-1.5">
+              {profile.links.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.url}
+                  className="flex items-center gap-2 text-accent/70 hover:text-accent font-mono text-[12px] transition-colors group"
+                >
+                  {link.label}
+                  <ExternalLink size={10} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                </a>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Footer CTA */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-center"
+          >
+            <p className="text-muted-foreground/30 font-mono text-[10px] mb-2">
+              Powered by <Link to="/" className="text-accent/40 hover:text-accent transition-colors">you.md</Link>
+            </p>
+            <Link
+              to="/#get-started"
+              className="text-muted-foreground/20 font-mono text-[10px] hover:text-accent/60 transition-colors"
             >
-              <span className="font-mono text-[11px] text-muted-foreground/50">
-                <span className="text-accent">you.md</span>/{profile.username}
-              </span>
-              <span className="text-muted-foreground/20 group-hover:text-muted-foreground/50 transition-colors ml-auto">
-                {copied ? <Check size={12} className="text-success" /> : <Copy size={12} />}
-              </span>
-            </button>
-          </motion.div>
-
-          <motion.p
-            className="text-muted-foreground text-[12px] leading-relaxed mb-6"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.25 }}
-          >
-            {profile.bio.medium}
-          </motion.p>
-
-          <motion.div
-            className="flex flex-wrap gap-2 mb-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.3 }}
-          >
-            {profile.topics.map((topic) => (
-              <span
-                key={topic}
-                className="text-[10px] font-mono px-2.5 py-1 rounded border border-accent/15 text-accent/60"
-              >
-                {topic}
-              </span>
-            ))}
-          </motion.div>
-
-          <motion.div
-            className="flex flex-col gap-1 mb-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.33 }}
-          >
-            {profile.credibility.map((c) => (
-              <p key={c} className="text-accent/50 text-[10px] font-mono">› {c}</p>
-            ))}
-          </motion.div>
-
-          <motion.div
-            ref={codeRef}
-            className="terminal-panel mb-8"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-          >
-            <div className="terminal-panel-header">
-              <div className="terminal-dot" />
-              <div className="terminal-dot" />
-              <div className="terminal-dot" />
-              <span className="ml-2 text-muted-foreground/40 text-[10px] font-mono">{profile.username}.md</span>
-            </div>
-            <div className="p-5 md:p-6">
-              <TypewriterBlock lines={codeLines} inView={inView} />
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="flex flex-wrap gap-2 mb-16"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.45 }}
-          >
-            {profile.links.map((link) => (
-              <a
-                key={link.label}
-                href={link.url}
-                className="inline-flex items-center gap-1.5 text-[10px] font-mono text-muted-foreground/40 hover:text-accent transition-colors border border-border rounded px-3 py-1.5 hover:border-accent/30"
-              >
-                {link.label}
-                <ExternalLink size={9} />
-              </a>
-            ))}
-          </motion.div>
-
-          <motion.div
-            className="text-center pt-6 border-t border-border"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Link to="/" className="text-muted-foreground/25 text-[10px] font-mono hover:text-accent/40 transition-colors">
-              powered by <span className="text-accent/40">you.md</span>
+              &gt; claim yours
             </Link>
           </motion.div>
+
         </div>
       </div>
     </div>

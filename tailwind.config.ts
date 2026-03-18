@@ -14,7 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        mono: ["JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", "monospace"],
+        mono: ["JetBrains Mono", "SF Mono", "Consolas", "monospace"],
+        body: ["Inter", "-apple-system", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -22,13 +23,12 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        // Accent system
         accent: {
           DEFAULT: "hsl(var(--accent))",
-          900: "hsl(var(--accent-900))",
-          700: "hsl(var(--accent-700))",
-          500: "hsl(var(--accent-500))",
-          300: "hsl(var(--accent-300))",
+          dark: "hsl(var(--accent-dark))",
+          mid: "hsl(var(--accent-mid))",
+          light: "hsl(var(--accent-light))",
+          wash: "hsl(var(--accent-wash))",
           foreground: "hsl(var(--accent-foreground))",
         },
         muted: {
