@@ -54,7 +54,7 @@ const Navbar = () => {
                 className={`font-mono text-[10px] transition-colors duration-200 ${
                   activeSection === id
                     ? "text-accent"
-                    : "text-muted-foreground/40 hover:text-foreground"
+                    : "text-muted-foreground/60 hover:text-foreground"
                 }`}
               >
                 {label}
@@ -62,7 +62,7 @@ const Navbar = () => {
             ))}
             <Link
               to="/profiles"
-              className="font-mono text-[10px] text-muted-foreground/40 hover:text-accent transition-colors"
+              className="font-mono text-[10px] text-muted-foreground/60 hover:text-accent transition-colors"
             >
               --profiles
             </Link>
@@ -94,7 +94,7 @@ const Navbar = () => {
               href={`#${id}`}
               onClick={() => setMobileOpen(false)}
               className={`font-mono text-[14px] transition-colors ${
-                activeSection === id ? "text-accent" : "text-muted-foreground/50 hover:text-foreground"
+                activeSection === id ? "text-accent" : "text-muted-foreground/70 hover:text-foreground"
               }`}
             >
               {label}
@@ -103,7 +103,7 @@ const Navbar = () => {
           <Link
             to="/profiles"
             onClick={() => setMobileOpen(false)}
-            className="font-mono text-[14px] text-muted-foreground/50 hover:text-accent transition-colors"
+            className="font-mono text-[14px] text-muted-foreground/70 hover:text-accent transition-colors"
           >
             --profiles
           </Link>

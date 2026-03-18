@@ -18,10 +18,10 @@ const Integrations = () => (
   <section className="py-16 md:py-24">
     <div className="max-w-xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground/30 font-mono text-[10px] uppercase tracking-widest mb-3 text-center">
+        <p className="text-muted-foreground/60 font-mono text-[10px] uppercase tracking-widest mb-3 text-center">
           ── compatible agents ──
         </p>
-        <p className="text-muted-foreground/50 font-body text-[12px] mb-10 text-center">
+        <p className="text-muted-foreground/70 font-body text-[12px] mb-10 text-center">
           Works with any agent that reads structured context.
         </p>
       </FadeUp>
@@ -38,8 +38,8 @@ const Integrations = () => (
               whileHover={{ scale: 1.05, y: -1 }}
               className={`font-mono text-[11px] transition-colors duration-300 cursor-default select-none px-3 py-1.5 rounded border ${
                 agent.tier === "primary"
-                  ? "text-accent/70 border-accent/15 hover:border-accent/40 hover:text-accent bg-accent-wash/30"
-                  : "text-muted-foreground/40 border-border/50 hover:border-accent/20 hover:text-accent/60"
+                  ? "text-accent/80 border-accent/20 hover:border-accent/40 hover:text-accent bg-accent-wash/30"
+                  : "text-muted-foreground/60 border-border/60 hover:border-accent/20 hover:text-accent/80"
               }`}
             >
               {agent.name}
@@ -50,7 +50,7 @@ const Integrations = () => (
 
       <FadeUp delay={0.15}>
         <p className="text-center mt-8">
-          <span className="text-muted-foreground/20 font-mono text-[10px]">
+          <span className="text-muted-foreground/50 font-mono text-[10px]">
             + any agent that supports context injection
           </span>
         </p>

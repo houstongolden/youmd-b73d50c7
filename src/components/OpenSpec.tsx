@@ -7,10 +7,10 @@ const OpenSpec = () => (
       <div className="section-divider mb-12" />
       <FadeUp>
         <div className="text-center py-8">
-          <p className="text-muted-foreground/30 font-mono text-[10px] mb-6 tracking-wider uppercase">
+          <p className="text-muted-foreground/60 font-mono text-[10px] mb-6 tracking-wider uppercase">
             ── open standard ──
           </p>
-          <p className="text-foreground/70 font-mono text-[14px] font-light leading-relaxed">
+          <p className="text-foreground/80 font-mono text-[14px] font-light leading-relaxed">
             <motion.span
               className="text-accent inline-block"
               whileHover={{ scale: 1.05 }}
@@ -26,13 +26,13 @@ const OpenSpec = () => (
           <div className="mt-6 flex items-center justify-center gap-6">
             <a
               href="#"
-              className="text-muted-foreground/40 font-mono text-[11px] hover:text-accent transition-colors duration-200"
+              className="text-muted-foreground/60 font-mono text-[11px] hover:text-accent transition-colors duration-200"
             >
               &gt; cat spec.you.md →
             </a>
             <a
               href="#"
-              className="text-muted-foreground/40 font-mono text-[11px] hover:text-accent transition-colors duration-200"
+              className="text-muted-foreground/60 font-mono text-[11px] hover:text-accent transition-colors duration-200"
             >
               &gt; github →
             </a>

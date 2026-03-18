@@ -27,7 +27,7 @@ const CTAFooter = () => {
 
         <motion.div className="relative z-10 text-center px-6" style={{ y: contentY }}>
           <FadeUp>
-            <p className="text-muted-foreground/30 font-mono text-[10px] mb-8 tracking-widest uppercase">
+            <p className="text-muted-foreground/60 font-mono text-[10px] mb-8 tracking-widest uppercase">
               ── get started ──
             </p>
             <p className="text-foreground font-mono text-[16px] md:text-[20px] font-light tracking-tight mb-10 leading-relaxed">
@@ -39,7 +39,7 @@ const CTAFooter = () => {
               <span className="text-muted-foreground">$</span>
               <span className="text-accent font-medium">npx youmd init</span>
               <span className="cursor-blink text-accent">█</span>
-              <span className="ml-2 text-muted-foreground/30">
+              <span className="ml-2 text-muted-foreground/50">
                 {copied ? <Check size={13} className="text-success" /> : <Copy size={13} />}
               </span>
             </button>
@@ -53,14 +53,14 @@ const CTAFooter = () => {
         <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <Link to="/" className="text-accent font-mono text-[11px] hover:text-accent-light transition-colors">you.md</Link>
           <div className="flex items-center gap-5">
-            <a href="#spec" className="text-muted-foreground/30 font-mono text-[10px] hover:text-accent transition-colors">&gt; spec</a>
-            <a href="#" className="text-muted-foreground/30 font-mono text-[10px] hover:text-accent transition-colors">&gt; github</a>
-            <a href="#pricing" className="text-muted-foreground/30 font-mono text-[10px] hover:text-accent transition-colors">&gt; pricing</a>
-            <Link to="/profiles" className="text-muted-foreground/30 font-mono text-[10px] hover:text-accent transition-colors">&gt; profiles</Link>
+            <a href="#spec" className="text-muted-foreground/60 font-mono text-[10px] hover:text-accent transition-colors">&gt; spec</a>
+            <a href="#" className="text-muted-foreground/60 font-mono text-[10px] hover:text-accent transition-colors">&gt; github</a>
+            <a href="#pricing" className="text-muted-foreground/60 font-mono text-[10px] hover:text-accent transition-colors">&gt; pricing</a>
+            <Link to="/profiles" className="text-muted-foreground/60 font-mono text-[10px] hover:text-accent transition-colors">&gt; profiles</Link>
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <span className="text-muted-foreground/20 font-mono text-[9px]">you-md/v1</span>
+            <span className="text-muted-foreground/50 font-mono text-[9px]">you-md/v1</span>
           </div>
         </div>
       </footer>

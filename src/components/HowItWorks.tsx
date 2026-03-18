@@ -21,7 +21,7 @@ const Step = ({ step, index }: { step: typeof steps[0]; index: number }) => {
       <FadeUp delay={index * 0.1}>
         <div className="py-6 border-b border-border last:border-0">
           <div className="flex items-baseline gap-4 mb-3">
-            <span className="text-muted-foreground/30 font-mono text-[10px]">{step.num}</span>
+            <span className="text-muted-foreground/50 font-mono text-[10px]">{step.num}</span>
             <span className="text-accent font-mono text-[12px]">{step.cmd}</span>
           </div>
           <p className="text-muted-foreground text-[13px] font-body leading-relaxed pl-8">{step.desc}</p>
@@ -35,7 +35,7 @@ const HowItWorks = () => (
   <section id="how-it-works" className="py-24 md:py-32 overflow-hidden">
     <div className="max-w-xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground/30 font-mono text-[10px] uppercase tracking-widest mb-2">
+        <p className="text-muted-foreground/60 font-mono text-[10px] uppercase tracking-widest mb-2">
           ── how it works ──
         </p>
         <p className="text-muted-foreground text-[13px] font-body mb-10">Three steps. No signup required.</p>

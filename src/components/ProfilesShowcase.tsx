@@ -11,7 +11,7 @@ const ProfilesShowcase = () => {
     <section className="py-24 md:py-32">
       <div className="max-w-2xl mx-auto px-6">
         <FadeUp>
-          <p className="text-muted-foreground/40 font-mono text-[10px] uppercase tracking-widest mb-2">
+          <p className="text-muted-foreground/60 font-mono text-[10px] uppercase tracking-widest mb-2">
             ── live on the network ──
           </p>
           <p className="text-muted-foreground text-[13px] font-body mb-10">
@@ -25,7 +25,7 @@ const ProfilesShowcase = () => {
               <div className="terminal-dot" />
               <div className="terminal-dot" />
               <div className="terminal-dot" />
-              <span className="ml-2 text-muted-foreground/40 font-mono text-[10px]">
+              <span className="ml-2 text-muted-foreground/60 font-mono text-[10px]">
                 &gt; ls /profiles --active
               </span>
             </div>
@@ -71,17 +71,17 @@ const ProfilesShowcase = () => {
 
                     {/* Metrics */}
                     <div className="hidden md:flex items-center gap-4 shrink-0">
-                      <span className="text-accent/50 font-mono text-[9px]">
+                      <span className="text-accent/70 font-mono text-[9px]">
                         {profile.agentMetrics.totalReads.toLocaleString()} reads
                       </span>
-                      <span className="text-muted-foreground/30 font-mono text-[9px]">
+                      <span className="text-muted-foreground/50 font-mono text-[9px]">
                         {profile.freshness.score}/100
                       </span>
                     </div>
 
                     <ArrowRight
                       size={12}
-                      className="text-muted-foreground/15 group-hover:text-accent group-hover:translate-x-0.5 transition-all shrink-0"
+                      className="text-muted-foreground/30 group-hover:text-accent group-hover:translate-x-0.5 transition-all shrink-0"
                     />
                   </Link>
                 </motion.div>
@@ -90,12 +90,12 @@ const ProfilesShowcase = () => {
 
             {/* Footer */}
             <div className="px-5 py-3 border-t border-border flex items-center justify-between">
-              <span className="text-muted-foreground/30 font-mono text-[9px]">
+              <span className="text-muted-foreground/50 font-mono text-[9px]">
                 {featured.length} active · {featured.filter(p => p.verification.verified).length} verified
               </span>
               <Link
                 to="/profiles"
-                className="text-accent/60 hover:text-accent font-mono text-[10px] transition-colors"
+                className="text-accent/70 hover:text-accent font-mono text-[10px] transition-colors"
               >
                 &gt; view all
               </Link>

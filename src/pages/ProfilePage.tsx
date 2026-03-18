@@ -3,6 +3,7 @@ import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, Ref
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { sampleProfiles, type ActivityItem, type Project, type AgentConnection, type ConnectedSource } from "@/data/sampleProfiles";
+import ProfileAsciiHeader from "@/components/ProfileAsciiHeader";
 
 /* ── Helpers ─────────────────────────────────── */
 
@@ -56,8 +57,8 @@ const Divider = () => <div className="section-divider my-8" />;
 
 const StatusLine = ({ label, value, color }: { label: string; value: string; color?: string }) => (
   <p className="font-mono text-[11px]">
-    <span className="text-muted-foreground/50">{label}:</span>{" "}
-    <span className={color || "text-foreground/60"}>{value}</span>
+    <span className="text-muted-foreground/70">{label}:</span>{" "}
+    <span className={color || "text-foreground/80"}>{value}</span>
   </p>
 );
 
@@ -69,7 +70,7 @@ const VerifiedBadge = ({ methods, level }: { methods: string[]; level?: string }
       <Shield size={9} />
       VERIFIED {level ? `· ${level.toUpperCase()}` : ""}
     </span>
-    <span className="text-muted-foreground/30 font-mono text-[9px]">
+    <span className="text-muted-foreground/60 font-mono text-[9px]">
       {methods.join(" · ")}
     </span>
   </div>
@@ -85,10 +86,10 @@ const ProjectCard = ({ project }: { project: Project }) => (
             {project.status}
           </span>
         </div>
-        <span className="text-muted-foreground/50 font-mono text-[10px]">{project.role}</span>
+        <span className="text-muted-foreground/70 font-mono text-[10px]">{project.role}</span>
       </div>
       {project.url && (
-        <a href={project.url} className="text-muted-foreground/20 group-hover:text-accent transition-colors">
+        <a href={project.url} className="text-muted-foreground/40 group-hover:text-accent transition-colors">
           <ArrowUpRight size={14} />
         </a>
       )}
@@ -96,7 +97,7 @@ const ProjectCard = ({ project }: { project: Project }) => (
     <p className="text-muted-foreground font-body text-[12px] leading-relaxed mb-3">{project.description}</p>
     <div className="flex items-center gap-4">
       {project.stars && (
-        <span className="flex items-center gap-1 text-muted-foreground/50 font-mono text-[10px]">
+        <span className="flex items-center gap-1 text-muted-foreground/60 font-mono text-[10px]">
           <Star size={10} /> {project.stars.toLocaleString()}
         </span>
       )}
@@ -111,13 +112,13 @@ const AgentConnectionsList = ({ connections }: { connections: AgentConnection[] 
   <div className="space-y-0">
     {connections.map((agent) => (
       <div key={agent.name} className="flex items-center justify-between py-1.5 border-b border-border/30 last:border-0">
-        <span className="text-foreground/70 font-mono text-[11px] flex items-center gap-1.5">
+        <span className="text-foreground/80 font-mono text-[11px] flex items-center gap-1.5">
           - {agent.name}
           {agent.isVerified && (
             <span className="text-success font-mono text-[8px]">✓</span>
           )}
         </span>
-        <span className="text-muted-foreground/30 font-mono text-[9px]">{agent.lastAccess}</span>
+        <span className="text-muted-foreground/50 font-mono text-[9px]">{agent.lastAccess}</span>
       </div>
     ))}
   </div>
@@ -132,38 +133,39 @@ const ConnectedSourcesList = ({ sources }: { sources: ConnectedSource[] }) => {
     <div className="space-y-3">
       {verified.length > 0 && (
         <div>
-          <p className="text-muted-foreground/40 font-mono text-[10px] mb-1.5">verified:</p>
+          <p className="text-muted-foreground/60 font-mono text-[10px] mb-1.5">verified:</p>
           {verified.map((s) => (
             <div key={s.name} className="flex items-center justify-between py-1">
               <span className="text-success/80 font-mono text-[11px]">
                 {sourceIcon(s.status)} {s.name}
               </span>
-              {s.lastSync && <span className="text-muted-foreground/30 font-mono text-[9px]">{s.lastSync}</span>}
+              {s.lastSync && <span className="text-muted-foreground/50 font-mono text-[9px]">{s.lastSync}</span>}
             </div>
           ))}
         </div>
       )}
       {synced.length > 0 && (
         <div>
-          <p className="text-muted-foreground/40 font-mono text-[10px] mb-1.5">synced:</p>
+          <p className="text-muted-foreground/60 font-mono text-[10px] mb-1.5">synced:</p>
           {synced.map((s) => (
             <div key={s.name} className="flex items-center justify-between py-1">
-              <span className="text-foreground/60 font-mono text-[11px]">
+              <span className="text-accent/80 font-mono text-[11px]">
                 {sourceIcon(s.status)} {s.name}
               </span>
-              {s.lastSync && <span className="text-muted-foreground/30 font-mono text-[9px]">{s.lastSync}</span>}
+              {s.lastSync && <span className="text-muted-foreground/50 font-mono text-[9px]">{s.lastSync}</span>}
             </div>
           ))}
         </div>
       )}
       {pending.length > 0 && (
         <div>
-          <p className="text-muted-foreground/40 font-mono text-[10px] mb-1.5">pending:</p>
+          <p className="text-muted-foreground/60 font-mono text-[10px] mb-1.5">pending:</p>
           {pending.map((s) => (
             <div key={s.name} className="flex items-center justify-between py-1">
-              <span className="text-muted-foreground/40 font-mono text-[11px]">
+              <span className="text-muted-foreground/70 font-mono text-[11px]">
                 {sourceIcon(s.status)} {s.name}
               </span>
+              {s.lastSync && <span className="text-muted-foreground/50 font-mono text-[9px]">{s.lastSync}</span>}
             </div>
           ))}
         </div>
@@ -174,15 +176,15 @@ const ConnectedSourcesList = ({ sources }: { sources: ConnectedSource[] }) => {
 
 const ActivityTimeline = ({ items }: { items: ActivityItem[] }) => (
   <div className="space-y-0">
-    {items.map((item, i) => (
-      <div key={i} className="flex items-start gap-3 py-2 border-b border-border/30 last:border-0">
-        <span className="text-accent/50 font-mono text-[11px] mt-0.5 w-4 text-center shrink-0">
+    {items.slice(0, 8).map((item, i) => (
+      <div key={i} className="flex items-center gap-3 py-1.5 border-b border-border/20 last:border-0">
+        <span className="text-accent/70 font-mono text-[11px] w-4 text-center shrink-0">
           {actionIcon(item.action)}
         </span>
         <div className="flex-1 min-w-0">
-          <p className="text-foreground/70 font-mono text-[11px] truncate">{item.detail}</p>
+          <p className="text-foreground/80 font-mono text-[11px] truncate">{item.detail}</p>
         </div>
-        <span className="text-muted-foreground/30 font-mono text-[9px] shrink-0">
+        <span className="text-muted-foreground/50 font-mono text-[9px] shrink-0">
           {new Date(item.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
         </span>
       </div>
@@ -228,15 +230,14 @@ const ProfilePage = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:pt-4">
         <div className="max-w-[680px] mx-auto flex items-center justify-between px-4 py-2 glass-nav rounded">
           <Link to="/" className="text-accent font-mono text-[12px]">you.md</Link>
-          <Link to="/profiles" className="text-muted-foreground/40 font-mono text-[10px] hover:text-accent transition-colors">/profiles</Link>
+          <Link to="/profiles" className="text-muted-foreground/60 font-mono text-[10px] hover:text-accent transition-colors">/profiles</Link>
         </div>
       </nav>
 
-      {/* Cover */}
+      {/* ASCII Art Header — personalized */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}
-        className="relative w-full h-[160px] md:h-[200px] overflow-hidden">
-        <img src={profile.coverUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+        className="relative w-full pt-16">
+        <ProfileAsciiHeader profile={profile} />
       </motion.div>
 
       {/* Content */}
@@ -244,7 +245,7 @@ const ProfilePage = () => {
         <div className="max-w-[680px] mx-auto">
 
           {/* ═══ SYSTEM HEADER ═══ */}
-          <motion.div {...delay(0)} className="-mt-10 mb-6">
+          <motion.div {...delay(0)} className="mt-4 mb-6">
             <div className="flex items-end gap-4 mb-4">
               <img src={profile.avatarUrl} alt={profile.name}
                 className="w-16 h-16 md:w-20 md:h-20 rounded border-2 border-background object-cover" loading="lazy" />
@@ -271,7 +272,7 @@ const ProfilePage = () => {
                   active
                 </span>
               </div>
-              <div className="flex items-center gap-1 text-muted-foreground/40 font-mono text-[10px]">
+              <div className="flex items-center gap-1 text-muted-foreground/60 font-mono text-[10px]">
                 <MapPin size={9} />
                 <span>{profile.location}</span>
               </div>
@@ -284,11 +285,11 @@ const ProfilePage = () => {
                 </div>
               )}
               <div className="flex items-center gap-4 pt-1">
-                <span className="font-mono text-[10px] text-muted-foreground/40">
-                  agent reads: <span className="text-foreground/70">{profile.agentMetrics.totalReads.toLocaleString()}</span>
+                <span className="font-mono text-[10px] text-muted-foreground/60">
+                  agent reads: <span className="text-foreground/80">{profile.agentMetrics.totalReads.toLocaleString()}</span>
                 </span>
-                <span className="font-mono text-[10px] text-muted-foreground/40">
-                  integrations: <span className="text-foreground/70">{profile.agentMetrics.activeIntegrations}</span>
+                <span className="font-mono text-[10px] text-muted-foreground/60">
+                  integrations: <span className="text-foreground/80">{profile.agentMetrics.activeIntegrations}</span>
                 </span>
               </div>
             </div>
@@ -299,12 +300,12 @@ const ProfilePage = () => {
           {/* ═══ IDENTITY ═══ */}
           <motion.div {...delay(1)}>
             <SectionHeader>identity</SectionHeader>
-            <p className="text-foreground/80 font-body text-[14px] leading-[1.7] mb-4">
+            <p className="text-foreground/90 font-body text-[14px] leading-[1.7] mb-4">
               {profile.bio.medium}
             </p>
             <div className="flex flex-wrap gap-2">
               {profile.topics.map((t) => (
-                <span key={t} className="font-mono text-[10px] px-2 py-0.5 rounded border border-accent/10 text-accent/40">
+                <span key={t} className="font-mono text-[10px] px-2 py-0.5 rounded border border-accent/20 text-accent/70">
                   {t}
                 </span>
               ))}
@@ -312,7 +313,7 @@ const ProfilePage = () => {
             {profile.credibility.length > 0 && (
               <div className="mt-3 space-y-0.5">
                 {profile.credibility.map((c) => (
-                  <p key={c} className="text-muted-foreground/50 font-mono text-[10px]">› {c}</p>
+                  <p key={c} className="text-muted-foreground/70 font-mono text-[10px]">› {c}</p>
                 ))}
               </div>
             )}
@@ -324,19 +325,19 @@ const ProfilePage = () => {
           <motion.div {...delay(2)}>
             <SectionHeader>current activity</SectionHeader>
             <div className="mb-4">
-              <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">now:</p>
+              <p className="text-muted-foreground/60 font-mono text-[10px] mb-2">now:</p>
               {profile.now.map((item) => (
-                <p key={item} className="text-foreground/70 font-mono text-[12px]">- {item}</p>
+                <p key={item} className="text-foreground/80 font-mono text-[12px]">- {item}</p>
               ))}
             </div>
             <div className="mb-4">
-              <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">recent changes:</p>
+              <p className="text-muted-foreground/60 font-mono text-[10px] mb-2">recent changes:</p>
               {profile.recentChanges.map((c) => (
-                <p key={c} className="text-foreground/60 font-mono text-[11px]">- {c}</p>
+                <p key={c} className="text-foreground/75 font-mono text-[11px]">- {c}</p>
               ))}
             </div>
             <div>
-              <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">timeline:</p>
+              <p className="text-muted-foreground/60 font-mono text-[10px] mb-2">timeline:</p>
               <ActivityTimeline items={profile.activity} />
             </div>
           </motion.div>
@@ -361,7 +362,7 @@ const ProfilePage = () => {
               <StatusLine label="sources" value={profile.freshness.sources} color={stateColor(profile.freshness.sources)} />
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-[10px] text-muted-foreground/40">freshness score:</span>
+              <span className="font-mono text-[10px] text-muted-foreground/60">freshness score:</span>
               <span className="font-mono text-[14px] text-accent font-medium">{profile.freshness.score}/100</span>
             </div>
           </motion.div>
@@ -373,15 +374,15 @@ const ProfilePage = () => {
             <SectionHeader>maintenance</SectionHeader>
             <div className="space-y-1.5">
               <StatusLine label="human edits" value={profile.maintenance.humanEdits ? "enabled" : "disabled"}
-                color={profile.maintenance.humanEdits ? "text-success" : "text-muted-foreground/40"} />
+                color={profile.maintenance.humanEdits ? "text-success" : "text-muted-foreground/60"} />
               <StatusLine label="agent maintenance" value={profile.maintenance.agentMaintenance ? "active" : "inactive"}
-                color={profile.maintenance.agentMaintenance ? "text-success" : "text-muted-foreground/40"} />
+                color={profile.maintenance.agentMaintenance ? "text-success" : "text-muted-foreground/60"} />
               <StatusLine label="update mode" value={profile.maintenance.updateMode} />
             </div>
             <div className="mt-3">
-              <p className="text-muted-foreground/40 font-mono text-[10px] mb-1.5">active maintainers:</p>
+              <p className="text-muted-foreground/60 font-mono text-[10px] mb-1.5">active maintainers:</p>
               {profile.maintenance.activeMaintainers.map((m) => (
-                <p key={m} className="text-foreground/60 font-mono text-[11px]">- {m}</p>
+                <p key={m} className="text-foreground/75 font-mono text-[11px]">- {m}</p>
               ))}
             </div>
           </motion.div>
@@ -396,25 +397,25 @@ const ProfilePage = () => {
                 <p className="text-foreground font-mono text-[18px] font-medium">
                   {profile.agentMetrics.totalReads.toLocaleString()}
                 </p>
-                <p className="text-muted-foreground/40 font-mono text-[9px]">total reads</p>
+                <p className="text-muted-foreground/60 font-mono text-[9px]">total reads</p>
               </div>
               <div>
                 <p className="text-accent font-mono text-[18px] font-medium">
                   +{profile.agentMetrics.recentReads24h}
                 </p>
-                <p className="text-muted-foreground/40 font-mono text-[9px]">reads (24h)</p>
+                <p className="text-muted-foreground/60 font-mono text-[9px]">reads (24h)</p>
               </div>
               <div>
                 <p className="text-foreground font-mono text-[18px] font-medium">
                   {profile.agentMetrics.connectedAgentsCount}
                 </p>
-                <p className="text-muted-foreground/40 font-mono text-[9px]">connected agents</p>
+                <p className="text-muted-foreground/60 font-mono text-[9px]">connected agents</p>
               </div>
               <div>
                 <p className="text-success font-mono text-[18px] font-medium">
                   {profile.agentMetrics.verifiedAgents}
                 </p>
-                <p className="text-muted-foreground/40 font-mono text-[9px]">verified agents</p>
+                <p className="text-muted-foreground/60 font-mono text-[9px]">verified agents</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 mb-5">
@@ -422,17 +423,17 @@ const ProfilePage = () => {
                 <p className="text-foreground font-mono text-[14px] font-medium">
                   {profile.agentMetrics.activeIntegrations}
                 </p>
-                <p className="text-muted-foreground/40 font-mono text-[9px]">active integrations</p>
+                <p className="text-muted-foreground/60 font-mono text-[9px]">active integrations</p>
               </div>
               <div>
                 <p className="text-foreground font-mono text-[14px] font-medium">
                   {profile.agentMetrics.contextSessions}
                 </p>
-                <p className="text-muted-foreground/40 font-mono text-[9px]">context sessions</p>
+                <p className="text-muted-foreground/60 font-mono text-[9px]">context sessions</p>
               </div>
             </div>
 
-            <p className="text-muted-foreground/30 font-mono text-[10px] mb-2">recent connections:</p>
+            <p className="text-muted-foreground/50 font-mono text-[10px] mb-2">recent connections:</p>
             <AgentConnectionsList connections={profile.agentConnections} />
           </motion.div>
 
@@ -473,15 +474,15 @@ const ProfilePage = () => {
             <SectionHeader>access layers</SectionHeader>
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">public:</p>
+                <p className="text-muted-foreground/60 font-mono text-[10px] mb-2">public:</p>
                 {profile.publicSections.map((s) => (
-                  <p key={s} className="text-foreground/60 font-mono text-[11px]">- {s}</p>
+                  <p key={s} className="text-foreground/75 font-mono text-[11px]">- {s}</p>
                 ))}
               </div>
               <div>
-                <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">private (scoped access):</p>
+                <p className="text-muted-foreground/60 font-mono text-[10px] mb-2">private (scoped access):</p>
                 {profile.privateSections.map((s) => (
-                  <p key={s} className="text-muted-foreground/30 font-mono text-[11px]">- {s}</p>
+                  <p key={s} className="text-muted-foreground/50 font-mono text-[11px]">- {s}</p>
                 ))}
               </div>
             </div>
@@ -493,22 +494,22 @@ const ProfilePage = () => {
           <motion.div {...delay(10)}>
             <SectionHeader>for agents</SectionHeader>
             <div className="terminal-panel p-4 space-y-2">
-              <p className="font-mono text-[11px] text-muted-foreground/40">start here:</p>
+              <p className="font-mono text-[11px] text-muted-foreground/60">start here:</p>
               <p className="font-mono text-[11px] text-accent">GET /api/v1/profiles/{profile.username}</p>
 
-              <p className="font-mono text-[10px] text-muted-foreground/40 mt-3">preferred retrieval order:</p>
-              <p className="font-mono text-[11px] text-foreground/60">1. you.json</p>
-              <p className="font-mono text-[11px] text-foreground/60">2. manifest.json</p>
-              <p className="font-mono text-[11px] text-foreground/60">3. you.md</p>
-              <p className="font-mono text-[11px] text-foreground/60">4. analysis/*</p>
+              <p className="font-mono text-[10px] text-muted-foreground/60 mt-3">preferred retrieval order:</p>
+              <p className="font-mono text-[11px] text-foreground/75">1. you.json</p>
+              <p className="font-mono text-[11px] text-foreground/75">2. manifest.json</p>
+              <p className="font-mono text-[11px] text-foreground/75">3. you.md</p>
+              <p className="font-mono text-[11px] text-foreground/75">4. analysis/*</p>
 
-              <p className="font-mono text-[10px] text-muted-foreground/40 mt-3">notes:</p>
-              <p className="font-mono text-[11px] text-foreground/60">- use structured fields first</p>
-              <p className="font-mono text-[11px] text-foreground/60">- prefer most recent timestamps</p>
-              <p className="font-mono text-[11px] text-foreground/60">- respect public/private boundaries</p>
-              <p className="font-mono text-[11px] text-foreground/60">- check verification status before citing</p>
-              <p className="font-mono text-[11px] text-foreground/60">- tone: {profile.preferences.tone}</p>
-              <p className="font-mono text-[11px] text-foreground/60">- avoid: {profile.preferences.avoid.join(", ")}</p>
+              <p className="font-mono text-[10px] text-muted-foreground/60 mt-3">notes:</p>
+              <p className="font-mono text-[11px] text-foreground/75">- use structured fields first</p>
+              <p className="font-mono text-[11px] text-foreground/75">- prefer most recent timestamps</p>
+              <p className="font-mono text-[11px] text-foreground/75">- respect public/private boundaries</p>
+              <p className="font-mono text-[11px] text-foreground/75">- check verification status before citing</p>
+              <p className="font-mono text-[11px] text-foreground/75">- tone: {profile.preferences.tone}</p>
+              <p className="font-mono text-[11px] text-foreground/75">- avoid: {profile.preferences.avoid.join(", ")}</p>
             </div>
           </motion.div>
 
@@ -519,7 +520,7 @@ const ProfilePage = () => {
             <SectionHeader>common queries</SectionHeader>
             <div className="space-y-1">
               {profile.topQueries.map((q) => (
-                <p key={q} className="font-mono text-[11px] text-muted-foreground/50">"{q}"</p>
+                <p key={q} className="font-mono text-[11px] text-muted-foreground/70">"{q}"</p>
               ))}
             </div>
           </motion.div>
@@ -531,16 +532,16 @@ const ProfilePage = () => {
             <SectionHeader>connect</SectionHeader>
             <div className="space-y-3">
               <div>
-                <p className="font-mono text-[11px] text-muted-foreground/50">share public context:</p>
+                <p className="font-mono text-[11px] text-muted-foreground/70">share public context:</p>
                 <p className="font-mono text-[12px] text-accent">$ youmd link create</p>
               </div>
               <div>
-                <p className="font-mono text-[11px] text-muted-foreground/50">scoped private context:</p>
+                <p className="font-mono text-[11px] text-muted-foreground/70">scoped private context:</p>
                 <p className="font-mono text-[12px] text-accent">$ youmd link create --scope=full</p>
               </div>
               <div>
-                <p className="font-mono text-[11px] text-muted-foreground/50">api:</p>
-                <p className="font-mono text-[11px] text-foreground/60">GET /api/v1/profiles/{profile.username}</p>
+                <p className="font-mono text-[11px] text-muted-foreground/70">api:</p>
+                <p className="font-mono text-[11px] text-foreground/75">GET /api/v1/profiles/{profile.username}</p>
               </div>
             </div>
           </motion.div>
@@ -552,7 +553,7 @@ const ProfilePage = () => {
             <div className="flex flex-wrap gap-3 mb-6">
               {profile.links.map((link) => (
                 <a key={link.label} href={link.url}
-                  className="inline-flex items-center gap-1.5 text-accent/60 hover:text-accent font-mono text-[11px] transition-colors border border-border rounded px-3 py-1.5 hover:border-accent/30">
+                  className="inline-flex items-center gap-1.5 text-accent/80 hover:text-accent font-mono text-[11px] transition-colors border border-border rounded px-3 py-1.5 hover:border-accent/30">
                   {link.label}
                   <ExternalLink size={9} />
                 </a>
@@ -564,21 +565,21 @@ const ProfilePage = () => {
           <motion.div {...delay(14)}>
             <div className="space-y-1 mb-16">
               {profile.values.map((v) => (
-                <p key={v} className="text-muted-foreground/40 font-mono text-[11px]">› {v}</p>
+                <p key={v} className="text-muted-foreground/60 font-mono text-[11px]">› {v}</p>
               ))}
             </div>
           </motion.div>
 
           {/* Footer */}
           <motion.div {...delay(15)} className="text-center space-y-2">
-            <p className="text-muted-foreground/20 font-mono text-[9px] italic">
+            <p className="text-muted-foreground/50 font-mono text-[9px] italic">
               Updated by the human. Maintained by the system. Verified by connected systems.
             </p>
-            <p className="text-muted-foreground/30 font-mono text-[10px]">
-              Powered by <Link to="/" className="text-accent/40 hover:text-accent transition-colors">you.md</Link>
+            <p className="text-muted-foreground/50 font-mono text-[10px]">
+              Powered by <Link to="/" className="text-accent/60 hover:text-accent transition-colors">you.md</Link>
             </p>
             <Link to="/#get-started"
-              className="text-muted-foreground/20 font-mono text-[10px] hover:text-accent/60 transition-colors">
+              className="text-muted-foreground/40 font-mono text-[10px] hover:text-accent/70 transition-colors">
               &gt; claim yours
             </Link>
           </motion.div>

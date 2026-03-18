@@ -55,21 +55,21 @@ const TypewriterCode = () => {
   const lines = visibleText.split("\n");
 
   const renderLine = (line: string) => {
-    if (line === "---") return <span className="text-muted-foreground/20">{line}</span>;
+    if (line === "---") return <span className="text-muted-foreground/40">{line}</span>;
     if (line === "") return <span>&nbsp;</span>;
     if (line.startsWith("# ")) return <span className="text-accent">{line}</span>;
-    if (line.startsWith("## ")) return <span className="text-accent/70">{line}</span>;
-    if (line.startsWith("- ")) return <span className="text-foreground/60">{line}</span>;
+    if (line.startsWith("## ")) return <span className="text-accent/80">{line}</span>;
+    if (line.startsWith("- ")) return <span className="text-foreground/75">{line}</span>;
     const colonIdx = line.indexOf(":");
     if (colonIdx > 0 && colonIdx < 20) {
       return (
         <>
-          <span className="text-accent/60">{line.slice(0, colonIdx)}</span>
-          <span className="text-muted-foreground/50">{line.slice(colonIdx)}</span>
+          <span className="text-accent/70">{line.slice(0, colonIdx)}</span>
+          <span className="text-muted-foreground/70">{line.slice(colonIdx)}</span>
         </>
       );
     }
-    return <span className="text-foreground/50">{line}</span>;
+    return <span className="text-foreground/70">{line}</span>;
   };
 
   return (
@@ -78,7 +78,7 @@ const TypewriterCode = () => {
         <div className="terminal-dot" />
         <div className="terminal-dot" />
         <div className="terminal-dot" />
-        <span className="ml-2 text-muted-foreground/30 font-mono text-[10px]">you.md</span>
+        <span className="ml-2 text-muted-foreground/50 font-mono text-[10px]">you.md</span>
       </div>
       <div className="p-5">
         <pre className="font-mono text-[11px] md:text-[12px] leading-[1.9] min-h-[200px]">
@@ -100,7 +100,7 @@ const WhatsInside = () => (
   <section id="spec" className="py-24 md:py-32">
     <div className="max-w-xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground/30 font-mono text-[10px] uppercase tracking-widest mb-2">
+        <p className="text-muted-foreground/60 font-mono text-[10px] uppercase tracking-widest mb-2">
           ── what's inside ──
         </p>
         <p className="text-muted-foreground text-[13px] font-body mb-10">A sample identity bundle.</p>
@@ -118,9 +118,9 @@ const WhatsInside = () => (
             { label: "Goals", desc: "Current focus areas" },
             { label: "Links", desc: "Verified connections" },
           ].map((item) => (
-            <div key={item.label} className="py-3 border-l-2 border-accent/15 pl-3">
+            <div key={item.label} className="py-3 border-l-2 border-accent/20 pl-3">
               <p className="text-foreground font-mono text-[11px] mb-0.5">{item.label}</p>
-              <p className="text-muted-foreground/60 font-body text-[11px]">{item.desc}</p>
+              <p className="text-muted-foreground/70 font-body text-[11px]">{item.desc}</p>
             </div>
           ))}
         </div>

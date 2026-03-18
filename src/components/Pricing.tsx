@@ -5,7 +5,7 @@ const Pricing = () => (
   <section id="pricing" className="py-24 md:py-32">
     <div className="max-w-xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground/30 font-mono text-[10px] uppercase tracking-widest mb-2">
+        <p className="text-muted-foreground/60 font-mono text-[10px] uppercase tracking-widest mb-2">
           ── pricing ──
         </p>
         <p className="text-muted-foreground text-[13px] font-body mb-14">Simple. Fair. Transparent.</p>
@@ -21,7 +21,7 @@ const Pricing = () => (
             <div className="flex items-baseline justify-between mb-4">
               <span className="text-foreground font-mono text-[13px]">Free</span>
               <span className="text-foreground font-mono text-[20px] font-light">
-                $0<span className="text-muted-foreground/30 text-[10px] ml-1">/forever</span>
+                $0<span className="text-muted-foreground/60 text-[10px] ml-1">/forever</span>
               </span>
             </div>
             <div className="space-y-2 font-mono text-[11px] text-muted-foreground mb-5">
@@ -50,7 +50,7 @@ const Pricing = () => (
             <div className="flex items-baseline justify-between mb-4">
               <span className="text-muted-foreground font-body text-[11px]">For power users.</span>
               <span className="text-foreground font-mono text-[20px] font-light">
-                $12<span className="text-muted-foreground/30 text-[10px] ml-1">/mo</span>
+                $12<span className="text-muted-foreground/60 text-[10px] ml-1">/mo</span>
               </span>
             </div>
             <div className="space-y-2 font-mono text-[11px] text-muted-foreground mb-5">
@@ -64,7 +64,7 @@ const Pricing = () => (
             <a href="#get-started" className="cta-primary block text-center px-4 py-2.5 text-[11px]">
               &gt; youmd upgrade --pro
             </a>
-            <p className="text-muted-foreground/25 font-mono text-[9px] text-center mt-2">
+            <p className="text-muted-foreground/50 font-mono text-[9px] text-center mt-2">
               keys stored locally, never on our servers
             </p>
           </motion.div>
@@ -72,7 +72,7 @@ const Pricing = () => (
       </div>
 
       <FadeUp delay={0.15}>
-        <p className="text-muted-foreground/30 font-mono text-[10px] text-center mt-10">
+        <p className="text-muted-foreground/60 font-mono text-[10px] text-center mt-10">
           we gate on usage intensity — never on core functionality.
         </p>
       </FadeUp>
