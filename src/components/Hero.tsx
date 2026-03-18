@@ -2,32 +2,31 @@ import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroWarm from "@/assets/hero-beam.png";
 
 const CliPill = () => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText("npx init youmd");
+    navigator.clipboard.writeText("npx create-youmd");
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="flex flex-col items-center gap-2.5">
-      <button onClick={handleCopy} className="cli-pill cli-glow flex items-center gap-3 px-6 py-3.5">
-        <span className="text-foreground/35">$</span>
-        <span className="text-foreground font-medium">npx init youmd</span>
-        <span className="cursor-blink text-teal">▌</span>
-        <span className="ml-1.5 text-foreground/30 hover:text-foreground/60 transition-colors">
-          {copied ? <Check size={13} className="text-teal" /> : <Copy size={13} />}
+    <div className="flex flex-col items-center gap-3">
+      <button onClick={handleCopy} className="cli-pill cli-glow flex items-center gap-3 px-5 py-3">
+        <span className="text-mist">$</span>
+        <span className="text-green font-medium">npx create-youmd</span>
+        <span className="cursor-blink text-green">▌</span>
+        <span className="ml-2 text-mist/40 hover:text-mist/70 transition-colors">
+          {copied ? <Check size={13} className="text-green" /> : <Copy size={13} />}
         </span>
       </button>
       {copied ? (
-        <span className="text-teal text-xs font-mono">Copied ✓</span>
+        <span className="text-green text-[11px]">copied to clipboard</span>
       ) : (
-        <span className="text-foreground/30 text-[11px] tracking-wide">
-          <span className="font-medium text-foreground/50">you.md</span>/username · Public or private · Readable by any agent
+        <span className="text-mist/40 text-[11px]">
+          <span className="text-cyan/60">you.md</span>/username · public or private · readable by any agent
         </span>
       )}
     </div>
@@ -41,65 +40,55 @@ const Hero = () => {
     offset: ["start start", "end start"],
   });
 
-  const bgY = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
-  const bgOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [1, 0.5, 0.2]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -80]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.5, 0.8], [1, 0.8, 0]);
 
   return (
-    <section ref={sectionRef} className="relative min-h-[110vh] flex flex-col items-center justify-end overflow-hidden">
-      {/* Hero image with parallax */}
-      <motion.div
-        className="absolute inset-0 -top-[100px]"
-        style={{ y: bgY, scale: bgScale, opacity: bgOpacity }}
-      >
-        <img
-          src={heroWarm}
-          alt="A figure standing in a warm beam of light"
-          className="w-full h-[calc(100%+100px)] object-cover object-[center_18%]"
-        />
-      </motion.div>
+    <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+      {/* Subtle beam glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[80%] beam-glow pointer-events-none" />
 
-      {/* Seamless gradient fade into sand bg */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-[60%] pointer-events-none"
-        style={{
-          background: "linear-gradient(to top, hsl(27 33% 91%) 0%, hsl(27 33% 91% / 0.97) 12%, hsl(27 33% 91% / 0.8) 35%, hsl(27 33% 91% / 0.4) 60%, hsl(27 33% 91% / 0.1) 80%, transparent 100%)"
-        }}
-      />
-
-      {/* Content with counter-parallax */}
       <motion.div
-        className="relative z-10 text-center pb-16 md:pb-24 px-6 max-w-3xl"
+        className="relative z-10 text-center px-6 max-w-2xl"
         style={{ y: contentY, opacity: contentOpacity }}
       >
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.15 }}
-          className="text-foreground text-3xl md:text-5xl lg:text-[3.75rem] font-display font-light mb-6 leading-[1.08]"
-          style={{ letterSpacing: "-0.01em" }}
+        {/* ASCII-art style header */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-8"
         >
-          The agent internet doesn't know
-          <br className="hidden sm:block" />
-          who you are. Yet.
+          <p className="text-mist/30 text-[10px] mb-4 tracking-widest uppercase">v1.0.0</p>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-foreground text-2xl md:text-4xl lg:text-[2.75rem] font-mono font-light mb-6 leading-[1.15] tracking-tight"
+        >
+          The agent internet
+          <br />
+          doesn't know who you are.
+          <br />
+          <span className="text-green">Yet.</span>
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut", delay: 0.35 }}
-          className="text-foreground/40 text-[15px] md:text-lg mb-12 max-w-md mx-auto leading-relaxed"
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="text-mist text-[13px] md:text-[14px] mb-12 max-w-lg mx-auto leading-relaxed"
         >
-          One command creates your permanent identity file — context, voice, goals — and publishes it to a URL every AI can read.
+          One command creates your identity file — context, voice, goals — and publishes it to a URL every AI can read.
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut", delay: 0.5 }}
-          className="mb-8"
+          transition={{ duration: 0.5, delay: 0.55 }}
+          className="mb-10"
         >
           <CliPill />
         </motion.div>
@@ -107,17 +96,20 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="flex items-center gap-6"
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="flex items-center justify-center gap-6 text-[12px]"
         >
-          <a href="#spec" className="text-foreground/25 text-[13px] hover:text-foreground/50 transition-colors duration-300">
-            Read the spec →
+          <a href="#spec" className="text-mist/40 hover:text-mist transition-colors">
+            read the spec →
           </a>
-          <Link to="/profiles" className="text-teal/60 text-[13px] hover:text-teal transition-colors duration-300">
-            Browse profiles →
+          <Link to="/profiles" className="text-cyan/50 hover:text-cyan transition-colors">
+            browse profiles →
           </Link>
         </motion.div>
       </motion.div>
+
+      {/* Bottom border */}
+      <div className="absolute bottom-0 inset-x-0 section-divider" />
     </section>
   );
 };

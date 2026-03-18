@@ -3,19 +3,31 @@ import { useInView } from "framer-motion";
 import FadeUp from "@/components/FadeUp";
 
 const codeLines = [
-  'name: "Alex Chen"',
-  'role: "Product designer & founder"',
-  'location: "San Francisco"',
-  'voice: "Direct, warm, no jargon"',
-  'goals:',
-  '  current: "Ship v2 by March"',
-  '  next: "Close funding round"',
-  'tools:',
-  '  primary: "Cursor, Claude Code"',
-  '  infra: "Vercel, Supabase"',
-  'preferences:',
-  '  format: "Bullet points over paragraphs"',
-  '  length: "Concise — max 3 paragraphs"',
+  "---",
+  "schema: you-md/v1",
+  'name: Alex Chen',
+  'username: alexchen',
+  "---",
+  "",
+  "# Alex Chen",
+  "",
+  "Product designer & founder. San Francisco.",
+  "",
+  "## Now",
+  "",
+  "- Ship v2 by March",
+  "- Close seed round",
+  "",
+  "## Agent Preferences",
+  "",
+  "Tone: direct, warm, no jargon",
+  "Format: bullet points over paragraphs",
+  "Length: concise — max 3 paragraphs",
+  "",
+  "## Tools",
+  "",
+  "- Primary: Cursor, Claude Code",
+  "- Infra: Vercel, Supabase",
 ];
 
 const callouts = [
@@ -42,7 +54,7 @@ const TypewriterCode = () => {
       } else {
         setVisibleChars(current);
       }
-    }, 18);
+    }, 16);
     return () => clearInterval(interval);
   }, [inView, totalChars]);
 
@@ -51,74 +63,70 @@ const TypewriterCode = () => {
   const lines = visibleText.split("\n");
 
   const renderLine = (line: string) => {
+    if (line === "---") return <span className="text-mist/25">{line}</span>;
+    if (line === "") return <span>&nbsp;</span>;
+    if (line.startsWith("# ")) return <span className="text-green font-medium">{line}</span>;
+    if (line.startsWith("## ")) return <span className="text-cyan/70">{line}</span>;
+    if (line.startsWith("- ")) return <span className="text-foreground/60">{line}</span>;
+
     const colonIdx = line.indexOf(":");
-    if (colonIdx === -1) return <span className="text-foreground/35">{line}</span>;
-
-    const key = line.slice(0, colonIdx);
-    const rest = line.slice(colonIdx);
-    const isIndented = key.startsWith("  ");
-    const quoteMatch = rest.match(/: "(.*)"$/);
-
-    return (
-      <>
-        <span className={isIndented ? "text-foreground/30" : "text-foreground/55"}>{key}</span>
-        {quoteMatch ? (
-          <>
-            <span className="text-foreground/15">: </span>
-            <span className="text-teal/90">"{quoteMatch[1]}"</span>
-          </>
-        ) : (
-          <span className="text-foreground/15">{rest}</span>
-        )}
-      </>
-    );
+    if (colonIdx > 0) {
+      const key = line.slice(0, colonIdx);
+      const val = line.slice(colonIdx);
+      return (
+        <>
+          <span className="text-amber/70">{key}</span>
+          <span className="text-mist/40">{val}</span>
+        </>
+      );
+    }
+    return <span className="text-foreground/60">{line}</span>;
   };
 
   return (
-    <div
-      ref={ref}
-      className="glass-card rounded-2xl p-6 md:p-8 overflow-x-auto"
-    >
-      <div className="flex items-center gap-1.5 mb-5 pb-4 border-b border-border/30">
-        <div className="w-[7px] h-[7px] rounded-full bg-foreground/8" />
-        <div className="w-[7px] h-[7px] rounded-full bg-foreground/8" />
-        <div className="w-[7px] h-[7px] rounded-full bg-foreground/8" />
-        <span className="ml-3 text-foreground/20 text-[11px] font-mono">you.md</span>
+    <div ref={ref} className="terminal-panel overflow-x-auto">
+      <div className="terminal-panel-header">
+        <div className="terminal-dot" />
+        <div className="terminal-dot" />
+        <div className="terminal-dot" />
+        <span className="ml-2 text-mist/30 text-[10px] font-mono">you.md</span>
       </div>
-      <pre className="font-mono text-[13px] leading-[2] min-h-[260px]">
-        <code>
-          {lines.map((line, i) => (
-            <div key={i}>{renderLine(line)}</div>
-          ))}
-          {visibleChars < totalChars && (
-            <span className="cursor-blink text-teal">▌</span>
-          )}
-        </code>
-      </pre>
+      <div className="p-5 md:p-6">
+        <pre className="font-mono text-[12px] md:text-[13px] leading-[1.9] min-h-[260px]">
+          <code>
+            {lines.map((line, i) => (
+              <div key={i}>{renderLine(line)}</div>
+            ))}
+            {visibleChars < totalChars && (
+              <span className="cursor-blink text-green">▌</span>
+            )}
+          </code>
+        </pre>
+      </div>
     </div>
   );
 };
 
 const WhatsInside = () => (
-  <section id="spec" className="py-24 md:py-32 bg-secondary">
-    <div className="max-w-5xl mx-auto px-6">
+  <section id="spec" className="py-24 md:py-32">
+    <div className="max-w-3xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground text-[10px] font-mono uppercase tracking-[0.25em] mb-3">What's inside</p>
-        <p className="text-foreground/35 text-sm mb-14">A preview of a sample you.md identity bundle.</p>
+        <p className="text-mist/30 text-[10px] font-mono uppercase tracking-widest mb-2">what's inside</p>
+        <p className="text-mist text-[12px] mb-14">A preview of a sample you.md identity bundle.</p>
       </FadeUp>
 
-      <div className="grid md:grid-cols-5 gap-8 md:gap-12 items-start">
+      <div className="grid md:grid-cols-5 gap-8 md:gap-10 items-start">
         <div className="md:col-span-3">
           <FadeUp delay={0.1}>
             <TypewriterCode />
           </FadeUp>
         </div>
-        <div className="md:col-span-2 flex flex-col gap-7 md:pt-4">
+        <div className="md:col-span-2 flex flex-col gap-6 md:pt-4">
           {callouts.map((c, i) => (
             <FadeUp key={c.label} delay={0.15 + i * 0.06}>
-              <div className="border-l-[2px] border-teal/25 pl-4 py-0.5">
-                <h4 className="text-foreground text-[13px] font-medium mb-1 tracking-tight">{c.label}</h4>
-                <p className="text-muted-foreground text-[13px] leading-relaxed">{c.desc}</p>
+              <div className="border-l border-green/20 pl-4 py-0.5">
+                <h4 className="text-foreground text-[12px] font-mono font-medium mb-1">{c.label}</h4>
+                <p className="text-mist text-[11px] leading-relaxed">{c.desc}</p>
               </div>
             </FadeUp>
           ))}
