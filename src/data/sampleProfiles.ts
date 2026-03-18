@@ -1,15 +1,33 @@
+export interface Project {
+  name: string;
+  role: string;
+  status: "active" | "building" | "publishing" | "launching" | "shipped";
+  description: string;
+  url?: string;
+  stars?: number;
+  mrr?: string;
+}
+
+export interface ActivityItem {
+  date: string;
+  action: string;
+  detail: string;
+}
+
 export interface Profile {
   username: string;
   name: string;
   tagline: string;
   location: string;
   voice: string;
+  avatarUrl: string;
+  coverUrl: string;
   bio: {
     short: string;
     medium: string;
   };
   now: string[];
-  projects: { name: string; role: string; status: string; description: string }[];
+  projects: Project[];
   values: string[];
   preferences: {
     tone: string;
@@ -20,6 +38,11 @@ export interface Profile {
   links: { label: string; url: string }[];
   topics: string[];
   credibility: string[];
+  socialProof: {
+    metric: string;
+    value: string;
+  }[];
+  activity: ActivityItem[];
 }
 
 export const sampleProfiles: Profile[] = [
@@ -29,14 +52,16 @@ export const sampleProfiles: Profile[] = [
     tagline: "Founder, BAMF Media. Building You.md.",
     location: "Miami, FL",
     voice: "Direct, high-energy, founder-coded.",
+    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+    coverUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=300&fit=crop",
     bio: {
       short: "Founder building identity infrastructure for the agent internet.",
       medium: "Founded BAMF Media (8-figure growth agency), LinkedIn growth pioneer. Now building You.md — the identity file standard for the agent internet. I ship fast and build in public.",
     },
     now: ["Building You.md", "Scaling BAMF Media"],
     projects: [
-      { name: "You.md", role: "Founder", status: "building", description: "Identity as code for the agent internet." },
-      { name: "BAMF Media", role: "Founder/CEO", status: "active", description: "Growth marketing agency." },
+      { name: "You.md", role: "Founder", status: "building", description: "Identity as code for the agent internet.", url: "https://you.md" },
+      { name: "BAMF Media", role: "Founder/CEO", status: "active", description: "Growth marketing agency.", url: "#", mrr: "$800k+" },
     ],
     values: ["Build in public", "Extreme ownership", "Ship fast"],
     preferences: {
@@ -52,6 +77,17 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["growth marketing", "AI agents", "identity protocols"],
     credibility: ["Founded BAMF Media (8-figure agency)", "LinkedIn growth pioneer"],
+    socialProof: [
+      { metric: "LinkedIn followers", value: "120k+" },
+      { metric: "Companies scaled", value: "500+" },
+      { metric: "Revenue generated", value: "$100M+" },
+    ],
+    activity: [
+      { date: "2026-03-17", action: "published", detail: "Updated identity bundle to v1.2" },
+      { date: "2026-03-15", action: "connected", detail: "Linked Claude Code agent" },
+      { date: "2026-03-12", action: "updated", detail: "Added new project: You.md" },
+      { date: "2026-03-08", action: "initialized", detail: "Created you.md/houston" },
+    ],
   },
   {
     username: "priya",
@@ -59,6 +95,8 @@ export const sampleProfiles: Profile[] = [
     tagline: "ML engineer @ Anthropic. Alignment researcher.",
     location: "London, UK",
     voice: "Technical but approachable, loves analogies.",
+    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face",
+    coverUrl: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&h=300&fit=crop",
     bio: {
       short: "Research engineer focused on RLHF and alignment.",
       medium: "ML engineer at Anthropic working on RLHF and alignment research. I think in probability distributions and communicate in analogies. Weekend ceramicist. Published 12 papers on reward modeling.",
@@ -66,7 +104,7 @@ export const sampleProfiles: Profile[] = [
     now: ["Publishing alignment paper Q2", "Open-sourcing eval framework"],
     projects: [
       { name: "Reward Landscapes", role: "Lead researcher", status: "publishing", description: "Novel approach to multi-objective reward modeling." },
-      { name: "EvalKit", role: "Creator", status: "building", description: "Open-source LLM evaluation framework." },
+      { name: "EvalKit", role: "Creator", status: "building", description: "Open-source LLM evaluation framework.", url: "#", stars: 2400 },
     ],
     values: ["Rigorous thinking", "Open science", "Making AI safe"],
     preferences: {
@@ -81,6 +119,17 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["RLHF", "alignment", "reward modeling", "open-source ML"],
     credibility: ["ML Engineer at Anthropic", "12 published papers on reward modeling"],
+    socialProof: [
+      { metric: "Papers published", value: "12" },
+      { metric: "Citations", value: "3,200+" },
+      { metric: "GitHub stars", value: "5.4k" },
+    ],
+    activity: [
+      { date: "2026-03-16", action: "published", detail: "Updated research interests" },
+      { date: "2026-03-14", action: "connected", detail: "Linked Cursor agent" },
+      { date: "2026-03-10", action: "updated", detail: "Added EvalKit project" },
+      { date: "2026-03-05", action: "initialized", detail: "Created you.md/priya" },
+    ],
   },
   {
     username: "jmarcus",
@@ -88,14 +137,16 @@ export const sampleProfiles: Profile[] = [
     tagline: "Indie hacker. 3 exits. Building in public.",
     location: "Austin, TX",
     voice: "Casual, emoji-friendly, shipping energy.",
+    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
+    coverUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=300&fit=crop",
     bio: {
       short: "Building micro-SaaS products in public.",
       medium: "3 exits, 12 failed projects, infinite lessons. Currently running ScreenshotAPI ($8k MRR) and TinyInvoice ($4k MRR). I document everything and believe the best marketing is building in public.",
     },
     now: ["Hit $20k MRR across products", "Launch AI writing tool"],
     projects: [
-      { name: "ScreenshotAPI", role: "Solo founder", status: "active", description: "Website screenshot API. $8k MRR." },
-      { name: "TinyInvoice", role: "Solo founder", status: "active", description: "Invoice generator for freelancers. $4k MRR." },
+      { name: "ScreenshotAPI", role: "Solo founder", status: "active", description: "Website screenshot API.", url: "#", mrr: "$8k" },
+      { name: "TinyInvoice", role: "Solo founder", status: "active", description: "Invoice generator for freelancers.", url: "#", mrr: "$4k" },
     ],
     values: ["Ship daily", "Revenue over fundraising", "Transparency"],
     preferences: {
@@ -111,6 +162,17 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["indie hacking", "micro-SaaS", "building in public", "solopreneurship"],
     credibility: ["3 successful exits", "$12k+ combined MRR across products"],
+    socialProof: [
+      { metric: "Products shipped", value: "15" },
+      { metric: "Combined MRR", value: "$12k" },
+      { metric: "X followers", value: "28k" },
+    ],
+    activity: [
+      { date: "2026-03-18", action: "updated", detail: "MRR milestone update" },
+      { date: "2026-03-15", action: "published", detail: "Added AI writing tool to projects" },
+      { date: "2026-03-09", action: "connected", detail: "Linked Goose agent" },
+      { date: "2026-03-01", action: "initialized", detail: "Created you.md/jmarcus" },
+    ],
   },
   {
     username: "sato.yuki",
@@ -118,14 +180,16 @@ export const sampleProfiles: Profile[] = [
     tagline: "Staff engineer @ Stripe. Distributed systems.",
     location: "Tokyo, Japan",
     voice: "Precise, systems-thinking, dry humor.",
+    avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
+    coverUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=300&fit=crop",
     bio: {
       short: "Distributed systems at scale. Correctness over cleverness.",
       medium: "Staff engineer at Stripe working on payment routing infrastructure. I care about correctness, observability, and well-written RFCs. Maintaining two popular open-source Rust crates with 5k+ combined stars.",
     },
     now: ["Migrating payment routing to new architecture", "Writing a technical book on distributed systems"],
     projects: [
-      { name: "tokio-retry", role: "Maintainer", status: "active", description: "Retry middleware for Tokio. 3.2k stars." },
-      { name: "serde-diff", role: "Creator", status: "active", description: "Structural diffing for Serde types. 1.8k stars." },
+      { name: "tokio-retry", role: "Maintainer", status: "active", description: "Retry middleware for Tokio.", url: "#", stars: 3200 },
+      { name: "serde-diff", role: "Creator", status: "active", description: "Structural diffing for Serde types.", url: "#", stars: 1800 },
     ],
     values: ["Correctness first", "Write it down", "Mentor generously"],
     preferences: {
@@ -140,6 +204,17 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["distributed systems", "Rust", "observability", "payment infrastructure"],
     credibility: ["Staff Engineer at Stripe", "5k+ stars on open-source Rust crates"],
+    socialProof: [
+      { metric: "GitHub stars", value: "5k+" },
+      { metric: "RFCs authored", value: "34" },
+      { metric: "Years at Stripe", value: "6" },
+    ],
+    activity: [
+      { date: "2026-03-17", action: "updated", detail: "Added book project to profile" },
+      { date: "2026-03-13", action: "published", detail: "Updated agent preferences" },
+      { date: "2026-03-07", action: "connected", detail: "Linked Aider agent" },
+      { date: "2026-03-02", action: "initialized", detail: "Created you.md/sato.yuki" },
+    ],
   },
   {
     username: "emmawright",
@@ -147,6 +222,8 @@ export const sampleProfiles: Profile[] = [
     tagline: "Creative director. Brand strategist. Strong feelings about kerning.",
     location: "Brooklyn, NY",
     voice: "Visual thinker, storytelling-first, bold opinions.",
+    avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
+    coverUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=300&fit=crop",
     bio: {
       short: "Making brands feel like they have a soul.",
       medium: "Creative director working with startups and cultural institutions. Previously at Pentagram. I believe every brand has a story worth telling — most just haven't found the right words yet. Strong feelings about kerning.",
@@ -154,7 +231,7 @@ export const sampleProfiles: Profile[] = [
     now: ["Launching rebrand for a climate tech startup", "Teaching brand workshop series"],
     projects: [
       { name: "Canopy Rebrand", role: "Creative Director", status: "building", description: "Full brand identity for climate tech startup." },
-      { name: "Brand Bones", role: "Instructor", status: "launching", description: "Workshop series on brand fundamentals." },
+      { name: "Brand Bones", role: "Instructor", status: "launching", description: "Workshop series on brand fundamentals.", url: "#" },
     ],
     values: ["Story over aesthetics", "Bold over safe", "Details matter"],
     preferences: {
@@ -170,6 +247,17 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["brand strategy", "creative direction", "visual identity", "storytelling"],
     credibility: ["Previously at Pentagram", "Worked with 40+ startups on brand identity"],
+    socialProof: [
+      { metric: "Brands created", value: "40+" },
+      { metric: "Awwwards", value: "7" },
+      { metric: "Workshop alumni", value: "600+" },
+    ],
+    activity: [
+      { date: "2026-03-16", action: "published", detail: "Added Brand Bones workshop" },
+      { date: "2026-03-11", action: "updated", detail: "Updated portfolio link" },
+      { date: "2026-03-06", action: "connected", detail: "Linked Claude Code agent" },
+      { date: "2026-03-03", action: "initialized", detail: "Created you.md/emmawright" },
+    ],
   },
   {
     username: "kai",
@@ -177,14 +265,16 @@ export const sampleProfiles: Profile[] = [
     tagline: "DevRel lead @ Vercel. 50k YouTube subscribers.",
     location: "Copenhagen, Denmark",
     voice: "Enthusiastic, educational, community-driven.",
+    avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face",
+    coverUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&h=300&fit=crop",
     bio: {
       short: "Helping developers build faster.",
       medium: "DevRel lead at Vercel. Conference speaker, tutorial creator, and eternal optimist about the web platform. 50k+ YouTube subscribers. I believe the best docs are the ones people actually enjoy reading.",
     },
     now: ["Launching new docs platform", "Keynote prep for React Conf"],
     projects: [
-      { name: "Vercel Docs v3", role: "Lead", status: "building", description: "Next-gen documentation platform." },
-      { name: "Ship It", role: "Host", status: "active", description: "YouTube series on web dev. 50k subs." },
+      { name: "Vercel Docs v3", role: "Lead", status: "building", description: "Next-gen documentation platform.", url: "#" },
+      { name: "Ship It", role: "Host", status: "active", description: "YouTube series on web dev. 50k subs.", url: "#" },
     ],
     values: ["Teach by building", "Community first", "Make it fun"],
     preferences: {
@@ -200,5 +290,16 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["developer relations", "Next.js", "web platform", "content creation"],
     credibility: ["DevRel Lead at Vercel", "50k+ YouTube subscribers"],
+    socialProof: [
+      { metric: "YouTube subs", value: "50k+" },
+      { metric: "Conf talks", value: "24" },
+      { metric: "Tutorials", value: "200+" },
+    ],
+    activity: [
+      { date: "2026-03-18", action: "updated", detail: "Added React Conf keynote to Now" },
+      { date: "2026-03-14", action: "published", detail: "Updated agent preferences" },
+      { date: "2026-03-10", action: "connected", detail: "Linked Cursor agent" },
+      { date: "2026-03-04", action: "initialized", detail: "Created you.md/kai" },
+    ],
   },
 ];
