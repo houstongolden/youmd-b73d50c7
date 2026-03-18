@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import FadeUp from "@/components/FadeUp";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const CTAFooter = () => {
   const [copied, setCopied] = useState(false);
