@@ -24,6 +24,17 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        // PRD palette
+        coral: "hsl(var(--coral))",
+        blush: "hsl(var(--blush))",
+        sky: "hsl(var(--sky))",
+        ether: "hsl(var(--ether))",
+        gold: "hsl(var(--gold))",
+        light: "hsl(var(--light))",
+        void: "hsl(var(--void))",
+        ink: "hsl(var(--ink))",
+        mist: "hsl(var(--mist))",
+        // Legacy
         sand: "hsl(var(--sand))",
         mauve: "hsl(var(--mauve))",
         teal: "hsl(var(--teal))",
