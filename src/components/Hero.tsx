@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import PixelYOU from "@/components/PixelYOU";
