@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Shield, ArrowRight } from "lucide-react";
 import { sampleProfiles } from "@/data/sampleProfiles";
 import FadeUp from "@/components/FadeUp";
+import AsciiAvatar from "@/components/AsciiAvatar";
 
 const ProfilesShowcase = () => {
   const featured = sampleProfiles.slice(0, 6);
