@@ -51,7 +51,7 @@ const CTAFooter = () => {
       <footer className="py-8 px-6">
         <div className="section-divider mb-8" />
         <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <Link to="/" className="text-accent font-mono text-[11px] hover:text-accent-light transition-colors">you.md</Link>
+          <Link to="/" className="text-accent font-mono text-[11px] hover:text-accent-light transition-colors">you</Link>
           <div className="flex items-center gap-5">
             <a href="#spec" className="text-muted-foreground/60 font-mono text-[10px] hover:text-accent transition-colors">&gt; spec</a>
             <a href="#" className="text-muted-foreground/60 font-mono text-[10px] hover:text-accent transition-colors">&gt; github</a>
@@ -60,7 +60,7 @@ const CTAFooter = () => {
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <span className="text-muted-foreground/50 font-mono text-[9px]">you-md/v1</span>
+            <span className="text-muted-foreground/50 font-mono text-[9px]">you/v1</span>
           </div>
         </div>
       </footer>

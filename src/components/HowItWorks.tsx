@@ -4,7 +4,7 @@ import FadeUp from "@/components/FadeUp";
 
 const steps = [
   { num: "01", cmd: "$ npx youmd init", desc: "Answer a few prompts. Your identity bundle is generated locally." },
-  { num: "02", cmd: "$ youmd publish", desc: "Your bundle publishes to you.md/username — readable by any agent." },
+  { num: "02", cmd: "$ youmd publish", desc: "Your identity publishes to you.md/username — readable by any agent." },
   { num: "03", cmd: "$ youmd link create", desc: "Share your context link with any agent, framework, or tool." },
 ];
 

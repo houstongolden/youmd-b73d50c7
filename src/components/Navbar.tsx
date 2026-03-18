@@ -43,7 +43,7 @@ const Navbar = () => {
           }`}
         >
           <a href="/" className="text-accent font-mono text-[12px] tracking-tight whitespace-nowrap">
-            you.md
+            you
           </a>
 
           <div className="hidden md:flex items-center gap-5">

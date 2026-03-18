@@ -179,7 +179,7 @@ const Hero = () => {
           className="mb-4"
         >
           <h1 className="text-foreground text-2xl md:text-4xl font-mono font-light tracking-tight">
-            YOU.MD
+            YOU
           </h1>
         </motion.div>
 
@@ -189,7 +189,7 @@ const Hero = () => {
           transition={{ duration: 0.4, delay: 2.0 }}
           className="text-muted-foreground font-mono text-[13px] mb-2 leading-relaxed"
         >
-          your identity file
+          identity context protocol
         </motion.p>
         <motion.p
           initial={{ opacity: 0 }}

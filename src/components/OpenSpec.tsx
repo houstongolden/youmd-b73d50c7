@@ -16,9 +16,9 @@ const OpenSpec = () => (
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
-              you-md/v1
+              you/v1
             </motion.span>{" "}
-            is an open spec.
+            is an open protocol.
           </p>
           <p className="text-muted-foreground font-body text-[13px] mt-2">
             Read it, fork it, build on it.
@@ -28,7 +28,7 @@ const OpenSpec = () => (
               href="#"
               className="text-muted-foreground/60 font-mono text-[11px] hover:text-accent transition-colors duration-200"
             >
-              &gt; cat spec.you.md →
+              &gt; cat spec.you →
             </a>
             <a
               href="#"
