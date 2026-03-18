@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import PixelYOU from "@/components/PixelYOU";
@@ -179,14 +180,18 @@ const Hero = () => {
 
           {/* RIGHT — ASCII portrait */}
           <div className="flex-1 flex justify-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-              className="w-full max-w-md"
-            >
-              <HeroPortrait />
-            </motion.div>
+            <Link to="/profile/houston" className="block w-full max-w-md group">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+              >
+                <HeroPortrait />
+                <p className="text-center font-mono text-[9px] text-muted-foreground/40 mt-2 group-hover:text-accent/60 transition-colors">
+                  &gt; view profile example
+                </p>
+              </motion.div>
+            </Link>
           </div>
         </div>
 
