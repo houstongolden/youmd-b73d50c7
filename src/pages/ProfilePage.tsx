@@ -383,32 +383,7 @@ const ProfilePage = () => {
           {/* ═══ AGENT NETWORK ═══ */}
           <motion.div {...delay(6)}>
             <SectionHeader>agent network</SectionHeader>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
-              <div>
-                <p className="text-foreground font-mono text-[18px] font-medium">
-                  {profile.agentMetrics.totalReads.toLocaleString()}
-                </p>
-                <p className="text-muted-foreground/60 font-mono text-[9px]">total reads</p>
-              </div>
-              <div>
-                <p className="text-accent font-mono text-[18px] font-medium">
-                  +{profile.agentMetrics.recentReads24h}
-                </p>
-                <p className="text-muted-foreground/60 font-mono text-[9px]">reads (24h)</p>
-              </div>
-              <div>
-                <p className="text-foreground font-mono text-[18px] font-medium">
-                  {profile.agentMetrics.connectedAgentsCount}
-                </p>
-                <p className="text-muted-foreground/60 font-mono text-[9px]">connected agents</p>
-              </div>
-              <div>
-                <p className="text-success font-mono text-[18px] font-medium">
-                  {profile.agentMetrics.verifiedAgents}
-                </p>
-                <p className="text-muted-foreground/60 font-mono text-[9px]">verified agents</p>
-              </div>
-            </div>
+            <AgentNetworkMetrics profile={profile} />
             <div className="grid grid-cols-2 gap-4 mb-5">
               <div>
                 <p className="text-foreground font-mono text-[14px] font-medium">
