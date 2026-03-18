@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import FadeUp from "@/components/FadeUp";
 
 const Pricing = () => (
@@ -13,7 +14,10 @@ const Pricing = () => (
       <div className="space-y-6">
         {/* Free */}
         <FadeUp delay={0}>
-          <div className="border border-border rounded p-6">
+          <motion.div
+            whileHover={{ borderColor: "hsl(var(--accent) / 0.15)" }}
+            className="border border-border rounded p-6 transition-colors"
+          >
             <div className="flex items-baseline justify-between mb-4">
               <span className="text-foreground font-mono text-[13px]">Free</span>
               <span className="text-foreground font-mono text-[20px] font-light">
@@ -26,15 +30,19 @@ const Pricing = () => (
               <p>  ✓ Sharing URL</p>
               <p>  ✓ 3 pipeline runs/mo</p>
             </div>
-            <a href="#get-started" className="cta-outline block text-center px-4 py-2 text-[11px]">
+            <a href="#get-started" className="cta-outline block text-center px-4 py-2.5 text-[11px]">
               &gt; youmd init
             </a>
-          </div>
+          </motion.div>
         </FadeUp>
 
         {/* Pro */}
         <FadeUp delay={0.08}>
-          <div className="border border-accent/30 rounded p-6">
+          <motion.div
+            whileHover={{ borderColor: "hsl(var(--accent) / 0.5)" }}
+            className="border border-accent/30 rounded p-6 relative overflow-hidden transition-colors"
+          >
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
             <div className="flex items-baseline justify-between mb-1">
               <span className="text-foreground font-mono text-[13px]">Pro</span>
               <span className="text-accent font-mono text-[9px] uppercase tracking-wider">recommended</span>
@@ -53,13 +61,13 @@ const Pricing = () => (
               <p>  › Custom domain</p>
               <p>  › Analytics & scoped API keys</p>
             </div>
-            <a href="#get-started" className="cta-primary block text-center px-4 py-2 text-[11px]">
+            <a href="#get-started" className="cta-primary block text-center px-4 py-2.5 text-[11px]">
               &gt; youmd upgrade --pro
             </a>
             <p className="text-muted-foreground/25 font-mono text-[9px] text-center mt-2">
               keys stored locally, never on our servers
             </p>
-          </div>
+          </motion.div>
         </FadeUp>
       </div>
 

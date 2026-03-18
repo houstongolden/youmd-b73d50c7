@@ -1,27 +1,59 @@
+import { motion } from "framer-motion";
 import FadeUp from "@/components/FadeUp";
 
-const agents = ["Claude Code", "Cursor", "CrewAI", "Goose", "Aider", "OpenClaw", "Codex CLI"];
+const agents = [
+  { name: "Claude Code", tier: "primary" },
+  { name: "Cursor", tier: "primary" },
+  { name: "Codex CLI", tier: "primary" },
+  { name: "Perplexity", tier: "primary" },
+  { name: "ChatGPT", tier: "secondary" },
+  { name: "CrewAI", tier: "secondary" },
+  { name: "Goose", tier: "secondary" },
+  { name: "Aider", tier: "secondary" },
+  { name: "OpenClaw", tier: "secondary" },
+  { name: "Windsurf", tier: "secondary" },
+];
 
 const Integrations = () => (
   <section className="py-16 md:py-24">
     <div className="max-w-xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground/30 font-mono text-[10px] uppercase tracking-widest mb-10 text-center">
+        <p className="text-muted-foreground/30 font-mono text-[10px] uppercase tracking-widest mb-3 text-center">
           ── compatible agents ──
+        </p>
+        <p className="text-muted-foreground/50 font-body text-[12px] mb-10 text-center">
+          Works with any agent that reads structured context.
         </p>
       </FadeUp>
 
       <FadeUp delay={0.08}>
-        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
-          {agents.map((name) => (
-            <span
-              key={name}
-              className="text-muted-foreground/40 hover:text-accent font-mono text-[11px] transition-colors duration-300 cursor-default select-none px-2.5 py-1"
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {agents.map((agent, i) => (
+            <motion.span
+              key={agent.name}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: i * 0.04 }}
+              whileHover={{ scale: 1.05, y: -1 }}
+              className={`font-mono text-[11px] transition-colors duration-300 cursor-default select-none px-3 py-1.5 rounded border ${
+                agent.tier === "primary"
+                  ? "text-accent/70 border-accent/15 hover:border-accent/40 hover:text-accent bg-accent-wash/30"
+                  : "text-muted-foreground/40 border-border/50 hover:border-accent/20 hover:text-accent/60"
+              }`}
             >
-              {name}
-            </span>
+              {agent.name}
+            </motion.span>
           ))}
         </div>
+      </FadeUp>
+
+      <FadeUp delay={0.15}>
+        <p className="text-center mt-8">
+          <span className="text-muted-foreground/20 font-mono text-[10px]">
+            + any agent that supports context injection
+          </span>
+        </p>
       </FadeUp>
     </div>
   </section>
