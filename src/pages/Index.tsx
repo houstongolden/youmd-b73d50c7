@@ -9,7 +9,7 @@ import Pricing from "@/components/Pricing";
 import CTAFooter from "@/components/CTAFooter";
 
 const Index = () => (
-  <div className="landing-page">
+  <div>
     <Navbar />
     <Hero />
     <ProblemStrip />

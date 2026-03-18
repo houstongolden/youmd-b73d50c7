@@ -6,18 +6,18 @@ const OpenSpec = () => (
       <div className="section-divider mb-12" />
       <FadeUp>
         <div className="terminal-panel p-6 md:p-8 text-center">
-          <p className="text-amber/60 text-[10px] font-mono mb-4 tracking-wider uppercase">open standard</p>
+          <p className="text-accent/60 text-[10px] font-mono mb-4 tracking-wider uppercase">open standard</p>
           <p className="text-foreground/70 text-[14px] md:text-[16px] font-mono font-light leading-relaxed max-w-lg mx-auto">
-            <span className="text-cyan">you-md/v1</span> is an open spec.
+            <span className="text-accent">you-md/v1</span> is an open spec.
             <br />
             Read it, fork it, build on it.
           </p>
           <div className="mt-6">
             <a
               href="#"
-              className="inline-flex items-center gap-1.5 text-green/70 text-[12px] font-mono hover:text-green transition-colors"
+              className="inline-flex items-center gap-1.5 text-accent/70 text-[12px] font-mono hover:text-accent transition-colors"
             >
-              $ cat spec.you.md →
+              &gt; cat spec.you.md →
             </a>
           </div>
         </div>
