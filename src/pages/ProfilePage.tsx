@@ -355,10 +355,7 @@ const ProfilePage = () => {
               <StatusLine label="voice" value={profile.freshness.voice} color={stateColor(profile.freshness.voice)} />
               <StatusLine label="sources" value={profile.freshness.sources} color={stateColor(profile.freshness.sources)} />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-[10px] text-muted-foreground/60">freshness score:</span>
-              <span className="font-mono text-[14px] text-accent font-medium">{profile.freshness.score}/100</span>
-            </div>
+            <FreshnessScore score={profile.freshness.score} />
           </motion.div>
 
           <Divider />
