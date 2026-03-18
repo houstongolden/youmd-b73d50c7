@@ -1,4 +1,6 @@
 import FadeUp from "@/components/FadeUp";
+import AsciiAvatar from "@/components/AsciiAvatar";
+import houstonImg from "@/assets/houston-portrait.jpeg";
 
 const FounderQuote = () => (
   <section className="relative py-20 px-4">
