@@ -7,18 +7,18 @@
 @layer base {
   :root {
     /* Dark mode is default */
-    --bg: 0 0% 4%;
-    --bg-raised: 0 0% 8%;
-    --text-primary: 30 10% 90%;
-    --text-secondary: 30 5% 42%;
-    --border-color: 0 0% 16%;
+    --bg: 0 0% 5%;
+    --bg-raised: 0 0% 9%;
+    --text-primary: 30 10% 88%;
+    --text-secondary: 30 5% 55%;
+    --border-color: 0 0% 18%;
 
     /* Burnt orange accent system */
-    --accent: 20 55% 50%;
-    --accent-dark: 20 60% 39%;
-    --accent-mid: 20 45% 59%;
+    --accent: 20 60% 52%;
+    --accent-dark: 20 60% 42%;
+    --accent-mid: 20 50% 62%;
     --accent-light: 24 45% 75%;
-    --accent-wash: 20 30% 10%;
+    --accent-wash: 20 30% 12%;
 
     /* Semantic tokens */
     --background: var(--bg);
@@ -69,17 +69,17 @@
 
   /* Light mode override */
   .light {
-    --bg: 36 23% 95%;
+    --bg: 36 20% 96%;
     --bg-raised: 0 0% 100%;
-    --text-primary: 0 0% 10%;
-    --text-secondary: 30 6% 58%;
-    --border-color: 30 10% 88%;
+    --text-primary: 0 0% 12%;
+    --text-secondary: 30 6% 40%;
+    --border-color: 30 10% 84%;
 
-    --accent: 20 55% 50%;
-    --accent-dark: 20 60% 39%;
-    --accent-mid: 20 45% 59%;
-    --accent-light: 24 45% 75%;
-    --accent-wash: 30 30% 94%;
+    --accent: 20 60% 45%;
+    --accent-dark: 20 65% 35%;
+    --accent-mid: 20 50% 55%;
+    --accent-light: 24 45% 70%;
+    --accent-wash: 30 25% 92%;
 
     --secondary: 36 15% 89%;
     --muted-val: 36 12% 86%;
