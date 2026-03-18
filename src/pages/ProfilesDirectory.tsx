@@ -17,12 +17,18 @@ const ProfileCard = ({ profile, index }: { profile: typeof sampleProfiles[0]; in
       className="block py-4 border-b border-border group hover:bg-accent-wash/30 transition-all duration-200 px-3 -mx-3 rounded"
     >
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded overflow-hidden border border-border group-hover:border-accent/30 transition-colors shrink-0 bg-background">
+        <div className="w-10 h-10 rounded overflow-hidden border border-border group-hover:border-accent/30 transition-colors shrink-0 bg-background relative">
           <AsciiAvatar
             src={profile.avatarUrl}
             cols={120}
             canvasWidth={80}
             className="w-full h-full object-cover"
+          />
+          <img
+            src={profile.avatarUrl}
+            alt={profile.name}
+            className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            loading="lazy"
           />
         </div>
         <div className="flex-1 min-w-0">

@@ -247,56 +247,8 @@ const ProfilePage = () => {
           {/* ═══ SYSTEM HEADER ═══ */}
           <motion.div {...delay(0)} className="mt-4 mb-6">
             <div className="flex items-end gap-4 mb-4">
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded border-2 border-background overflow-hidden bg-background shrink-0">
-                <canvas ref={(() => {
-                  const ref = { current: null as HTMLCanvasElement | null };
-                  return (el: HTMLCanvasElement | null) => {
-                    if (!el || ref.current === el) return;
-                    ref.current = el;
-                    const img = new Image();
-                    img.crossOrigin = "anonymous";
-                    img.onload = () => {
-                      const cols = 60;
-                      const c = document.createElement("canvas");
-                      const rows = Math.floor(cols * (img.naturalHeight / img.naturalWidth) * 0.46);
-                      c.width = cols; c.height = rows;
-                      const ctx2 = c.getContext("2d");
-                      if (!ctx2) return;
-                      ctx2.filter = "contrast(1.35) brightness(1.05)";
-                      ctx2.drawImage(img, 0, 0, cols, rows);
-                      const px = ctx2.getImageData(0, 0, cols, rows).data;
-                      const RAMP = `$@B%8&#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}?-_+~<>i!lI;:,". `;
-                      const W = 160;
-                      el.width = W;
-                      const cellW = W / cols;
-                      const cellH = cellW * 2.1;
-                      el.height = Math.ceil(rows * cellH);
-                      const ctx = el.getContext("2d");
-                      if (!ctx) return;
-                      const fs = Math.max(3, Math.floor(cellH * 1.05));
-                      ctx.font = `${fs}px "Courier New",monospace`;
-                      ctx.textBaseline = "top";
-                      for (let y = 0; y < rows; y++)
-                        for (let x = 0; x < cols; x++) {
-                          const i = (y * cols + x) * 4;
-                          const lum = 0.299 * px[i] + 0.587 * px[i+1] + 0.114 * px[i+2];
-                          const lumColors = [
-                            [25, "transparent"], [55, "hsl(20 50% 10%)"], [85, "hsl(20 55% 16%)"],
-                            [115, "hsl(20 58% 24%)"], [145, "hsl(20 60% 34%)"], [175, "hsl(20 60% 42%)"],
-                            [205, "hsl(20 60% 52%)"], [230, "hsl(22 55% 60%)"]
-                          ] as [number, string][];
-                          let color = "hsl(24 50% 72%)";
-                          for (const [t, c] of lumColors) { if (lum < t) { color = c; break; } }
-                          ctx.fillStyle = color;
-                          ctx.fillText(RAMP[Math.floor((lum / 255) * (RAMP.length - 1))], x * cellW, y * cellH);
-                        }
-                    };
-                    img.src = profile.avatarUrl;
-                  };
-                })()}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              <img src={profile.avatarUrl} alt={profile.name}
+                className="w-16 h-16 md:w-20 md:h-20 rounded border-2 border-background object-cover" loading="lazy" />
               <div className="pb-1 flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <h1 className="text-foreground font-mono text-lg md:text-xl font-medium tracking-tight truncate">
