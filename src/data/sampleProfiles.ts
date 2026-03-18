@@ -17,6 +17,28 @@ export interface ActivityItem {
 export interface AgentConnection {
   name: string;
   lastAccess: string;
+  isVerified?: boolean;
+}
+
+export interface ConnectedSource {
+  name: string;
+  status: "verified" | "synced" | "pending";
+  lastSync?: string;
+}
+
+export interface FreshnessState {
+  identity: "current" | "stale" | "outdated";
+  projects: "current" | "stale" | "outdated";
+  voice: "current" | "stale" | "outdated";
+  sources: "current" | "syncing" | "stale";
+  score: number; // 0-100
+}
+
+export interface MaintenanceInfo {
+  humanEdits: boolean;
+  agentMaintenance: boolean;
+  updateMode: "auto-publish" | "review before publish" | "manual only";
+  activeMaintainers: string[];
 }
 
 export interface Profile {
@@ -43,12 +65,14 @@ export interface Profile {
   links: { label: string; url: string }[];
   topics: string[];
   credibility: string[];
-  // Agent metrics
   agentMetrics: {
     totalReads: number;
     activeIntegrations: number;
     recentReads24h: number;
     contextScore: number;
+    contextSessions: number;
+    connectedAgentsCount: number;
+    verifiedAgents: number;
   };
   agentConnections: AgentConnection[];
   identityState: {
@@ -61,7 +85,13 @@ export interface Profile {
   verification: {
     verified: boolean;
     methods: string[];
+    verifiedAt?: string;
+    level?: "person" | "builder" | "company";
   };
+  connectedSources: ConnectedSource[];
+  freshness: FreshnessState;
+  maintenance: MaintenanceInfo;
+  recentChanges: string[];
   topQueries: string[];
   publicSections: string[];
   privateSections: string[];
@@ -83,7 +113,7 @@ export const sampleProfiles: Profile[] = [
       short: "Founder building identity infrastructure for the agent internet.",
       medium: "Founded BAMF Media (8-figure growth agency), LinkedIn growth pioneer. Now building You.md — the identity file standard for the agent internet. I ship fast and build in public.",
     },
-    now: ["Building You.md", "Scaling BAMF Media"],
+    now: ["Building You.md", "Scaling BAMF Media", "Refining identity protocol"],
     projects: [
       { name: "You.md", role: "Founder", status: "building", description: "Identity as code for the agent internet.", url: "https://you.md" },
       { name: "BAMF Media", role: "Founder/CEO", status: "active", description: "Growth marketing agency.", url: "#", mrr: "$800k+" },
@@ -101,18 +131,21 @@ export const sampleProfiles: Profile[] = [
       { label: "X", url: "https://x.com/houstongolden" },
     ],
     topics: ["growth marketing", "AI agents", "identity protocols"],
-    credibility: ["Founded BAMF Media (8-figure agency)", "LinkedIn growth pioneer"],
+    credibility: ["Founded BAMF Media (8-figure agency)", "LinkedIn growth pioneer", "Speaker at 20+ conferences"],
     agentMetrics: {
       totalReads: 12842,
       activeIntegrations: 6,
       recentReads24h: 42,
       contextScore: 92,
+      contextSessions: 318,
+      connectedAgentsCount: 14,
+      verifiedAgents: 4,
     },
     agentConnections: [
-      { name: "claude-code", lastAccess: "2 min ago" },
-      { name: "cursor", lastAccess: "11 min ago" },
-      { name: "codex-cli", lastAccess: "1 hr ago" },
-      { name: "perplexity", lastAccess: "3 hr ago" },
+      { name: "claude-code", lastAccess: "2 min ago", isVerified: true },
+      { name: "cursor", lastAccess: "11 min ago", isVerified: true },
+      { name: "codex-cli", lastAccess: "1 hr ago", isVerified: true },
+      { name: "perplexity", lastAccess: "3 hr ago", isVerified: true },
       { name: "goose", lastAccess: "8 hr ago" },
       { name: "aider", lastAccess: "1 day ago" },
     ],
@@ -121,16 +154,47 @@ export const sampleProfiles: Profile[] = [
       voiceProfile: "trained",
       contextFreshness: "current",
       lastPipelineRun: "2 hours ago",
-      sourcesSynced: 5,
+      sourcesSynced: 8,
     },
-    verification: { verified: true, methods: ["domain", "linkedin"] },
+    verification: { verified: true, methods: ["domain", "linkedin", "github"], verifiedAt: "2026-03-10", level: "builder" },
+    connectedSources: [
+      { name: "linkedin", status: "verified", lastSync: "2h ago" },
+      { name: "github", status: "verified", lastSync: "4h ago" },
+      { name: "website", status: "verified", lastSync: "1d ago" },
+      { name: "x", status: "synced", lastSync: "6h ago" },
+      { name: "youtube", status: "synced", lastSync: "1d ago" },
+      { name: "notion", status: "synced", lastSync: "3h ago" },
+      { name: "substack", status: "synced", lastSync: "12h ago" },
+      { name: "google drive", status: "pending" },
+    ],
+    freshness: {
+      identity: "current",
+      projects: "current",
+      voice: "current",
+      sources: "syncing",
+      score: 92,
+    },
+    maintenance: {
+      humanEdits: true,
+      agentMaintenance: true,
+      updateMode: "review before publish",
+      activeMaintainers: ["claude-code", "cursor", "codex-cli", "youmd sync engine"],
+    },
+    recentChanges: [
+      "Refreshed voice profile",
+      "Republished identity bundle v1.3",
+      "Connected GitHub + LinkedIn OAuth",
+      "Updated project metadata",
+      "Synced latest YouTube activity",
+    ],
     topQueries: ["who is houston golden", "what is bamf media", "what is you.md", "houston golden linkedin growth"],
-    publicSections: ["identity", "projects", "values", "voice summary"],
-    privateSections: ["preferences", "internal context", "working notes"],
+    publicSections: ["identity", "projects", "values", "voice summary", "current focus"],
+    privateSections: ["preferences", "internal context", "working notes", "private memory"],
     activity: [
       { date: "2026-03-18", action: "agent_read", detail: "claude-code accessed identity bundle" },
-      { date: "2026-03-17", action: "published", detail: "Updated identity bundle to v1.2" },
-      { date: "2026-03-15", action: "connected", detail: "Linked Claude Code agent" },
+      { date: "2026-03-18", action: "updated", detail: "Synced LinkedIn activity via OAuth" },
+      { date: "2026-03-17", action: "published", detail: "Updated identity bundle to v1.3" },
+      { date: "2026-03-15", action: "connected", detail: "Connected GitHub OAuth source" },
       { date: "2026-03-12", action: "updated", detail: "Added new project: You.md" },
       { date: "2026-03-08", action: "initialized", detail: "Created you.md/houston" },
     ],
@@ -166,17 +230,20 @@ export const sampleProfiles: Profile[] = [
       { label: "GitHub", url: "#" },
     ],
     topics: ["RLHF", "alignment", "reward modeling", "open-source ML"],
-    credibility: ["ML Engineer at Anthropic", "12 published papers on reward modeling"],
+    credibility: ["ML Engineer at Anthropic", "12 published papers on reward modeling", "Top 1% cited in ML safety"],
     agentMetrics: {
       totalReads: 8421,
       activeIntegrations: 4,
       recentReads24h: 18,
       contextScore: 88,
+      contextSessions: 142,
+      connectedAgentsCount: 8,
+      verifiedAgents: 3,
     },
     agentConnections: [
-      { name: "cursor", lastAccess: "5 min ago" },
-      { name: "claude-code", lastAccess: "22 min ago" },
-      { name: "codex-cli", lastAccess: "4 hr ago" },
+      { name: "cursor", lastAccess: "5 min ago", isVerified: true },
+      { name: "claude-code", lastAccess: "22 min ago", isVerified: true },
+      { name: "codex-cli", lastAccess: "4 hr ago", isVerified: true },
       { name: "perplexity", lastAccess: "6 hr ago" },
     ],
     identityState: {
@@ -184,14 +251,41 @@ export const sampleProfiles: Profile[] = [
       voiceProfile: "trained",
       contextFreshness: "current",
       lastPipelineRun: "4 hours ago",
-      sourcesSynced: 3,
+      sourcesSynced: 5,
     },
-    verification: { verified: true, methods: ["github", "scholar"] },
+    verification: { verified: true, methods: ["github", "scholar", "domain"], verifiedAt: "2026-02-20", level: "builder" },
+    connectedSources: [
+      { name: "github", status: "verified", lastSync: "1h ago" },
+      { name: "scholar", status: "verified", lastSync: "1d ago" },
+      { name: "website", status: "verified", lastSync: "2d ago" },
+      { name: "arxiv", status: "synced", lastSync: "6h ago" },
+      { name: "notion", status: "synced", lastSync: "12h ago" },
+    ],
+    freshness: {
+      identity: "current",
+      projects: "current",
+      voice: "current",
+      sources: "current",
+      score: 88,
+    },
+    maintenance: {
+      humanEdits: true,
+      agentMaintenance: true,
+      updateMode: "review before publish",
+      activeMaintainers: ["cursor", "youmd sync engine"],
+    },
+    recentChanges: [
+      "Updated research interests",
+      "Synced latest arxiv preprints",
+      "Added EvalKit v2 milestone",
+      "Refreshed voice profile",
+    ],
     topQueries: ["priya sharma anthropic", "RLHF reward modeling", "evalkit framework"],
     publicSections: ["identity", "projects", "values", "research"],
-    privateSections: ["preferences", "unpublished research notes"],
+    privateSections: ["preferences", "unpublished research notes", "internal experiment logs"],
     activity: [
       { date: "2026-03-16", action: "published", detail: "Updated research interests" },
+      { date: "2026-03-14", action: "connected", detail: "Connected arXiv source" },
       { date: "2026-03-14", action: "connected", detail: "Linked Cursor agent" },
       { date: "2026-03-10", action: "updated", detail: "Added EvalKit project" },
       { date: "2026-03-05", action: "initialized", detail: "Created you.md/priya" },
@@ -235,9 +329,12 @@ export const sampleProfiles: Profile[] = [
       activeIntegrations: 3,
       recentReads24h: 8,
       contextScore: 79,
+      contextSessions: 54,
+      connectedAgentsCount: 5,
+      verifiedAgents: 1,
     },
     agentConnections: [
-      { name: "goose", lastAccess: "18 min ago" },
+      { name: "goose", lastAccess: "18 min ago", isVerified: true },
       { name: "claude-code", lastAccess: "2 hr ago" },
       { name: "cursor", lastAccess: "5 hr ago" },
     ],
@@ -249,6 +346,31 @@ export const sampleProfiles: Profile[] = [
       sourcesSynced: 4,
     },
     verification: { verified: false, methods: [] },
+    connectedSources: [
+      { name: "x", status: "synced", lastSync: "1h ago" },
+      { name: "github", status: "synced", lastSync: "3h ago" },
+      { name: "blog", status: "synced", lastSync: "1d ago" },
+      { name: "stripe", status: "synced", lastSync: "6h ago" },
+    ],
+    freshness: {
+      identity: "current",
+      projects: "current",
+      voice: "current",
+      sources: "current",
+      score: 79,
+    },
+    maintenance: {
+      humanEdits: true,
+      agentMaintenance: true,
+      updateMode: "auto-publish",
+      activeMaintainers: ["goose", "youmd sync engine"],
+    },
+    recentChanges: [
+      "MRR milestone update",
+      "Added AI writing tool to projects",
+      "Synced Stripe revenue data",
+      "Updated bio variants",
+    ],
     topQueries: ["jordan marcus indie hacker", "screenshotapi founder", "building in public tips"],
     publicSections: ["identity", "projects", "values"],
     privateSections: ["revenue details", "internal roadmaps"],
@@ -290,31 +412,61 @@ export const sampleProfiles: Profile[] = [
       { label: "Blog", url: "#" },
     ],
     topics: ["distributed systems", "Rust", "observability", "payment infrastructure"],
-    credibility: ["Staff Engineer at Stripe", "5k+ stars on open-source Rust crates"],
+    credibility: ["Staff Engineer at Stripe", "5k+ stars on open-source Rust crates", "Published in OSDI"],
     agentMetrics: {
       totalReads: 6754,
       activeIntegrations: 5,
       recentReads24h: 31,
       contextScore: 95,
+      contextSessions: 203,
+      connectedAgentsCount: 11,
+      verifiedAgents: 5,
     },
     agentConnections: [
-      { name: "aider", lastAccess: "3 min ago" },
-      { name: "claude-code", lastAccess: "14 min ago" },
-      { name: "cursor", lastAccess: "1 hr ago" },
-      { name: "codex-cli", lastAccess: "2 hr ago" },
-      { name: "goose", lastAccess: "12 hr ago" },
+      { name: "aider", lastAccess: "3 min ago", isVerified: true },
+      { name: "claude-code", lastAccess: "14 min ago", isVerified: true },
+      { name: "cursor", lastAccess: "1 hr ago", isVerified: true },
+      { name: "codex-cli", lastAccess: "2 hr ago", isVerified: true },
+      { name: "goose", lastAccess: "12 hr ago", isVerified: true },
     ],
     identityState: {
       memoryCoverage: "high",
       voiceProfile: "trained",
       contextFreshness: "current",
       lastPipelineRun: "1 hour ago",
-      sourcesSynced: 4,
+      sourcesSynced: 6,
     },
-    verification: { verified: true, methods: ["github", "domain"] },
+    verification: { verified: true, methods: ["github", "domain", "linkedin"], verifiedAt: "2026-01-15", level: "builder" },
+    connectedSources: [
+      { name: "github", status: "verified", lastSync: "30m ago" },
+      { name: "website", status: "verified", lastSync: "2h ago" },
+      { name: "linkedin", status: "verified", lastSync: "1d ago" },
+      { name: "crates.io", status: "synced", lastSync: "1h ago" },
+      { name: "blog", status: "synced", lastSync: "3d ago" },
+      { name: "notion", status: "synced", lastSync: "6h ago" },
+    ],
+    freshness: {
+      identity: "current",
+      projects: "current",
+      voice: "current",
+      sources: "current",
+      score: 95,
+    },
+    maintenance: {
+      humanEdits: true,
+      agentMaintenance: true,
+      updateMode: "review before publish",
+      activeMaintainers: ["aider", "claude-code", "youmd sync engine"],
+    },
+    recentChanges: [
+      "Added book project to profile",
+      "Synced latest crates.io stats",
+      "Updated agent preferences",
+      "Refreshed GitHub activity",
+    ],
     topQueries: ["yuki sato stripe", "tokio-retry rust", "distributed systems book"],
     publicSections: ["identity", "projects", "values", "technical writing"],
-    privateSections: ["RFC drafts", "internal architecture notes"],
+    privateSections: ["RFC drafts", "internal architecture notes", "book manuscript"],
     activity: [
       { date: "2026-03-17", action: "agent_read", detail: "aider accessed identity bundle" },
       { date: "2026-03-17", action: "updated", detail: "Added book project to profile" },
@@ -361,9 +513,12 @@ export const sampleProfiles: Profile[] = [
       activeIntegrations: 2,
       recentReads24h: 5,
       contextScore: 74,
+      contextSessions: 28,
+      connectedAgentsCount: 3,
+      verifiedAgents: 1,
     },
     agentConnections: [
-      { name: "claude-code", lastAccess: "45 min ago" },
+      { name: "claude-code", lastAccess: "45 min ago", isVerified: true },
       { name: "cursor", lastAccess: "6 hr ago" },
     ],
     identityState: {
@@ -373,10 +528,33 @@ export const sampleProfiles: Profile[] = [
       lastPipelineRun: "8 hours ago",
       sourcesSynced: 3,
     },
-    verification: { verified: true, methods: ["domain", "instagram"] },
+    verification: { verified: true, methods: ["domain", "instagram"], verifiedAt: "2026-03-01", level: "person" },
+    connectedSources: [
+      { name: "website", status: "verified", lastSync: "1d ago" },
+      { name: "instagram", status: "verified", lastSync: "3h ago" },
+      { name: "are.na", status: "synced", lastSync: "2d ago" },
+    ],
+    freshness: {
+      identity: "current",
+      projects: "current",
+      voice: "current",
+      sources: "stale",
+      score: 74,
+    },
+    maintenance: {
+      humanEdits: true,
+      agentMaintenance: false,
+      updateMode: "manual only",
+      activeMaintainers: ["youmd sync engine"],
+    },
+    recentChanges: [
+      "Added Brand Bones workshop",
+      "Updated portfolio link",
+      "Synced Instagram activity",
+    ],
     topQueries: ["emma wright designer", "pentagram creative director", "brand bones workshop"],
     publicSections: ["identity", "projects", "values", "portfolio"],
-    privateSections: ["client briefs", "pricing"],
+    privateSections: ["client briefs", "pricing", "mood boards"],
     activity: [
       { date: "2026-03-16", action: "published", detail: "Added Brand Bones workshop" },
       { date: "2026-03-11", action: "updated", detail: "Updated portfolio link" },
@@ -416,20 +594,23 @@ export const sampleProfiles: Profile[] = [
       { label: "GitHub", url: "#" },
     ],
     topics: ["developer relations", "Next.js", "web platform", "content creation"],
-    credibility: ["DevRel Lead at Vercel", "50k+ YouTube subscribers"],
+    credibility: ["DevRel Lead at Vercel", "50k+ YouTube subscribers", "React Conf keynote speaker"],
     agentMetrics: {
       totalReads: 9312,
       activeIntegrations: 7,
       recentReads24h: 56,
       contextScore: 91,
+      contextSessions: 274,
+      connectedAgentsCount: 16,
+      verifiedAgents: 6,
     },
     agentConnections: [
-      { name: "cursor", lastAccess: "1 min ago" },
-      { name: "claude-code", lastAccess: "8 min ago" },
-      { name: "codex-cli", lastAccess: "30 min ago" },
-      { name: "perplexity", lastAccess: "1 hr ago" },
-      { name: "goose", lastAccess: "2 hr ago" },
-      { name: "aider", lastAccess: "5 hr ago" },
+      { name: "cursor", lastAccess: "1 min ago", isVerified: true },
+      { name: "claude-code", lastAccess: "8 min ago", isVerified: true },
+      { name: "codex-cli", lastAccess: "30 min ago", isVerified: true },
+      { name: "perplexity", lastAccess: "1 hr ago", isVerified: true },
+      { name: "goose", lastAccess: "2 hr ago", isVerified: true },
+      { name: "aider", lastAccess: "5 hr ago", isVerified: true },
       { name: "opendevin", lastAccess: "1 day ago" },
     ],
     identityState: {
@@ -437,17 +618,47 @@ export const sampleProfiles: Profile[] = [
       voiceProfile: "trained",
       contextFreshness: "current",
       lastPipelineRun: "30 minutes ago",
-      sourcesSynced: 6,
+      sourcesSynced: 8,
     },
-    verification: { verified: true, methods: ["github", "youtube"] },
+    verification: { verified: true, methods: ["github", "youtube", "domain"], verifiedAt: "2026-02-01", level: "builder" },
+    connectedSources: [
+      { name: "github", status: "verified", lastSync: "15m ago" },
+      { name: "youtube", status: "verified", lastSync: "1h ago" },
+      { name: "website", status: "verified", lastSync: "6h ago" },
+      { name: "x", status: "synced", lastSync: "30m ago" },
+      { name: "notion", status: "synced", lastSync: "2h ago" },
+      { name: "google drive", status: "synced", lastSync: "1d ago" },
+      { name: "calendar", status: "synced", lastSync: "3h ago" },
+      { name: "substack", status: "synced", lastSync: "2d ago" },
+    ],
+    freshness: {
+      identity: "current",
+      projects: "current",
+      voice: "current",
+      sources: "current",
+      score: 91,
+    },
+    maintenance: {
+      humanEdits: true,
+      agentMaintenance: true,
+      updateMode: "auto-publish",
+      activeMaintainers: ["cursor", "claude-code", "codex-cli", "youmd sync engine"],
+    },
+    recentChanges: [
+      "Added React Conf keynote to Now",
+      "Synced latest YouTube analytics",
+      "Updated agent preferences",
+      "Connected calendar source",
+      "Refreshed GitHub activity",
+    ],
     topQueries: ["kai andersen vercel", "next.js devrel", "ship it youtube"],
     publicSections: ["identity", "projects", "values", "tutorials"],
-    privateSections: ["talk proposals", "internal docs strategy"],
+    privateSections: ["talk proposals", "internal docs strategy", "sponsor rates"],
     activity: [
       { date: "2026-03-18", action: "agent_read", detail: "cursor accessed identity bundle" },
       { date: "2026-03-18", action: "updated", detail: "Added React Conf keynote to Now" },
       { date: "2026-03-14", action: "published", detail: "Updated agent preferences" },
-      { date: "2026-03-10", action: "connected", detail: "Linked Cursor agent" },
+      { date: "2026-03-10", action: "connected", detail: "Connected YouTube OAuth source" },
       { date: "2026-03-04", action: "initialized", detail: "Created you.md/kai" },
     ],
     maintainedBy: ["youmd", "cursor", "claude"],
