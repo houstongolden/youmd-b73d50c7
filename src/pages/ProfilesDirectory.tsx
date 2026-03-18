@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, MapPin, Shield } from "lucide-react";
 import { sampleProfiles } from "@/data/sampleProfiles";
 import FadeUp from "@/components/FadeUp";
+import AsciiAvatar from "@/components/AsciiAvatar";
 
 const ProfileCard = ({ profile, index }: { profile: typeof sampleProfiles[0]; index: number }) => (
   <motion.div
