@@ -69,17 +69,17 @@
 
   /* Light mode override */
   .light {
-    --bg: 36 23% 95%;
+    --bg: 36 20% 96%;
     --bg-raised: 0 0% 100%;
-    --text-primary: 0 0% 10%;
-    --text-secondary: 30 6% 58%;
-    --border-color: 30 10% 88%;
+    --text-primary: 0 0% 12%;
+    --text-secondary: 30 6% 40%;
+    --border-color: 30 10% 84%;
 
-    --accent: 20 55% 50%;
-    --accent-dark: 20 60% 39%;
-    --accent-mid: 20 45% 59%;
-    --accent-light: 24 45% 75%;
-    --accent-wash: 30 30% 94%;
+    --accent: 20 60% 45%;
+    --accent-dark: 20 65% 35%;
+    --accent-mid: 20 50% 55%;
+    --accent-light: 24 45% 70%;
+    --accent-wash: 30 25% 92%;
 
     --secondary: 36 15% 89%;
     --muted-val: 36 12% 86%;
