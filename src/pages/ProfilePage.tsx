@@ -63,6 +63,67 @@ const StatusLine = ({ label, value, color }: { label: string; value: string; col
   </p>
 );
 
+/* ── Count-up Components ──────────────────────── */
+
+const CountUpValue = ({ target, prefix = "", suffix = "", className = "" }: { target: number; prefix?: string; suffix?: string; className?: string }) => {
+  const { value, ref } = useCountUp(target);
+  return (
+    <span ref={ref} className={className}>
+      {prefix}{value.toLocaleString()}{suffix}
+    </span>
+  );
+};
+
+const AgentMetricsInline = ({ profile }: { profile: typeof sampleProfiles[0] }) => (
+  <div className="flex items-center gap-4 pt-1">
+    <span className="font-mono text-[10px] text-muted-foreground/60">
+      agent reads: <CountUpValue target={profile.agentMetrics.totalReads} className="text-foreground/80" />
+    </span>
+    <span className="font-mono text-[10px] text-muted-foreground/60">
+      integrations: <CountUpValue target={profile.agentMetrics.activeIntegrations} className="text-foreground/80" />
+    </span>
+  </div>
+);
+
+const FreshnessScore = ({ score }: { score: number }) => {
+  const { value, ref } = useCountUp(score);
+  return (
+    <div ref={ref} className="flex items-center gap-2">
+      <span className="font-mono text-[10px] text-muted-foreground/60">freshness score:</span>
+      <span className="font-mono text-[14px] text-accent font-medium">{value}/100</span>
+    </div>
+  );
+};
+
+const AgentNetworkMetrics = ({ profile }: { profile: typeof sampleProfiles[0] }) => (
+  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
+    <div>
+      <p className="text-foreground font-mono text-[18px] font-medium">
+        <CountUpValue target={profile.agentMetrics.totalReads} />
+      </p>
+      <p className="text-muted-foreground/60 font-mono text-[9px]">total reads</p>
+    </div>
+    <div>
+      <p className="text-accent font-mono text-[18px] font-medium">
+        <CountUpValue target={profile.agentMetrics.recentReads24h} prefix="+" />
+      </p>
+      <p className="text-muted-foreground/60 font-mono text-[9px]">reads (24h)</p>
+    </div>
+    <div>
+      <p className="text-foreground font-mono text-[18px] font-medium">
+        <CountUpValue target={profile.agentMetrics.connectedAgentsCount} />
+      </p>
+      <p className="text-muted-foreground/60 font-mono text-[9px]">connected agents</p>
+    </div>
+    <div>
+      <p className="text-success font-mono text-[18px] font-medium">
+        <CountUpValue target={profile.agentMetrics.verifiedAgents} />
+      </p>
+      <p className="text-muted-foreground/60 font-mono text-[9px]">verified agents</p>
+    </div>
+  </div>
+);
+
 /* ── Section Components ───────────────────────── */
 
 const VerifiedBadge = ({ methods, level }: { methods: string[]; level?: string }) => (
