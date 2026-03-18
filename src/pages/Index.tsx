@@ -9,7 +9,7 @@ import Pricing from "@/components/Pricing";
 import CTAFooter from "@/components/CTAFooter";
 
 const Index = () => (
-  <>
+  <div className="landing-page">
     <Navbar />
     <Hero />
     <ProblemStrip />
@@ -19,7 +19,7 @@ const Index = () => (
     <Integrations />
     <Pricing />
     <CTAFooter />
-  </>
+  </div>
 );
 
 export default Index;

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,53 +6,92 @@
 
 @layer base {
   :root {
-    --background: 27 33% 91%;
-    --foreground: 30 10% 28%;
+    /* PRD palette — warm ascending to cool to luminous */
+    --coral: 7 72% 69%;
+    --blush: 15 76% 77%;
+    --sky: 196 52% 65%;
+    --ether: 200 42% 81%;
+    --gold: 43 85% 75%;
+    --light: 42 100% 95%;
+    --void: 222 35% 7%;
+    --ink: 224 27% 14%;
+    --mist: 210 18% 60%;
 
-    --card: 27 33% 91%;
-    --card-foreground: 30 10% 28%;
+    /* Dark mode default — profiles live in the void */
+    --background: 222 35% 7%;
+    --foreground: 42 100% 95%;
 
-    --popover: 27 33% 91%;
-    --popover-foreground: 30 10% 28%;
+    --card: 224 27% 14%;
+    --card-foreground: 42 100% 95%;
 
-    --primary: 172 43% 65%;
-    --primary-foreground: 30 10% 28%;
+    --popover: 224 27% 14%;
+    --popover-foreground: 42 100% 95%;
 
-    --secondary: 272 18% 93%;
-    --secondary-foreground: 30 10% 28%;
+    --primary: 7 72% 69%;
+    --primary-foreground: 222 35% 7%;
 
-    --muted: 272 18% 93%;
-    --muted-foreground: 30 8% 48%;
+    --secondary: 224 27% 18%;
+    --secondary-foreground: 42 100% 95%;
 
-    --accent: 39 89% 72%;
-    --accent-foreground: 30 10% 28%;
+    --muted: 224 27% 18%;
+    --muted-foreground: 210 18% 60%;
+
+    --accent: 43 85% 75%;
+    --accent-foreground: 222 35% 7%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 42 100% 95%;
 
-    --border: 30 12% 82%;
-    --input: 30 12% 78%;
-    --ring: 172 43% 65%;
+    --border: 224 20% 20%;
+    --input: 224 20% 22%;
+    --ring: 7 72% 69%;
 
     --radius: 0.5rem;
 
+    /* Legacy aliases for existing components */
     --sand: 27 33% 91%;
     --mauve: 272 18% 93%;
+    --teal: 196 52% 65%;
+    --golden: 43 85% 75%;
+    --dusk: 222 35% 7%;
+
+    --glass-bg: 224 27% 14%;
+    --glass-border: 210 18% 30%;
+
+    --sidebar-background: 222 35% 7%;
+    --sidebar-foreground: 42 100% 95%;
+    --sidebar-primary: 7 72% 69%;
+    --sidebar-primary-foreground: 222 35% 7%;
+    --sidebar-accent: 224 27% 18%;
+    --sidebar-accent-foreground: 42 100% 95%;
+    --sidebar-border: 224 20% 20%;
+    --sidebar-ring: 7 72% 69%;
+  }
+
+  /* Landing page overrides — warm sand aesthetic stays for marketing */
+  .landing-page {
+    --background: 27 33% 91%;
+    --foreground: 30 10% 28%;
+    --card: 27 33% 91%;
+    --card-foreground: 30 10% 28%;
+    --popover: 27 33% 91%;
+    --popover-foreground: 30 10% 28%;
+    --primary: 172 43% 65%;
+    --primary-foreground: 30 10% 28%;
+    --secondary: 272 18% 93%;
+    --secondary-foreground: 30 10% 28%;
+    --muted: 272 18% 93%;
+    --muted-foreground: 30 8% 48%;
+    --accent: 39 89% 72%;
+    --accent-foreground: 30 10% 28%;
+    --border: 30 12% 82%;
+    --input: 30 12% 78%;
+    --ring: 172 43% 65%;
     --teal: 172 43% 65%;
     --golden: 39 89% 72%;
     --dusk: 30 14% 9%;
-
     --glass-bg: 0 0% 100%;
     --glass-border: 0 0% 100%;
-
-    --sidebar-background: 27 33% 91%;
-    --sidebar-foreground: 30 10% 28%;
-    --sidebar-primary: 172 43% 65%;
-    --sidebar-primary-foreground: 30 10% 28%;
-    --sidebar-accent: 272 18% 93%;
-    --sidebar-accent-foreground: 30 10% 28%;
-    --sidebar-border: 30 12% 78%;
-    --sidebar-ring: 172 43% 65%;
   }
 }
 
@@ -122,7 +161,7 @@ html {
   animation: none;
 }
 
-/* Teal glow CTA */
+/* Teal glow CTA (landing page) */
 .cta-teal {
   @apply bg-teal text-dusk font-medium rounded-full transition-all duration-300;
   box-shadow: 0 2px 12px -2px hsl(var(--teal) / 0.25);
@@ -131,6 +170,20 @@ html {
 .cta-teal:hover {
   box-shadow: 0 4px 24px -2px hsl(var(--teal) / 0.4);
   filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+/* Coral CTA (profile/dark pages) */
+.cta-coral {
+  background: hsl(var(--coral));
+  color: hsl(var(--void));
+  @apply font-medium rounded-full transition-all duration-300;
+  box-shadow: 0 2px 12px -2px hsl(var(--coral) / 0.3);
+}
+
+.cta-coral:hover {
+  box-shadow: 0 4px 24px -2px hsl(var(--coral) / 0.5);
+  filter: brightness(1.08);
   transform: translateY(-1px);
 }
 
@@ -153,13 +206,32 @@ html {
   box-shadow: 0 2px 20px -6px hsl(var(--foreground) / 0.04);
 }
 
+/* Dark glass card — for profile pages */
+.glass-card-dark {
+  background: hsl(var(--ink) / 0.6);
+  border: 1px solid hsl(var(--mist) / 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
 /* Section divider */
 .section-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, hsl(var(--border) / 0.5), transparent);
 }
 
+/* Beam of light — the recurring brand motif */
+@keyframes beam-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.25; }
+}
+
+.beam-glow {
+  background: radial-gradient(ellipse 120px 600px at center, hsl(var(--gold) / 0.15), hsl(var(--coral) / 0.05) 40%, transparent 70%);
+  animation: beam-pulse 4s ease-in-out infinite;
+}
+
 /* Selection color */
 ::selection {
-  background: hsl(var(--teal) / 0.3);
+  background: hsl(var(--coral) / 0.3);
 }

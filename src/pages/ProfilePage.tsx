@@ -28,34 +28,30 @@ const TypewriterBlock = ({ lines, inView }: { lines: string[]; inView: boolean }
   const visibleLines = visibleText.split("\n");
 
   const renderLine = (line: string) => {
+    if (line.startsWith("# ")) return <span className="text-coral font-medium">{line}</span>;
+    if (line.startsWith("## ")) return <span className="text-light/60 font-medium">{line}</span>;
+    if (line.startsWith("- **")) {
+      const match = line.match(/^- \*\*(.+?)\*\*(.*)$/);
+      if (match) return <><span className="text-gold">- <strong>{match[1]}</strong></span><span className="text-mist">{match[2]}</span></>;
+    }
+    if (line.startsWith("- ")) return <span className="text-mist">{line}</span>;
+    if (line.startsWith("> ")) return <span className="text-mist/50 italic">{line}</span>;
     const colonIdx = line.indexOf(":");
-    if (colonIdx === -1) return <span className="text-foreground/35">{line}</span>;
-    const key = line.slice(0, colonIdx);
-    const rest = line.slice(colonIdx);
-    const isIndented = key.startsWith("  ");
-    const quoteMatch = rest.match(/: "(.*)"$/);
-    return (
-      <>
-        <span className={isIndented ? "text-foreground/30" : "text-foreground/55"}>{key}</span>
-        {quoteMatch ? (
-          <>
-            <span className="text-foreground/15">: </span>
-            <span className="text-teal/90">"{quoteMatch[1]}"</span>
-          </>
-        ) : (
-          <span className="text-foreground/15">{rest}</span>
-        )}
-      </>
-    );
+    if (colonIdx > 0 && colonIdx < 20) {
+      const key = line.slice(0, colonIdx);
+      const val = line.slice(colonIdx);
+      return <><span className="text-sky">{key}</span><span className="text-mist/40">{val}</span></>;
+    }
+    return <span className="text-light/80">{line}</span>;
   };
 
   return (
-    <pre className="font-mono text-[12px] md:text-[13px] leading-[2] whitespace-pre-wrap">
+    <pre className="font-mono text-[12px] md:text-[13px] leading-[1.9] whitespace-pre-wrap">
       <code>
         {visibleLines.map((line, i) => (
           <div key={i}>{renderLine(line)}</div>
         ))}
-        {visibleChars < totalChars && <span className="cursor-blink text-teal">▌</span>}
+        {visibleChars < totalChars && <span className="cursor-blink text-coral">▌</span>}
       </code>
     </pre>
   );
@@ -70,11 +66,11 @@ const ProfilePage = () => {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+      <div className="min-h-screen bg-void flex items-center justify-center px-6">
         <div className="text-center">
-          <h1 className="text-foreground text-2xl font-display font-light mb-3">Profile not found</h1>
-          <p className="text-muted-foreground text-sm mb-6">This you.md username doesn't exist yet.</p>
-          <Link to="/profiles" className="cta-teal px-6 py-2.5 text-sm inline-block">
+          <h1 className="text-light text-2xl font-display font-light mb-3">Profile not found</h1>
+          <p className="text-mist text-sm mb-6">This you.md username doesn't exist yet.</p>
+          <Link to="/profiles" className="cta-coral px-6 py-2.5 text-sm inline-block">
             Browse profiles
           </Link>
         </div>
@@ -82,20 +78,43 @@ const ProfilePage = () => {
     );
   }
 
+  // Build you.md content
   const codeLines = [
-    `name: "${profile.name}"`,
-    `role: "${profile.role}"`,
-    `location: "${profile.location}"`,
-    `voice: "${profile.voice}"`,
-    `goals:`,
-    `  current: "${profile.goals.current}"`,
-    `  next: "${profile.goals.next}"`,
-    `tools:`,
-    `  primary: "${profile.tools.primary}"`,
-    `  infra: "${profile.tools.infra}"`,
-    `preferences:`,
-    `  format: "${profile.preferences.format}"`,
-    `  length: "${profile.preferences.length}"`,
+    "---",
+    "schema: you-md/v1",
+    `name: ${profile.name}`,
+    `username: ${profile.username}`,
+    "---",
+    "",
+    `# ${profile.name}`,
+    "",
+    profile.tagline,
+    "",
+    "## Now",
+    "",
+    ...profile.now.map((n) => `- ${n}`),
+    "",
+    "## Projects",
+    "",
+    ...profile.projects.map((p) => `- **${p.name}** — ${p.description} (${p.role}, ${p.status})`),
+    "",
+    "## Values",
+    "",
+    ...profile.values.map((v) => `- ${v}`),
+    "",
+    "## Agent Preferences",
+    "",
+    `Tone: ${profile.preferences.tone}`,
+    `Avoid: ${profile.preferences.avoid.join(", ")}`,
+    `Format: ${profile.preferences.format}`,
+    "",
+    "## Links",
+    "",
+    ...profile.links.map((l) => `- ${l.label}: ${l.url}`),
+    "",
+    "---",
+    "",
+    "> Full context: see manifest.json",
   ];
 
   const profileUrl = `you.md/${profile.username}`;
@@ -107,23 +126,26 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-void relative overflow-hidden">
+      {/* Beam of light motif */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[800px] beam-glow pointer-events-none" />
+
       {/* Top bar */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-3 md:pt-4">
-        <div className="rounded-full flex items-center justify-between gap-6 px-5 py-2 w-full max-w-2xl glass-scrolled">
-          <Link to="/" className="text-foreground font-display text-[15px] font-medium tracking-tight">
-            You.md
+        <div className="rounded-full flex items-center justify-between gap-6 px-5 py-2 w-full max-w-2xl glass-card-dark">
+          <Link to="/" className="text-light font-mono text-[14px] font-medium tracking-tight">
+            you.md
           </Link>
           <Link
             to="/profiles"
-            className="text-foreground/50 text-[11px] uppercase tracking-[0.08em] font-medium hover:text-foreground/80 transition-colors"
+            className="text-mist text-[11px] uppercase tracking-[0.08em] font-medium hover:text-light transition-colors"
           >
-            Profiles
+            Directory
           </Link>
         </div>
       </nav>
 
-      <div className="pt-24 pb-20 px-6">
+      <div className="pt-24 pb-20 px-6 relative z-10">
         <div className="max-w-2xl mx-auto">
           {/* Back link */}
           <motion.div
@@ -133,37 +155,33 @@ const ProfilePage = () => {
           >
             <Link
               to="/profiles"
-              className="inline-flex items-center gap-1.5 text-muted-foreground text-[12px] hover:text-foreground transition-colors mb-8"
+              className="inline-flex items-center gap-1.5 text-mist text-[12px] hover:text-light transition-colors mb-10"
             >
               <ArrowLeft size={12} /> All profiles
             </Link>
           </motion.div>
 
-          {/* Profile header */}
+          {/* Identity section with subtle beam glow behind */}
           <motion.div
-            className="flex items-start gap-5 mb-8"
+            className="relative mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <img
-              src={profile.avatar}
-              alt={profile.name}
-              className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-border/50"
-            />
-            <div className="flex-1 min-w-0">
-              <h1 className="text-foreground text-xl md:text-2xl font-display font-medium tracking-tight leading-tight">
-                {profile.name}
-              </h1>
-              <p className="text-muted-foreground text-[13px] mt-0.5">{profile.role}</p>
-              <div className="flex items-center gap-1 mt-1.5 text-muted-foreground/70 text-[12px]">
-                <MapPin size={11} />
-                <span>{profile.location}</span>
-              </div>
+            {/* Subtle glow behind identity */}
+            <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-[150px] h-[120px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
+
+            <h1 className="text-light text-2xl md:text-3xl font-display font-medium tracking-tight leading-tight relative">
+              {profile.name}
+            </h1>
+            <p className="text-coral text-[14px] mt-1.5 font-medium">{profile.tagline}</p>
+            <div className="flex items-center gap-1 mt-2 text-mist/60 text-[12px]">
+              <MapPin size={11} />
+              <span>{profile.location}</span>
             </div>
           </motion.div>
 
-          {/* URL bar */}
+          {/* URL bar — monospace, mimics terminal */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -172,64 +190,76 @@ const ProfilePage = () => {
           >
             <button
               onClick={handleCopy}
-              className="glass-card rounded-full px-5 py-2.5 flex items-center gap-3 w-full md:w-auto group hover:border-teal/30 transition-all"
+              className="glass-card-dark rounded-full px-5 py-2.5 flex items-center gap-3 w-full md:w-auto group hover:border-coral/30 transition-all"
             >
-              <span className="font-mono text-[12px] text-foreground/40">
-                <span className="text-teal">you.md</span>/{profile.username}
+              <span className="font-mono text-[12px] text-mist/60">
+                <span className="text-coral">you.md</span>/{profile.username}
               </span>
-              <span className="text-foreground/25 group-hover:text-foreground/50 transition-colors ml-auto md:ml-2">
-                {copied ? <Check size={13} className="text-teal" /> : <Copy size={13} />}
+              <span className="text-mist/30 group-hover:text-mist/60 transition-colors ml-auto md:ml-2">
+                {copied ? <Check size={13} className="text-coral" /> : <Copy size={13} />}
               </span>
             </button>
           </motion.div>
 
           {/* Bio */}
           <motion.p
-            className="text-foreground/60 text-[14px] leading-relaxed mb-8"
+            className="text-ether/80 text-[14px] leading-relaxed mb-8"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.25 }}
           >
-            {profile.bio}
+            {profile.bio.medium}
           </motion.p>
 
-          {/* Tags */}
+          {/* Topics */}
           <motion.div
-            className="flex flex-wrap gap-2 mb-10"
+            className="flex flex-wrap gap-2 mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            {profile.tags.map((tag) => (
+            {profile.topics.map((topic) => (
               <span
-                key={tag}
-                className="text-[11px] font-mono px-3 py-1 rounded-full bg-teal/10 text-teal border border-teal/15"
+                key={topic}
+                className="text-[11px] font-mono px-3 py-1 rounded-full bg-sky/10 text-sky border border-sky/15"
               >
-                {tag}
+                {topic}
               </span>
             ))}
           </motion.div>
 
-          {/* Code block */}
+          {/* Credibility signals */}
+          <motion.div
+            className="flex flex-col gap-1.5 mb-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.33 }}
+          >
+            {profile.credibility.map((c) => (
+              <p key={c} className="text-gold/70 text-[12px] font-mono">↗ {c}</p>
+            ))}
+          </motion.div>
+
+          {/* Code block — the you.md file */}
           <motion.div
             ref={codeRef}
-            className="glass-card rounded-2xl p-6 md:p-8 mb-8"
+            className="glass-card-dark rounded-2xl p-6 md:p-8 mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.35 }}
           >
-            <div className="flex items-center gap-1.5 mb-5 pb-4 border-b border-border/30">
-              <div className="w-[7px] h-[7px] rounded-full bg-foreground/8" />
-              <div className="w-[7px] h-[7px] rounded-full bg-foreground/8" />
-              <div className="w-[7px] h-[7px] rounded-full bg-foreground/8" />
-              <span className="ml-3 text-foreground/20 text-[11px] font-mono">{profile.username}.md</span>
+            <div className="flex items-center gap-1.5 mb-5 pb-4 border-b border-mist/10">
+              <div className="w-[7px] h-[7px] rounded-full bg-mist/15" />
+              <div className="w-[7px] h-[7px] rounded-full bg-mist/15" />
+              <div className="w-[7px] h-[7px] rounded-full bg-mist/15" />
+              <span className="ml-3 text-mist/30 text-[11px] font-mono">{profile.username}.md</span>
             </div>
             <TypewriterBlock lines={codeLines} inView={inView} />
           </motion.div>
 
           {/* Links */}
           <motion.div
-            className="flex flex-wrap gap-3"
+            className="flex flex-wrap gap-3 mb-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.45 }}
@@ -238,12 +268,24 @@ const ProfilePage = () => {
               <a
                 key={link.label}
                 href={link.url}
-                className="inline-flex items-center gap-1.5 text-[12px] text-foreground/40 hover:text-foreground/70 transition-colors border border-border/40 rounded-full px-4 py-1.5"
+                className="inline-flex items-center gap-1.5 text-[12px] text-mist/50 hover:text-coral transition-colors border border-mist/15 rounded-full px-4 py-1.5 hover:border-coral/30"
               >
                 {link.label}
                 <ExternalLink size={10} />
               </a>
             ))}
+          </motion.div>
+
+          {/* Powered by footer */}
+          <motion.div
+            className="text-center pt-8 border-t border-mist/8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <Link to="/" className="text-mist/30 text-[11px] font-mono hover:text-mist/50 transition-colors">
+              powered by <span className="text-coral/50">you.md</span>
+            </Link>
           </motion.div>
         </div>
       </div>
