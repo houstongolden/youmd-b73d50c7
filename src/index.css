@@ -202,7 +202,9 @@ html {
 .ascii-strong { color: hsl(var(--accent)); }
 .ascii-mid { color: hsl(var(--accent-mid)); }
 .ascii-soft { color: hsl(var(--accent-light)); }
-.ascii-glow { color: hsl(var(--accent-wash)); }
+.ascii-glow { color: hsl(var(--accent) / 0.25); }
+.ascii-beam { color: hsl(var(--accent) / 0.4); text-shadow: 0 0 8px hsl(var(--accent) / 0.15); }
+.ascii-dim { color: hsl(var(--muted-foreground) / 0.3); }
 
 /* Selection */
 ::selection {
