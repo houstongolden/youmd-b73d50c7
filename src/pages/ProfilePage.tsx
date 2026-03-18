@@ -197,6 +197,8 @@ const ProfilePage = () => {
   const profile = sampleProfiles.find((p) => p.username === username);
   const [copied, setCopied] = useState(false);
 
+  useEffect(() => { window.scrollTo(0, 0); }, [username]);
+
   if (!profile) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
