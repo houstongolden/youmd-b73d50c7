@@ -4,23 +4,30 @@ import { Copy, Check } from "lucide-react";
 
 /* ── ASCII — UFO + Beam + Avatar (orange monochrome shading) ── */
 const asciiLines = [
-  { text: "              █████████████████████", cls: "ascii-strong" },
-  { text: "         █████████████████████████████", cls: "ascii-strong" },
-  { text: "       █████████████████████████████████", cls: "ascii-strong" },
-  { text: "      ███████████████████████████████████", cls: "ascii-strong" },
-  { text: "       ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", cls: "ascii-mid" },
-  { text: "          ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", cls: "ascii-soft" },
-  { text: "             ░░░░░░░░░░░░░░░░░░░░", cls: "ascii-glow" },
-  { text: "", cls: "" },
-  { text: "                   ║░░░░░░░░║", cls: "ascii-soft" },
-  { text: "                   ║░░░░░░░░║", cls: "ascii-soft" },
-  { text: "                   ║░░▒▒▒░░░║", cls: "ascii-mid" },
-  { text: "                   ║░▒████░░║", cls: "ascii-mid" },
-  { text: "                   ║░█    █░║", cls: "ascii-strong" },
-  { text: "                   ║░█ ██ █░║", cls: "ascii-strong" },
-  { text: "                   ║░█ ██ █░║", cls: "ascii-strong" },
-  { text: "                   ║░█____█░║", cls: "ascii-strong" },
-  { text: "                   ║░  ░░  ░║", cls: "ascii-soft" },
+  // UFO dome
+  { text: "                    ████████", cls: "ascii-strong" },
+  { text: "                 ██████████████", cls: "ascii-strong" },
+  { text: "                ████████████████", cls: "ascii-strong" },
+  // UFO body - wide saucer
+  { text: "           ▓▓▓▓▓▓████████████████▓▓▓▓▓▓", cls: "ascii-mid" },
+  { text: "        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", cls: "ascii-mid" },
+  { text: "      ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", cls: "ascii-soft" },
+  { text: "        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░", cls: "ascii-glow" },
+  // Beam - widening cone of light
+  { text: "                  ░░░░░░░░░░░░", cls: "ascii-glow" },
+  { text: "                 ░░▒▒▒▒▒▒▒▒▒░░", cls: "ascii-glow" },
+  { text: "                ░░░▒▒▒▒▒▒▒▒░░░", cls: "ascii-glow" },
+  { text: "               ░░░░▒▒▒▒▒▒▒░░░░", cls: "ascii-glow" },
+  { text: "              ░░░░░▒▒▒▒▒▒░░░░░", cls: "ascii-glow" },
+  // Person silhouette being lifted
+  { text: "                    ██", cls: "ascii-strong" },
+  { text: "                   ████", cls: "ascii-strong" },
+  { text: "                    ██", cls: "ascii-mid" },
+  { text: "                  ██████", cls: "ascii-mid" },
+  { text: "                 ██ ██ ██", cls: "ascii-soft" },
+  { text: "                    ██", cls: "ascii-soft" },
+  { text: "                   ████", cls: "ascii-soft" },
+  { text: "                  ██  ██", cls: "ascii-glow" },
 ];
 
 /* ── Boot sequence (faster) ── */
