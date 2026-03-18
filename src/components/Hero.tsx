@@ -2,33 +2,83 @@ import { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 
-/* ── ASCII — UFO + Beam + Avatar (orange monochrome shading) ── */
-const asciiLines = [
-  // UFO — classic dome + wide saucer
-  { text: "                  ▄██████▄", cls: "ascii-strong" },
-  { text: "               ▄████████████▄", cls: "ascii-strong" },
-  { text: "          ▄▄▓▓████████████████▓▓▄▄", cls: "ascii-mid" },
-  { text: "       ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", cls: "ascii-mid" },
-  { text: "     ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", cls: "ascii-soft" },
-  { text: "       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░", cls: "ascii-glow" },
-  // Beam — expanding cone of particles
-  { text: "                ░  ░  ░  ░  ░", cls: "ascii-glow" },
-  { text: "               ░ ░ ▒ ░ ▒ ░ ░", cls: "ascii-glow" },
-  { text: "              ░ ░ ░ ▒ ░ ░ ░ ░", cls: "ascii-glow" },
-  { text: "             ░ ░ ▒ ░ ░ ▒ ░ ░ ░", cls: "ascii-glow" },
-  { text: "            ░ ░ ░ ░ ▒ ░ ░ ░ ░ ░", cls: "ascii-glow" },
-  // Person — stick figure ascending
-  { text: "                   ▄██▄", cls: "ascii-strong" },
-  { text: "                   █  █", cls: "ascii-strong" },
-  { text: "                   ▀██▀", cls: "ascii-strong" },
-  { text: "                 ▄▄████▄▄", cls: "ascii-mid" },
-  { text: "                ▀▀ ████ ▀▀", cls: "ascii-soft" },
-  { text: "                   ████", cls: "ascii-mid" },
-  { text: "                   █  █", cls: "ascii-soft" },
-  { text: "                  ██  ██", cls: "ascii-glow" },
-];
+/* ── WIDESCREEN ASCII ART — UFO beaming David statue portrait ── */
+const asciiArt = `
+                                            ▄▄▓▓▓▓▓▓▓▓▄▄
+                                        ▄▓████████████████▓▄
+                                      ▓██████████████████████▓
+                                    ▓████████████████████████████▓
+                               ▄▓▓████████████████████████████████▓▓▄
+                          ▄▄▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▄▄
+                      ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+                    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+                       ▀▀▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▀▀
+                              ░  .  ░  .  ░  .  ░  .  ░  .  ░
+                             ░ . ░ . ░ . ░ . ░ . ░ . ░ . ░ .
+                              . ░ . ░ . ░ . ░ . ░ . ░ . ░ .
+                               ░ . ░ . ░ . ░ . ░ . ░ . ░ .
+                                . ░ . ░ . ░ . ░ . ░ . ░ .
+                                 ░ . ░ . ░ . ░ . ░ . ░ .
+                                  . ░ . ░ . ░ . ░ . ░ .
+                                   ░ . ░ . ░ . ░ . ░ .
+                                    ░ . ░ . ░ . ░ . ░
+                                   ▄▄▓▓████▓▓▄▄
+                                 ▓██▓▓▒▒▒▒▒▒▓▓██▓
+                                ▓█▓▒░░░░░░░░░░▒▓█▓
+                               ▓█▒░░░▄▒▒▒▒▄░░░░▒█▓
+                               █▓░░░▒████████▒░░░▓█
+                               █▒░░░████░░████░░░▒█
+                               █▓░░░▒████████▒░░░▓█
+                               ▓█░░░░░▀▓▓▓▓▀░░░░█▓
+                               ▓█▒░░░░░░░░░░░░░▒█▓
+                                █▓▒░▄▓▓▓▓▓▓▓▓▄░▒▓█
+                                ▓██▓█▓▒▒▒▒▒▒▓█▓██▓
+                                 ██▓░░░░░░░░░░▓██
+                                 █▓░░░░░░░░░░░░▓█
+                                ▓█░░░░░░░░░░░░░░█▓
+                                █▓░░░░░▄▄▄▄░░░░░▓█
+                               ▓█░░░▒▓██████▓▒░░░█▓
+                              ▓█▒░░▓██████████▓░░▒█▓
+                             ▓█▒░░░████████████░░░▒█▓
+                            ▓█▓░░░░████████████░░░░▓█▓
+                            █▓░░░░░▓██████████▓░░░░░▓█
+                           ▓█░░░░░░░▓████████▓░░░░░░░█▓
+                           █▒░░░░░░░░▒▓████▓▒░░░░░░░░▒█
+                          ▓█░░░░░░░░░░░░░░░░░░░░░░░░░░█▓
+                          █▓░░░░░░░░░░░░░░░░░░░░░░░░░░▓█
+                         ▓█░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▓
+                         █▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓█
+                        ▓█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▓
+                        █▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒█
+                       ▄█▄░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▄█▄
+                      ██████▓▒░░░░░░░░░░░░░░░░░░░░░░░▒▓██████
+                    ▓██▓  ▀▓██▓░░░░░░░░░░░░░░░░░░░░▓██▓▀  ▓██▓
+                   ▓█▓      ▓█▓░░░░░░░░░░░░░░░░░░░▓█▓      ▓█▓
+                  ▓█▓        ▓█▓░░░░░░░░░░░░░░░░░▓█▓        ▓█▓
+                 ██▓          ██░░░░░░░░░░░░░░░░░░██          ▓██
+                ██▓           ██░░░░░░░░░░░░░░░░░░██           ▓██
+`;
 
-/* ── Boot sequence (faster) ── */
+/* Parse into colored lines */
+const parseAsciiLines = () => {
+  const lines = asciiArt.split("\n").filter((l) => l.length > 0);
+  return lines.map((text, i) => {
+    let cls = "ascii-mid";
+    if (i < 4) cls = "ascii-strong";       // UFO dome
+    else if (i < 6) cls = "ascii-mid";     // Saucer body
+    else if (i < 8) cls = "ascii-soft";    // Saucer edges
+    else if (i < 9) cls = "ascii-mid";     // Undercarriage
+    else if (i < 18) cls = "ascii-beam";   // Beam particles
+    else if (i < 24) cls = "ascii-strong"; // David head
+    else if (i < 30) cls = "ascii-mid";    // David neck/shoulders
+    else cls = "ascii-soft";               // David body/legs
+    return { text, cls };
+  });
+};
+
+const asciiLines = parseAsciiLines();
+
+/* ── Boot sequence ── */
 const bootLines = [
   { text: "initializing identity...", delay: 0 },
   { text: "loading memory...", delay: 300 },
@@ -91,12 +141,12 @@ const Hero = () => {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.5, 0.8], [1, 0.8, 0]);
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden py-16">
       {/* Beam glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[80%] beam-glow pointer-events-none" />
 
       <motion.div
-        className="relative z-10 text-center px-6 max-w-2xl"
+        className="relative z-10 text-center px-4 w-full max-w-4xl"
         style={{ opacity: contentOpacity }}
       >
         {/* Boot sequence */}
@@ -104,17 +154,17 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className="mb-10 flex justify-center"
+          className="mb-8 flex justify-center"
         >
           <BootSequence />
         </motion.div>
 
-        {/* ASCII Art */}
+        {/* ASCII Art — widescreen */}
         <motion.pre
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-          className="font-mono text-[7px] md:text-[10px] lg:text-[11px] leading-[1.3] mb-10 select-none"
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="font-mono text-[4px] sm:text-[5px] md:text-[7px] lg:text-[8px] xl:text-[9px] leading-[1.15] mb-8 select-none overflow-hidden whitespace-pre"
         >
           {asciiLines.map((line, i) => (
             <div key={i} className={line.cls}>{line.text || "\u00A0"}</div>
@@ -125,7 +175,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 1.5 }}
+          transition={{ duration: 0.4, delay: 1.8 }}
           className="mb-4"
         >
           <h1 className="text-foreground text-2xl md:text-4xl font-mono font-light tracking-tight">
@@ -136,7 +186,7 @@ const Hero = () => {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 1.7 }}
+          transition={{ duration: 0.4, delay: 2.0 }}
           className="text-muted-foreground font-mono text-[13px] mb-2 leading-relaxed"
         >
           your identity file
@@ -144,7 +194,7 @@ const Hero = () => {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 1.8 }}
+          transition={{ duration: 0.4, delay: 2.1 }}
           className="text-muted-foreground font-mono text-[13px] mb-10 leading-relaxed"
         >
           for the agent internet
@@ -154,7 +204,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 2.0 }}
+          transition={{ duration: 0.4, delay: 2.3 }}
           className="mb-12"
         >
           <CliPill />
@@ -164,7 +214,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 2.2 }}
+          transition={{ duration: 0.5, delay: 2.5 }}
           className="flex items-center justify-center gap-8 font-mono text-[12px]"
         >
           <a href="#get-started" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">

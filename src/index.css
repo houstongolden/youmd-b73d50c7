@@ -9,8 +9,8 @@
     /* Dark mode is default */
     --bg: 0 0% 5%;
     --bg-raised: 0 0% 9%;
-    --text-primary: 30 10% 88%;
-    --text-secondary: 30 5% 55%;
+    --text-primary: 30 10% 92%;
+    --text-secondary: 30 8% 65%;
     --border-color: 0 0% 18%;
 
     /* Burnt orange accent system */
@@ -71,8 +71,8 @@
   .light {
     --bg: 36 20% 96%;
     --bg-raised: 0 0% 100%;
-    --text-primary: 0 0% 12%;
-    --text-secondary: 30 6% 40%;
+    --text-primary: 0 0% 8%;
+    --text-secondary: 30 8% 32%;
     --border-color: 30 10% 84%;
 
     --accent: 20 60% 45%;
@@ -100,7 +100,7 @@ html {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
     line-height: 1.65;
-    font-size: 14px;
+    font-size: 15px;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -202,7 +202,9 @@ html {
 .ascii-strong { color: hsl(var(--accent)); }
 .ascii-mid { color: hsl(var(--accent-mid)); }
 .ascii-soft { color: hsl(var(--accent-light)); }
-.ascii-glow { color: hsl(var(--accent-wash)); }
+.ascii-glow { color: hsl(var(--accent) / 0.25); }
+.ascii-beam { color: hsl(var(--accent) / 0.4); text-shadow: 0 0 8px hsl(var(--accent) / 0.15); }
+.ascii-dim { color: hsl(var(--muted-foreground) / 0.3); }
 
 /* Selection */
 ::selection {
