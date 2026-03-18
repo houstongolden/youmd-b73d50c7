@@ -145,8 +145,8 @@ const Hero = () => {
               transition={{ duration: 0.4, delay: 1.1 }}
               className="font-mono text-[11px] leading-relaxed text-muted-foreground/60 mb-6 max-w-sm"
             >
-              <p>ai agents don't know who you are.</p>
-              <p className="mt-1">you.md gives them your context — skills, work, voice — so they represent you, not a hallucination.</p>
+              <p>help agents find you, know you, work with you — instantly.</p>
+              <p className="mt-1">one file. public or private context. scoped, shareable, managed via cli.</p>
             </motion.div>
 
             {/* Divider */}
