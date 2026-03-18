@@ -30,8 +30,11 @@ const CTAFooter = () => {
             <p className="text-muted-foreground/60 font-mono text-[10px] mb-8 tracking-widest uppercase">
               ── get started ──
             </p>
-            <p className="text-foreground font-mono text-[16px] md:text-[20px] font-light tracking-tight mb-10 leading-relaxed">
-              Your agents are waiting.
+            <p className="text-foreground font-mono text-[16px] md:text-[20px] font-light tracking-tight mb-4 leading-relaxed">
+              Stop re-explaining yourself.
+            </p>
+            <p className="text-muted-foreground font-body text-[13px] mb-10">
+              One command. Persistent identity. Every agent knows you.
             </p>
           </FadeUp>
           <FadeUp delay={0.08}>

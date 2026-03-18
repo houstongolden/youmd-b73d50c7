@@ -19,10 +19,10 @@ const Integrations = () => (
     <div className="max-w-xl mx-auto px-6">
       <FadeUp>
         <p className="text-muted-foreground/60 font-mono text-[10px] uppercase tracking-widest mb-3 text-center">
-          ── compatible agents ──
+          ── works everywhere ──
         </p>
         <p className="text-muted-foreground/70 font-body text-[12px] mb-10 text-center">
-          Works with any agent that reads structured context.
+          Your identity travels with you. No per-tool setup — just share your link.
         </p>
       </FadeUp>
 
@@ -51,7 +51,7 @@ const Integrations = () => (
       <FadeUp delay={0.15}>
         <p className="text-center mt-8">
           <span className="text-muted-foreground/50 font-mono text-[10px]">
-            + any agent that supports context injection
+            + any agent that supports structured context injection
           </span>
         </p>
       </FadeUp>

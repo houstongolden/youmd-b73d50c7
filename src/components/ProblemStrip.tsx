@@ -18,17 +18,17 @@ const ProblemStrip = () => {
             ── the problem ──
           </p>
           <p className="text-foreground/90 font-mono text-[15px] md:text-[17px] font-light leading-[1.8] tracking-tight">
-            The agent internet doesn't know who you are.{" "}
-            <span className="text-accent">Yet.</span>
+            Every agent you use starts from scratch.{" "}
+            <span className="text-accent">Every. Single. Time.</span>
           </p>
           <p className="text-muted-foreground text-[13px] font-body mt-6 leading-relaxed max-w-md mx-auto">
-            Every agent starts from zero. No memory. No context. No you.
-            You re-explain yourself every time.
+            You re-explain who you are, what you're building, how you like to work.
+            Context is lost between sessions, tools, and teams. Your identity doesn't carry.
           </p>
         </FadeUp>
         <FadeUp delay={0.15}>
           <div className="mt-10 flex justify-center gap-6 font-mono text-[10px]">
-            {["no memory", "no context", "no identity"].map((item, i) => (
+            {["context lost every session", "re-explain yourself endlessly", "agents that don't know you"].map((item, i) => (
               <motion.span
                 key={item}
                 className="text-destructive/70 border border-destructive/20 px-3 py-1 rounded"
@@ -43,7 +43,7 @@ const ProblemStrip = () => {
         </FadeUp>
         <FadeUp delay={0.25}>
           <p className="text-accent/70 font-mono text-[11px] mt-8">
-            one command changes that →
+            one command fixes this →
           </p>
         </FadeUp>
       </motion.div>

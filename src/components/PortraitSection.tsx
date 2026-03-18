@@ -9,7 +9,7 @@ const PortraitSection = () => (
           ── ascii portrait ──
         </p>
         <p className="text-muted-foreground text-[13px] font-body mb-10">
-          Generate your identity portrait from any profile photo.
+          A visual fingerprint for your identity. Recognizable by humans and machines.
         </p>
       </FadeUp>
 
