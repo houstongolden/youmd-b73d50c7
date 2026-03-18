@@ -74,7 +74,7 @@ const AsciiPortraitGenerator = () => {
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [asciiData, setAsciiData] = useState<AsciiCell[][] | null>(null);
-  const [cols, setCols] = useState(68);
+  const [cols, setCols] = useState(120);
   const [showPhoto, setShowPhoto] = useState(false);
   const [tab, setTab] = useState<"portrait" | "about">("portrait");
   const [urlInput, setUrlInput] = useState("");
