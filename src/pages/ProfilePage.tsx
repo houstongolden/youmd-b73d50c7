@@ -1,11 +1,13 @@
 import { useParams, Link } from "react-router-dom";
-import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield } from "lucide-react";
+import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { sampleProfiles, type ActivityItem, type Project, type AgentConnection } from "@/data/sampleProfiles";
+import { sampleProfiles, type ActivityItem, type Project, type AgentConnection, type ConnectedSource } from "@/data/sampleProfiles";
 
-const statusColor = (status: string) => {
-  switch (status) {
+/* ── Helpers ─────────────────────────────────── */
+
+const statusColor = (s: string) => {
+  switch (s) {
     case "active": return "text-success";
     case "building": return "text-accent";
     case "publishing": return "text-accent-mid";
@@ -15,17 +17,17 @@ const statusColor = (status: string) => {
   }
 };
 
-const stateColor = (state: string) => {
-  switch (state) {
+const stateColor = (s: string) => {
+  switch (s) {
     case "high": case "trained": case "current": return "text-success";
-    case "medium": case "partial": case "stale": return "text-accent";
+    case "medium": case "partial": case "syncing": case "stale": return "text-accent";
     case "low": case "untrained": case "outdated": return "text-destructive";
     default: return "text-muted-foreground";
   }
 };
 
-const actionIcon = (action: string) => {
-  switch (action) {
+const actionIcon = (a: string) => {
+  switch (a) {
     case "published": return "↑";
     case "connected": return "⊕";
     case "updated": return "△";
@@ -35,11 +37,43 @@ const actionIcon = (action: string) => {
   }
 };
 
+const sourceIcon = (status: string) => {
+  switch (status) {
+    case "verified": return "✓";
+    case "synced": return "↻";
+    case "pending": return "…";
+    default: return "·";
+  }
+};
+
+/* ── Micro Components ─────────────────────────── */
+
 const SectionHeader = ({ children }: { children: string }) => (
   <h2 className="text-accent font-mono text-[11px] uppercase tracking-wider mb-4">&gt; {children}</h2>
 );
 
 const Divider = () => <div className="section-divider my-8" />;
+
+const StatusLine = ({ label, value, color }: { label: string; value: string; color?: string }) => (
+  <p className="font-mono text-[11px]">
+    <span className="text-muted-foreground/50">{label}:</span>{" "}
+    <span className={color || "text-foreground/60"}>{value}</span>
+  </p>
+);
+
+/* ── Section Components ───────────────────────── */
+
+const VerifiedBadge = ({ methods, level }: { methods: string[]; level?: string }) => (
+  <div className="flex items-center gap-2">
+    <span className="inline-flex items-center gap-1 font-mono text-[10px] text-success border border-success/20 rounded px-2 py-0.5 bg-success/5">
+      <Shield size={9} />
+      VERIFIED {level ? `· ${level.toUpperCase()}` : ""}
+    </span>
+    <span className="text-muted-foreground/30 font-mono text-[9px]">
+      {methods.join(" · ")}
+    </span>
+  </div>
+);
 
 const ProjectCard = ({ project }: { project: Project }) => (
   <div className="border border-border rounded p-4 hover:border-accent/20 transition-colors group">
@@ -77,12 +111,66 @@ const AgentConnectionsList = ({ connections }: { connections: AgentConnection[] 
   <div className="space-y-0">
     {connections.map((agent) => (
       <div key={agent.name} className="flex items-center justify-between py-1.5 border-b border-border/30 last:border-0">
-        <span className="text-foreground/70 font-mono text-[11px]">- {agent.name}</span>
+        <span className="text-foreground/70 font-mono text-[11px] flex items-center gap-1.5">
+          - {agent.name}
+          {agent.isVerified && (
+            <span className="text-success font-mono text-[8px]">✓</span>
+          )}
+        </span>
         <span className="text-muted-foreground/30 font-mono text-[9px]">{agent.lastAccess}</span>
       </div>
     ))}
   </div>
 );
+
+const ConnectedSourcesList = ({ sources }: { sources: ConnectedSource[] }) => {
+  const verified = sources.filter((s) => s.status === "verified");
+  const synced = sources.filter((s) => s.status === "synced");
+  const pending = sources.filter((s) => s.status === "pending");
+
+  return (
+    <div className="space-y-3">
+      {verified.length > 0 && (
+        <div>
+          <p className="text-muted-foreground/40 font-mono text-[10px] mb-1.5">verified:</p>
+          {verified.map((s) => (
+            <div key={s.name} className="flex items-center justify-between py-1">
+              <span className="text-success/80 font-mono text-[11px]">
+                {sourceIcon(s.status)} {s.name}
+              </span>
+              {s.lastSync && <span className="text-muted-foreground/30 font-mono text-[9px]">{s.lastSync}</span>}
+            </div>
+          ))}
+        </div>
+      )}
+      {synced.length > 0 && (
+        <div>
+          <p className="text-muted-foreground/40 font-mono text-[10px] mb-1.5">synced:</p>
+          {synced.map((s) => (
+            <div key={s.name} className="flex items-center justify-between py-1">
+              <span className="text-foreground/60 font-mono text-[11px]">
+                {sourceIcon(s.status)} {s.name}
+              </span>
+              {s.lastSync && <span className="text-muted-foreground/30 font-mono text-[9px]">{s.lastSync}</span>}
+            </div>
+          ))}
+        </div>
+      )}
+      {pending.length > 0 && (
+        <div>
+          <p className="text-muted-foreground/40 font-mono text-[10px] mb-1.5">pending:</p>
+          {pending.map((s) => (
+            <div key={s.name} className="flex items-center justify-between py-1">
+              <span className="text-muted-foreground/40 font-mono text-[11px]">
+                {sourceIcon(s.status)} {s.name}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ActivityTimeline = ({ items }: { items: ActivityItem[] }) => (
   <div className="space-y-0">
@@ -101,6 +189,8 @@ const ActivityTimeline = ({ items }: { items: ActivityItem[] }) => (
     ))}
   </div>
 );
+
+/* ── Main Page ────────────────────────────────── */
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -128,6 +218,8 @@ const ProfilePage = () => {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const delay = (i: number) => ({ initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: i * 0.04 } });
+
   return (
     <div className="min-h-screen">
       {/* Nav */}
@@ -139,12 +231,8 @@ const ProfilePage = () => {
       </nav>
 
       {/* Cover */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        className="relative w-full h-[160px] md:h-[200px] overflow-hidden"
-      >
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}
+        className="relative w-full h-[160px] md:h-[200px] overflow-hidden">
         <img src={profile.coverUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
       </motion.div>
@@ -154,79 +242,159 @@ const ProfilePage = () => {
         <div className="max-w-[680px] mx-auto">
 
           {/* ═══ SYSTEM HEADER ═══ */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="-mt-10 mb-6"
-          >
+          <motion.div {...delay(0)} className="-mt-10 mb-6">
             <div className="flex items-end gap-4 mb-4">
-              <img
-                src={profile.avatarUrl}
-                alt={profile.name}
-                className="w-16 h-16 md:w-20 md:h-20 rounded border-2 border-background object-cover"
-                loading="lazy"
-              />
+              <img src={profile.avatarUrl} alt={profile.name}
+                className="w-16 h-16 md:w-20 md:h-20 rounded border-2 border-background object-cover" loading="lazy" />
               <div className="pb-1 flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <h1 className="text-foreground font-mono text-lg md:text-xl font-medium tracking-tight truncate">
                     {profile.name}
                   </h1>
-                  {profile.verification.verified && (
-                    <Shield size={14} className="text-success shrink-0" />
-                  )}
                 </div>
                 <p className="text-muted-foreground font-body text-[12px] mt-0.5 truncate">{profile.tagline}</p>
               </div>
             </div>
 
             {/* System status block */}
-            <div className="terminal-panel p-4 space-y-1">
+            <div className="terminal-panel p-4 space-y-1.5">
               <div className="flex items-center justify-between">
-                <button
-                  onClick={handleCopy}
-                  className="flex items-center gap-1.5 text-accent font-mono text-[12px] hover:text-accent-light transition-colors"
-                >
+                <button onClick={handleCopy}
+                  className="flex items-center gap-1.5 text-accent font-mono text-[12px] hover:text-accent-light transition-colors">
                   you.md/{profile.username}
                   {copied ? <Check size={10} className="text-success" /> : <Copy size={10} />}
                 </button>
-                <span className="font-mono text-[10px] text-success uppercase tracking-wider">● active</span>
+                <span className="font-mono text-[10px] text-success uppercase tracking-wider flex items-center gap-1">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+                  active
+                </span>
               </div>
               <div className="flex items-center gap-1 text-muted-foreground/40 font-mono text-[10px]">
                 <MapPin size={9} />
                 <span>{profile.location}</span>
               </div>
-              <p className="font-mono text-[10px] text-muted-foreground/40">
-                last updated: {profile.lastUpdated}
-              </p>
-              <p className="font-mono text-[10px] text-muted-foreground/40">
-                maintained by: {profile.maintainedBy.join(" + ")}
-              </p>
+              <StatusLine label="last updated" value={profile.lastUpdated} />
+              <StatusLine label="maintained by" value={profile.maintainedBy.join(" + ")} />
+              <StatusLine label="connected sources" value={String(profile.connectedSources.length)} color="text-accent" />
               {profile.verification.verified && (
-                <p className="font-mono text-[10px] text-muted-foreground/40">
-                  verification: <span className="text-success">VERIFIED</span> ({profile.verification.methods.join(" + ")})
-                </p>
+                <div className="pt-1">
+                  <VerifiedBadge methods={profile.verification.methods} level={profile.verification.level} />
+                </div>
               )}
+              <div className="flex items-center gap-4 pt-1">
+                <span className="font-mono text-[10px] text-muted-foreground/40">
+                  agent reads: <span className="text-foreground/70">{profile.agentMetrics.totalReads.toLocaleString()}</span>
+                </span>
+                <span className="font-mono text-[10px] text-muted-foreground/40">
+                  integrations: <span className="text-foreground/70">{profile.agentMetrics.activeIntegrations}</span>
+                </span>
+              </div>
             </div>
           </motion.div>
 
           <Divider />
 
-          {/* ═══ AGENT ACTIVITY ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
-            <SectionHeader>agent activity</SectionHeader>
-            <div className="grid grid-cols-3 gap-4 mb-5">
+          {/* ═══ IDENTITY ═══ */}
+          <motion.div {...delay(1)}>
+            <SectionHeader>identity</SectionHeader>
+            <p className="text-foreground/80 font-body text-[14px] leading-[1.7] mb-4">
+              {profile.bio.medium}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {profile.topics.map((t) => (
+                <span key={t} className="font-mono text-[10px] px-2 py-0.5 rounded border border-accent/10 text-accent/40">
+                  {t}
+                </span>
+              ))}
+            </div>
+            {profile.credibility.length > 0 && (
+              <div className="mt-3 space-y-0.5">
+                {profile.credibility.map((c) => (
+                  <p key={c} className="text-muted-foreground/50 font-mono text-[10px]">› {c}</p>
+                ))}
+              </div>
+            )}
+          </motion.div>
+
+          <Divider />
+
+          {/* ═══ CURRENT ACTIVITY ═══ */}
+          <motion.div {...delay(2)}>
+            <SectionHeader>current activity</SectionHeader>
+            <div className="mb-4">
+              <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">now:</p>
+              {profile.now.map((item) => (
+                <p key={item} className="text-foreground/70 font-mono text-[12px]">- {item}</p>
+              ))}
+            </div>
+            <div className="mb-4">
+              <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">recent changes:</p>
+              {profile.recentChanges.map((c) => (
+                <p key={c} className="text-foreground/60 font-mono text-[11px]">- {c}</p>
+              ))}
+            </div>
+            <div>
+              <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">timeline:</p>
+              <ActivityTimeline items={profile.activity} />
+            </div>
+          </motion.div>
+
+          <Divider />
+
+          {/* ═══ CONNECTED SOURCES ═══ */}
+          <motion.div {...delay(3)}>
+            <SectionHeader>connected sources</SectionHeader>
+            <ConnectedSourcesList sources={profile.connectedSources} />
+          </motion.div>
+
+          <Divider />
+
+          {/* ═══ FRESHNESS ═══ */}
+          <motion.div {...delay(4)}>
+            <SectionHeader>freshness</SectionHeader>
+            <div className="space-y-1.5 mb-3">
+              <StatusLine label="identity" value={profile.freshness.identity} color={stateColor(profile.freshness.identity)} />
+              <StatusLine label="projects" value={profile.freshness.projects} color={stateColor(profile.freshness.projects)} />
+              <StatusLine label="voice" value={profile.freshness.voice} color={stateColor(profile.freshness.voice)} />
+              <StatusLine label="sources" value={profile.freshness.sources} color={stateColor(profile.freshness.sources)} />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[10px] text-muted-foreground/40">freshness score:</span>
+              <span className="font-mono text-[14px] text-accent font-medium">{profile.freshness.score}/100</span>
+            </div>
+          </motion.div>
+
+          <Divider />
+
+          {/* ═══ MAINTENANCE ═══ */}
+          <motion.div {...delay(5)}>
+            <SectionHeader>maintenance</SectionHeader>
+            <div className="space-y-1.5">
+              <StatusLine label="human edits" value={profile.maintenance.humanEdits ? "enabled" : "disabled"}
+                color={profile.maintenance.humanEdits ? "text-success" : "text-muted-foreground/40"} />
+              <StatusLine label="agent maintenance" value={profile.maintenance.agentMaintenance ? "active" : "inactive"}
+                color={profile.maintenance.agentMaintenance ? "text-success" : "text-muted-foreground/40"} />
+              <StatusLine label="update mode" value={profile.maintenance.updateMode} />
+            </div>
+            <div className="mt-3">
+              <p className="text-muted-foreground/40 font-mono text-[10px] mb-1.5">active maintainers:</p>
+              {profile.maintenance.activeMaintainers.map((m) => (
+                <p key={m} className="text-foreground/60 font-mono text-[11px]">- {m}</p>
+              ))}
+            </div>
+          </motion.div>
+
+          <Divider />
+
+          {/* ═══ AGENT NETWORK ═══ */}
+          <motion.div {...delay(6)}>
+            <SectionHeader>agent network</SectionHeader>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
               <div>
                 <p className="text-foreground font-mono text-[18px] font-medium">
                   {profile.agentMetrics.totalReads.toLocaleString()}
                 </p>
-                <p className="text-muted-foreground/40 font-mono text-[9px]">agent reads</p>
-              </div>
-              <div>
-                <p className="text-foreground font-mono text-[18px] font-medium">
-                  {profile.agentMetrics.activeIntegrations}
-                </p>
-                <p className="text-muted-foreground/40 font-mono text-[9px]">integrations</p>
+                <p className="text-muted-foreground/40 font-mono text-[9px]">total reads</p>
               </div>
               <div>
                 <p className="text-accent font-mono text-[18px] font-medium">
@@ -234,83 +402,60 @@ const ProfilePage = () => {
                 </p>
                 <p className="text-muted-foreground/40 font-mono text-[9px]">reads (24h)</p>
               </div>
+              <div>
+                <p className="text-foreground font-mono text-[18px] font-medium">
+                  {profile.agentMetrics.connectedAgentsCount}
+                </p>
+                <p className="text-muted-foreground/40 font-mono text-[9px]">connected agents</p>
+              </div>
+              <div>
+                <p className="text-success font-mono text-[18px] font-medium">
+                  {profile.agentMetrics.verifiedAgents}
+                </p>
+                <p className="text-muted-foreground/40 font-mono text-[9px]">verified agents</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-5">
+              <div>
+                <p className="text-foreground font-mono text-[14px] font-medium">
+                  {profile.agentMetrics.activeIntegrations}
+                </p>
+                <p className="text-muted-foreground/40 font-mono text-[9px]">active integrations</p>
+              </div>
+              <div>
+                <p className="text-foreground font-mono text-[14px] font-medium">
+                  {profile.agentMetrics.contextSessions}
+                </p>
+                <p className="text-muted-foreground/40 font-mono text-[9px]">context sessions</p>
+              </div>
             </div>
 
-            <p className="text-muted-foreground/30 font-mono text-[10px] mb-2">active connections:</p>
+            <p className="text-muted-foreground/30 font-mono text-[10px] mb-2">recent connections:</p>
             <AgentConnectionsList connections={profile.agentConnections} />
           </motion.div>
 
           <Divider />
 
           {/* ═══ IDENTITY STATE ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
+          <motion.div {...delay(7)}>
             <SectionHeader>identity state</SectionHeader>
             <div className="space-y-1.5">
-              <p className="font-mono text-[11px]">
-                <span className="text-muted-foreground/50">memory coverage:</span>{" "}
-                <span className={stateColor(profile.identityState.memoryCoverage)}>{profile.identityState.memoryCoverage}</span>
-              </p>
-              <p className="font-mono text-[11px]">
-                <span className="text-muted-foreground/50">voice profile:</span>{" "}
-                <span className={stateColor(profile.identityState.voiceProfile)}>{profile.identityState.voiceProfile}</span>
-              </p>
-              <p className="font-mono text-[11px]">
-                <span className="text-muted-foreground/50">context freshness:</span>{" "}
-                <span className={stateColor(profile.identityState.contextFreshness)}>{profile.identityState.contextFreshness}</span>
-              </p>
-              <p className="font-mono text-[11px]">
-                <span className="text-muted-foreground/50">last pipeline run:</span>{" "}
-                <span className="text-foreground/60">{profile.identityState.lastPipelineRun}</span>
-              </p>
-              <p className="font-mono text-[11px]">
-                <span className="text-muted-foreground/50">sources synced:</span>{" "}
-                <span className="text-foreground/60">{profile.identityState.sourcesSynced}</span>
-              </p>
-              <p className="font-mono text-[11px]">
-                <span className="text-muted-foreground/50">context score:</span>{" "}
-                <span className="text-accent font-medium">{profile.agentMetrics.contextScore}/100</span>
-              </p>
-            </div>
-          </motion.div>
-
-          <Divider />
-
-          {/* ═══ IDENTITY ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-            <SectionHeader>identity</SectionHeader>
-            <p className="text-foreground/80 font-body text-[14px] leading-[1.7] mb-4">
-              {profile.bio.medium}
-            </p>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {profile.topics.map((topic) => (
-                <span key={topic} className="font-mono text-[10px] px-2 py-0.5 rounded border border-accent/10 text-accent/40">
-                  {topic}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-
-          <Divider />
-
-          {/* ═══ CURRENT ACTIVITY ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
-            <SectionHeader>current activity</SectionHeader>
-            <div className="mb-4">
-              <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">building:</p>
-              {profile.now.map((item) => (
-                <p key={item} className="text-foreground/70 font-mono text-[12px]">- {item}</p>
-              ))}
-            </div>
-            <div>
-              <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">recent updates:</p>
-              <ActivityTimeline items={profile.activity} />
+              <StatusLine label="memory coverage" value={profile.identityState.memoryCoverage}
+                color={stateColor(profile.identityState.memoryCoverage)} />
+              <StatusLine label="voice profile" value={profile.identityState.voiceProfile}
+                color={stateColor(profile.identityState.voiceProfile)} />
+              <StatusLine label="context freshness" value={profile.identityState.contextFreshness}
+                color={stateColor(profile.identityState.contextFreshness)} />
+              <StatusLine label="last pipeline run" value={profile.identityState.lastPipelineRun} />
+              <StatusLine label="sources synced" value={String(profile.identityState.sourcesSynced)} />
+              <StatusLine label="context score" value={`${profile.agentMetrics.contextScore}/100`} color="text-accent font-medium" />
             </div>
           </motion.div>
 
           <Divider />
 
           {/* ═══ PROJECTS ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+          <motion.div {...delay(8)}>
             <SectionHeader>projects</SectionHeader>
             <div className="grid gap-3">
               {profile.projects.map((p) => (
@@ -322,8 +467,8 @@ const ProfilePage = () => {
           <Divider />
 
           {/* ═══ ACCESS LAYERS ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
-            <SectionHeader>access</SectionHeader>
+          <motion.div {...delay(9)}>
+            <SectionHeader>access layers</SectionHeader>
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <p className="text-muted-foreground/40 font-mono text-[10px] mb-2">public:</p>
@@ -343,19 +488,23 @@ const ProfilePage = () => {
           <Divider />
 
           {/* ═══ FOR AGENTS ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+          <motion.div {...delay(10)}>
             <SectionHeader>for agents</SectionHeader>
             <div className="terminal-panel p-4 space-y-2">
-              <p className="font-mono text-[11px]">
-                <span className="text-muted-foreground/40">start here:</span>
-              </p>
-              <p className="font-mono text-[11px] text-accent">
-                GET /api/v1/profiles/{profile.username}
-              </p>
-              <p className="font-mono text-[10px] text-muted-foreground/40 mt-3">preferred:</p>
-              <p className="font-mono text-[11px] text-foreground/60">- use you.json for structured context</p>
-              <p className="font-mono text-[11px] text-foreground/60">- use analysis/ for deeper understanding</p>
+              <p className="font-mono text-[11px] text-muted-foreground/40">start here:</p>
+              <p className="font-mono text-[11px] text-accent">GET /api/v1/profiles/{profile.username}</p>
+
+              <p className="font-mono text-[10px] text-muted-foreground/40 mt-3">preferred retrieval order:</p>
+              <p className="font-mono text-[11px] text-foreground/60">1. you.json</p>
+              <p className="font-mono text-[11px] text-foreground/60">2. manifest.json</p>
+              <p className="font-mono text-[11px] text-foreground/60">3. you.md</p>
+              <p className="font-mono text-[11px] text-foreground/60">4. analysis/*</p>
+
               <p className="font-mono text-[10px] text-muted-foreground/40 mt-3">notes:</p>
+              <p className="font-mono text-[11px] text-foreground/60">- use structured fields first</p>
+              <p className="font-mono text-[11px] text-foreground/60">- prefer most recent timestamps</p>
+              <p className="font-mono text-[11px] text-foreground/60">- respect public/private boundaries</p>
+              <p className="font-mono text-[11px] text-foreground/60">- check verification status before citing</p>
               <p className="font-mono text-[11px] text-foreground/60">- tone: {profile.preferences.tone}</p>
               <p className="font-mono text-[11px] text-foreground/60">- avoid: {profile.preferences.avoid.join(", ")}</p>
             </div>
@@ -364,7 +513,7 @@ const ProfilePage = () => {
           <Divider />
 
           {/* ═══ TOP QUERIES ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.43 }}>
+          <motion.div {...delay(11)}>
             <SectionHeader>common queries</SectionHeader>
             <div className="space-y-1">
               {profile.topQueries.map((q) => (
@@ -375,28 +524,33 @@ const ProfilePage = () => {
 
           <Divider />
 
-          {/* ═══ SHARE CONTEXT ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.46 }}>
-            <SectionHeader>share context</SectionHeader>
-            <div className="space-y-2">
-              <p className="font-mono text-[11px] text-muted-foreground/50">generate a context link:</p>
-              <p className="font-mono text-[12px] text-accent">$ youmd link create</p>
-              <p className="font-mono text-[11px] text-muted-foreground/50 mt-2">or use:</p>
-              <p className="font-mono text-[11px] text-foreground/60">https://you.md/ctx/{profile.username}/abc123</p>
+          {/* ═══ CONNECT / SHARE CONTEXT ═══ */}
+          <motion.div {...delay(12)}>
+            <SectionHeader>connect</SectionHeader>
+            <div className="space-y-3">
+              <div>
+                <p className="font-mono text-[11px] text-muted-foreground/50">share public context:</p>
+                <p className="font-mono text-[12px] text-accent">$ youmd link create</p>
+              </div>
+              <div>
+                <p className="font-mono text-[11px] text-muted-foreground/50">scoped private context:</p>
+                <p className="font-mono text-[12px] text-accent">$ youmd link create --scope=full</p>
+              </div>
+              <div>
+                <p className="font-mono text-[11px] text-muted-foreground/50">api:</p>
+                <p className="font-mono text-[11px] text-foreground/60">GET /api/v1/profiles/{profile.username}</p>
+              </div>
             </div>
           </motion.div>
 
           <Divider />
 
           {/* ═══ LINKS ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.48 }}>
+          <motion.div {...delay(13)}>
             <div className="flex flex-wrap gap-3 mb-6">
               {profile.links.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.url}
-                  className="inline-flex items-center gap-1.5 text-accent/60 hover:text-accent font-mono text-[11px] transition-colors border border-border rounded px-3 py-1.5 hover:border-accent/30"
-                >
+                <a key={link.label} href={link.url}
+                  className="inline-flex items-center gap-1.5 text-accent/60 hover:text-accent font-mono text-[11px] transition-colors border border-border rounded px-3 py-1.5 hover:border-accent/30">
                   {link.label}
                   <ExternalLink size={9} />
                 </a>
@@ -405,7 +559,7 @@ const ProfilePage = () => {
           </motion.div>
 
           {/* ═══ VALUES ═══ */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+          <motion.div {...delay(14)}>
             <div className="space-y-1 mb-16">
               {profile.values.map((v) => (
                 <p key={v} className="text-muted-foreground/40 font-mono text-[11px]">› {v}</p>
@@ -414,14 +568,15 @@ const ProfilePage = () => {
           </motion.div>
 
           {/* Footer */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }} className="text-center">
-            <p className="text-muted-foreground/30 font-mono text-[10px] mb-2">
+          <motion.div {...delay(15)} className="text-center space-y-2">
+            <p className="text-muted-foreground/20 font-mono text-[9px] italic">
+              Updated by the human. Maintained by the system. Verified by connected systems.
+            </p>
+            <p className="text-muted-foreground/30 font-mono text-[10px]">
               Powered by <Link to="/" className="text-accent/40 hover:text-accent transition-colors">you.md</Link>
             </p>
-            <Link
-              to="/#get-started"
-              className="text-muted-foreground/20 font-mono text-[10px] hover:text-accent/60 transition-colors"
-            >
+            <Link to="/#get-started"
+              className="text-muted-foreground/20 font-mono text-[10px] hover:text-accent/60 transition-colors">
               &gt; claim yours
             </Link>
           </motion.div>
