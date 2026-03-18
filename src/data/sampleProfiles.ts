@@ -14,6 +14,11 @@ export interface ActivityItem {
   detail: string;
 }
 
+export interface AgentConnection {
+  name: string;
+  lastAccess: string;
+}
+
 export interface Profile {
   username: string;
   name: string;
@@ -38,11 +43,31 @@ export interface Profile {
   links: { label: string; url: string }[];
   topics: string[];
   credibility: string[];
-  socialProof: {
-    metric: string;
-    value: string;
-  }[];
+  // Agent metrics
+  agentMetrics: {
+    totalReads: number;
+    activeIntegrations: number;
+    recentReads24h: number;
+    contextScore: number;
+  };
+  agentConnections: AgentConnection[];
+  identityState: {
+    memoryCoverage: "high" | "medium" | "low";
+    voiceProfile: "trained" | "partial" | "untrained";
+    contextFreshness: "current" | "stale" | "outdated";
+    lastPipelineRun: string;
+    sourcesSynced: number;
+  };
+  verification: {
+    verified: boolean;
+    methods: string[];
+  };
+  topQueries: string[];
+  publicSections: string[];
+  privateSections: string[];
   activity: ActivityItem[];
+  maintainedBy: string[];
+  lastUpdated: string;
 }
 
 export const sampleProfiles: Profile[] = [
@@ -77,17 +102,40 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["growth marketing", "AI agents", "identity protocols"],
     credibility: ["Founded BAMF Media (8-figure agency)", "LinkedIn growth pioneer"],
-    socialProof: [
-      { metric: "LinkedIn followers", value: "120k+" },
-      { metric: "Companies scaled", value: "500+" },
-      { metric: "Revenue generated", value: "$100M+" },
+    agentMetrics: {
+      totalReads: 12842,
+      activeIntegrations: 6,
+      recentReads24h: 42,
+      contextScore: 92,
+    },
+    agentConnections: [
+      { name: "claude-code", lastAccess: "2 min ago" },
+      { name: "cursor", lastAccess: "11 min ago" },
+      { name: "codex-cli", lastAccess: "1 hr ago" },
+      { name: "perplexity", lastAccess: "3 hr ago" },
+      { name: "goose", lastAccess: "8 hr ago" },
+      { name: "aider", lastAccess: "1 day ago" },
     ],
+    identityState: {
+      memoryCoverage: "high",
+      voiceProfile: "trained",
+      contextFreshness: "current",
+      lastPipelineRun: "2 hours ago",
+      sourcesSynced: 5,
+    },
+    verification: { verified: true, methods: ["domain", "linkedin"] },
+    topQueries: ["who is houston golden", "what is bamf media", "what is you.md", "houston golden linkedin growth"],
+    publicSections: ["identity", "projects", "values", "voice summary"],
+    privateSections: ["preferences", "internal context", "working notes"],
     activity: [
+      { date: "2026-03-18", action: "agent_read", detail: "claude-code accessed identity bundle" },
       { date: "2026-03-17", action: "published", detail: "Updated identity bundle to v1.2" },
       { date: "2026-03-15", action: "connected", detail: "Linked Claude Code agent" },
       { date: "2026-03-12", action: "updated", detail: "Added new project: You.md" },
       { date: "2026-03-08", action: "initialized", detail: "Created you.md/houston" },
     ],
+    maintainedBy: ["youmd", "claude", "cursor"],
+    lastUpdated: "2 hours ago",
   },
   {
     username: "priya",
@@ -119,17 +167,37 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["RLHF", "alignment", "reward modeling", "open-source ML"],
     credibility: ["ML Engineer at Anthropic", "12 published papers on reward modeling"],
-    socialProof: [
-      { metric: "Papers published", value: "12" },
-      { metric: "Citations", value: "3,200+" },
-      { metric: "GitHub stars", value: "5.4k" },
+    agentMetrics: {
+      totalReads: 8421,
+      activeIntegrations: 4,
+      recentReads24h: 18,
+      contextScore: 88,
+    },
+    agentConnections: [
+      { name: "cursor", lastAccess: "5 min ago" },
+      { name: "claude-code", lastAccess: "22 min ago" },
+      { name: "codex-cli", lastAccess: "4 hr ago" },
+      { name: "perplexity", lastAccess: "6 hr ago" },
     ],
+    identityState: {
+      memoryCoverage: "high",
+      voiceProfile: "trained",
+      contextFreshness: "current",
+      lastPipelineRun: "4 hours ago",
+      sourcesSynced: 3,
+    },
+    verification: { verified: true, methods: ["github", "scholar"] },
+    topQueries: ["priya sharma anthropic", "RLHF reward modeling", "evalkit framework"],
+    publicSections: ["identity", "projects", "values", "research"],
+    privateSections: ["preferences", "unpublished research notes"],
     activity: [
       { date: "2026-03-16", action: "published", detail: "Updated research interests" },
       { date: "2026-03-14", action: "connected", detail: "Linked Cursor agent" },
       { date: "2026-03-10", action: "updated", detail: "Added EvalKit project" },
       { date: "2026-03-05", action: "initialized", detail: "Created you.md/priya" },
     ],
+    maintainedBy: ["youmd", "cursor"],
+    lastUpdated: "4 hours ago",
   },
   {
     username: "jmarcus",
@@ -162,17 +230,36 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["indie hacking", "micro-SaaS", "building in public", "solopreneurship"],
     credibility: ["3 successful exits", "$12k+ combined MRR across products"],
-    socialProof: [
-      { metric: "Products shipped", value: "15" },
-      { metric: "Combined MRR", value: "$12k" },
-      { metric: "X followers", value: "28k" },
+    agentMetrics: {
+      totalReads: 3219,
+      activeIntegrations: 3,
+      recentReads24h: 8,
+      contextScore: 79,
+    },
+    agentConnections: [
+      { name: "goose", lastAccess: "18 min ago" },
+      { name: "claude-code", lastAccess: "2 hr ago" },
+      { name: "cursor", lastAccess: "5 hr ago" },
     ],
+    identityState: {
+      memoryCoverage: "medium",
+      voiceProfile: "trained",
+      contextFreshness: "current",
+      lastPipelineRun: "6 hours ago",
+      sourcesSynced: 4,
+    },
+    verification: { verified: false, methods: [] },
+    topQueries: ["jordan marcus indie hacker", "screenshotapi founder", "building in public tips"],
+    publicSections: ["identity", "projects", "values"],
+    privateSections: ["revenue details", "internal roadmaps"],
     activity: [
       { date: "2026-03-18", action: "updated", detail: "MRR milestone update" },
       { date: "2026-03-15", action: "published", detail: "Added AI writing tool to projects" },
       { date: "2026-03-09", action: "connected", detail: "Linked Goose agent" },
       { date: "2026-03-01", action: "initialized", detail: "Created you.md/jmarcus" },
     ],
+    maintainedBy: ["youmd", "goose"],
+    lastUpdated: "6 hours ago",
   },
   {
     username: "sato.yuki",
@@ -204,17 +291,39 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["distributed systems", "Rust", "observability", "payment infrastructure"],
     credibility: ["Staff Engineer at Stripe", "5k+ stars on open-source Rust crates"],
-    socialProof: [
-      { metric: "GitHub stars", value: "5k+" },
-      { metric: "RFCs authored", value: "34" },
-      { metric: "Years at Stripe", value: "6" },
+    agentMetrics: {
+      totalReads: 6754,
+      activeIntegrations: 5,
+      recentReads24h: 31,
+      contextScore: 95,
+    },
+    agentConnections: [
+      { name: "aider", lastAccess: "3 min ago" },
+      { name: "claude-code", lastAccess: "14 min ago" },
+      { name: "cursor", lastAccess: "1 hr ago" },
+      { name: "codex-cli", lastAccess: "2 hr ago" },
+      { name: "goose", lastAccess: "12 hr ago" },
     ],
+    identityState: {
+      memoryCoverage: "high",
+      voiceProfile: "trained",
+      contextFreshness: "current",
+      lastPipelineRun: "1 hour ago",
+      sourcesSynced: 4,
+    },
+    verification: { verified: true, methods: ["github", "domain"] },
+    topQueries: ["yuki sato stripe", "tokio-retry rust", "distributed systems book"],
+    publicSections: ["identity", "projects", "values", "technical writing"],
+    privateSections: ["RFC drafts", "internal architecture notes"],
     activity: [
+      { date: "2026-03-17", action: "agent_read", detail: "aider accessed identity bundle" },
       { date: "2026-03-17", action: "updated", detail: "Added book project to profile" },
       { date: "2026-03-13", action: "published", detail: "Updated agent preferences" },
       { date: "2026-03-07", action: "connected", detail: "Linked Aider agent" },
       { date: "2026-03-02", action: "initialized", detail: "Created you.md/sato.yuki" },
     ],
+    maintainedBy: ["youmd", "aider", "claude"],
+    lastUpdated: "1 hour ago",
   },
   {
     username: "emmawright",
@@ -247,17 +356,35 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["brand strategy", "creative direction", "visual identity", "storytelling"],
     credibility: ["Previously at Pentagram", "Worked with 40+ startups on brand identity"],
-    socialProof: [
-      { metric: "Brands created", value: "40+" },
-      { metric: "Awwwards", value: "7" },
-      { metric: "Workshop alumni", value: "600+" },
+    agentMetrics: {
+      totalReads: 2187,
+      activeIntegrations: 2,
+      recentReads24h: 5,
+      contextScore: 74,
+    },
+    agentConnections: [
+      { name: "claude-code", lastAccess: "45 min ago" },
+      { name: "cursor", lastAccess: "6 hr ago" },
     ],
+    identityState: {
+      memoryCoverage: "medium",
+      voiceProfile: "trained",
+      contextFreshness: "current",
+      lastPipelineRun: "8 hours ago",
+      sourcesSynced: 3,
+    },
+    verification: { verified: true, methods: ["domain", "instagram"] },
+    topQueries: ["emma wright designer", "pentagram creative director", "brand bones workshop"],
+    publicSections: ["identity", "projects", "values", "portfolio"],
+    privateSections: ["client briefs", "pricing"],
     activity: [
       { date: "2026-03-16", action: "published", detail: "Added Brand Bones workshop" },
       { date: "2026-03-11", action: "updated", detail: "Updated portfolio link" },
       { date: "2026-03-06", action: "connected", detail: "Linked Claude Code agent" },
       { date: "2026-03-03", action: "initialized", detail: "Created you.md/emmawright" },
     ],
+    maintainedBy: ["youmd", "claude"],
+    lastUpdated: "8 hours ago",
   },
   {
     username: "kai",
@@ -290,16 +417,40 @@ export const sampleProfiles: Profile[] = [
     ],
     topics: ["developer relations", "Next.js", "web platform", "content creation"],
     credibility: ["DevRel Lead at Vercel", "50k+ YouTube subscribers"],
-    socialProof: [
-      { metric: "YouTube subs", value: "50k+" },
-      { metric: "Conf talks", value: "24" },
-      { metric: "Tutorials", value: "200+" },
+    agentMetrics: {
+      totalReads: 9312,
+      activeIntegrations: 7,
+      recentReads24h: 56,
+      contextScore: 91,
+    },
+    agentConnections: [
+      { name: "cursor", lastAccess: "1 min ago" },
+      { name: "claude-code", lastAccess: "8 min ago" },
+      { name: "codex-cli", lastAccess: "30 min ago" },
+      { name: "perplexity", lastAccess: "1 hr ago" },
+      { name: "goose", lastAccess: "2 hr ago" },
+      { name: "aider", lastAccess: "5 hr ago" },
+      { name: "opendevin", lastAccess: "1 day ago" },
     ],
+    identityState: {
+      memoryCoverage: "high",
+      voiceProfile: "trained",
+      contextFreshness: "current",
+      lastPipelineRun: "30 minutes ago",
+      sourcesSynced: 6,
+    },
+    verification: { verified: true, methods: ["github", "youtube"] },
+    topQueries: ["kai andersen vercel", "next.js devrel", "ship it youtube"],
+    publicSections: ["identity", "projects", "values", "tutorials"],
+    privateSections: ["talk proposals", "internal docs strategy"],
     activity: [
+      { date: "2026-03-18", action: "agent_read", detail: "cursor accessed identity bundle" },
       { date: "2026-03-18", action: "updated", detail: "Added React Conf keynote to Now" },
       { date: "2026-03-14", action: "published", detail: "Updated agent preferences" },
       { date: "2026-03-10", action: "connected", detail: "Linked Cursor agent" },
       { date: "2026-03-04", action: "initialized", detail: "Created you.md/kai" },
     ],
+    maintainedBy: ["youmd", "cursor", "claude"],
+    lastUpdated: "30 minutes ago",
   },
 ];
