@@ -103,7 +103,7 @@ const WhatsInside = () => (
         <p className="text-muted-foreground/60 font-mono text-[10px] uppercase tracking-widest mb-2">
           ── what's inside ──
         </p>
-        <p className="text-muted-foreground text-[13px] font-body mb-10">A sample identity bundle.</p>
+        <p className="text-muted-foreground text-[13px] font-body mb-10">Your identity, structured for machines and humans.</p>
       </FadeUp>
 
       <FadeUp delay={0.1}>
@@ -113,10 +113,10 @@ const WhatsInside = () => (
       <FadeUp delay={0.2}>
         <div className="mt-8 grid grid-cols-2 gap-4">
           {[
-            { label: "Identity", desc: "Name, role, location" },
-            { label: "Voice", desc: "Tone & style preferences" },
-            { label: "Goals", desc: "Current focus areas" },
-            { label: "Links", desc: "Verified connections" },
+            { label: "Identity", desc: "Agents know who you are without asking" },
+            { label: "Voice", desc: "Responses match your tone automatically" },
+            { label: "Goals", desc: "Context on what matters to you right now" },
+            { label: "Links", desc: "Verified sources agents can trust" },
           ].map((item) => (
             <div key={item.label} className="py-3 border-l-2 border-accent/20 pl-3">
               <p className="text-foreground font-mono text-[11px] mb-0.5">{item.label}</p>

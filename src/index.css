@@ -181,6 +181,16 @@ html {
   animation: blink 1s step-end infinite;
 }
 
+/* Status pulse */
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 hsl(var(--success) / 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 4px hsl(var(--success) / 0); }
+}
+
+.status-dot-pulse {
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
 /* Section divider */
 .section-divider {
   height: 1px;

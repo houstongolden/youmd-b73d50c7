@@ -16,7 +16,7 @@ const ProfilesShowcase = () => {
             ── live on the network ──
           </p>
           <p className="text-muted-foreground text-[13px] font-body mb-10">
-            Identity surfaces maintained by humans and agents.
+            Real identities, always current. Maintained by humans and agents together.
           </p>
         </FadeUp>
 
@@ -45,9 +45,9 @@ const ProfilesShowcase = () => {
                     className="flex items-center gap-4 px-5 py-3.5 group hover:bg-accent-wash/40 transition-colors"
                   >
                     {/* Status dot */}
-                    <span className="w-1.5 h-1.5 rounded-full bg-success/60 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-success/60 status-dot-pulse shrink-0" />
 
-                    {/* Avatar — ASCII default, real photo on hover */}
+                    {/* Avatar */}
                     <div className="w-8 h-8 rounded overflow-hidden border border-border group-hover:border-accent/30 transition-colors shrink-0 bg-background relative">
                       <AsciiAvatar
                         src={profile.avatarUrl}

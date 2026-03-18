@@ -1,9 +1,10 @@
 import { useParams, Link } from "react-router-dom";
 import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw } from "lucide-react";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { sampleProfiles, type ActivityItem, type Project, type AgentConnection, type ConnectedSource } from "@/data/sampleProfiles";
 import ProfileAsciiHeader from "@/components/ProfileAsciiHeader";
+import { useCountUp } from "@/hooks/useCountUp";
 
 /* ── Helpers ─────────────────────────────────── */
 
@@ -60,6 +61,67 @@ const StatusLine = ({ label, value, color }: { label: string; value: string; col
     <span className="text-muted-foreground/70">{label}:</span>{" "}
     <span className={color || "text-foreground/80"}>{value}</span>
   </p>
+);
+
+/* ── Count-up Components ──────────────────────── */
+
+const CountUpValue = ({ target, prefix = "", suffix = "", className = "" }: { target: number; prefix?: string; suffix?: string; className?: string }) => {
+  const { value, ref } = useCountUp(target);
+  return (
+    <span ref={ref} className={className}>
+      {prefix}{value.toLocaleString()}{suffix}
+    </span>
+  );
+};
+
+const AgentMetricsInline = ({ profile }: { profile: typeof sampleProfiles[0] }) => (
+  <div className="flex items-center gap-4 pt-1">
+    <span className="font-mono text-[10px] text-muted-foreground/60">
+      agent reads: <CountUpValue target={profile.agentMetrics.totalReads} className="text-foreground/80" />
+    </span>
+    <span className="font-mono text-[10px] text-muted-foreground/60">
+      integrations: <CountUpValue target={profile.agentMetrics.activeIntegrations} className="text-foreground/80" />
+    </span>
+  </div>
+);
+
+const FreshnessScore = ({ score }: { score: number }) => {
+  const { value, ref } = useCountUp(score);
+  return (
+    <div ref={ref} className="flex items-center gap-2">
+      <span className="font-mono text-[10px] text-muted-foreground/60">freshness score:</span>
+      <span className="font-mono text-[14px] text-accent font-medium">{value}/100</span>
+    </div>
+  );
+};
+
+const AgentNetworkMetrics = ({ profile }: { profile: typeof sampleProfiles[0] }) => (
+  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
+    <div>
+      <p className="text-foreground font-mono text-[18px] font-medium">
+        <CountUpValue target={profile.agentMetrics.totalReads} />
+      </p>
+      <p className="text-muted-foreground/60 font-mono text-[9px]">total reads</p>
+    </div>
+    <div>
+      <p className="text-accent font-mono text-[18px] font-medium">
+        <CountUpValue target={profile.agentMetrics.recentReads24h} prefix="+" />
+      </p>
+      <p className="text-muted-foreground/60 font-mono text-[9px]">reads (24h)</p>
+    </div>
+    <div>
+      <p className="text-foreground font-mono text-[18px] font-medium">
+        <CountUpValue target={profile.agentMetrics.connectedAgentsCount} />
+      </p>
+      <p className="text-muted-foreground/60 font-mono text-[9px]">connected agents</p>
+    </div>
+    <div>
+      <p className="text-success font-mono text-[18px] font-medium">
+        <CountUpValue target={profile.agentMetrics.verifiedAgents} />
+      </p>
+      <p className="text-muted-foreground/60 font-mono text-[9px]">verified agents</p>
+    </div>
+  </div>
 );
 
 /* ── Section Components ───────────────────────── */
@@ -267,8 +329,8 @@ const ProfilePage = () => {
                   you.md/{profile.username}
                   {copied ? <Check size={10} className="text-success" /> : <Copy size={10} />}
                 </button>
-                <span className="font-mono text-[10px] text-success uppercase tracking-wider flex items-center gap-1">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+                <span className="font-mono text-[10px] text-success uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-success status-dot-pulse" />
                   active
                 </span>
               </div>
@@ -284,14 +346,7 @@ const ProfilePage = () => {
                   <VerifiedBadge methods={profile.verification.methods} level={profile.verification.level} />
                 </div>
               )}
-              <div className="flex items-center gap-4 pt-1">
-                <span className="font-mono text-[10px] text-muted-foreground/60">
-                  agent reads: <span className="text-foreground/80">{profile.agentMetrics.totalReads.toLocaleString()}</span>
-                </span>
-                <span className="font-mono text-[10px] text-muted-foreground/60">
-                  integrations: <span className="text-foreground/80">{profile.agentMetrics.activeIntegrations}</span>
-                </span>
-              </div>
+              <AgentMetricsInline profile={profile} />
             </div>
           </motion.div>
 
@@ -361,10 +416,7 @@ const ProfilePage = () => {
               <StatusLine label="voice" value={profile.freshness.voice} color={stateColor(profile.freshness.voice)} />
               <StatusLine label="sources" value={profile.freshness.sources} color={stateColor(profile.freshness.sources)} />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-[10px] text-muted-foreground/60">freshness score:</span>
-              <span className="font-mono text-[14px] text-accent font-medium">{profile.freshness.score}/100</span>
-            </div>
+            <FreshnessScore score={profile.freshness.score} />
           </motion.div>
 
           <Divider />
@@ -392,32 +444,7 @@ const ProfilePage = () => {
           {/* ═══ AGENT NETWORK ═══ */}
           <motion.div {...delay(6)}>
             <SectionHeader>agent network</SectionHeader>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
-              <div>
-                <p className="text-foreground font-mono text-[18px] font-medium">
-                  {profile.agentMetrics.totalReads.toLocaleString()}
-                </p>
-                <p className="text-muted-foreground/60 font-mono text-[9px]">total reads</p>
-              </div>
-              <div>
-                <p className="text-accent font-mono text-[18px] font-medium">
-                  +{profile.agentMetrics.recentReads24h}
-                </p>
-                <p className="text-muted-foreground/60 font-mono text-[9px]">reads (24h)</p>
-              </div>
-              <div>
-                <p className="text-foreground font-mono text-[18px] font-medium">
-                  {profile.agentMetrics.connectedAgentsCount}
-                </p>
-                <p className="text-muted-foreground/60 font-mono text-[9px]">connected agents</p>
-              </div>
-              <div>
-                <p className="text-success font-mono text-[18px] font-medium">
-                  {profile.agentMetrics.verifiedAgents}
-                </p>
-                <p className="text-muted-foreground/60 font-mono text-[9px]">verified agents</p>
-              </div>
-            </div>
+            <AgentNetworkMetrics profile={profile} />
             <div className="grid grid-cols-2 gap-4 mb-5">
               <div>
                 <p className="text-foreground font-mono text-[14px] font-medium">

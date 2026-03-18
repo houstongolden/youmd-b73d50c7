@@ -18,10 +18,10 @@ const OpenSpec = () => (
             >
               you/v1
             </motion.span>{" "}
-            is an open protocol.
+            is an open protocol. No vendor lock-in. No walled gardens.
           </p>
           <p className="text-muted-foreground font-body text-[13px] mt-2">
-            Read it, fork it, build on it.
+            Your identity belongs to you. Read it, fork it, self-host it.
           </p>
           <div className="mt-6 flex items-center justify-center gap-6">
             <a
