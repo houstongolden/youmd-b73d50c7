@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
-import heroWarm from "@/assets/hero-beam.png";
+import { Link } from "react-router-dom";
 import FadeUp from "@/components/FadeUp";
 
 const CTAFooter = () => {
@@ -11,58 +11,54 @@ const CTAFooter = () => {
     target: sectionRef,
     offset: ["start end", "end start"],
   });
-  const bgY = useTransform(scrollYProgress, [0, 1], [-40, 40]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [60, -30]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [40, -20]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText("npx init youmd");
+    navigator.clipboard.writeText("npx create-youmd");
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
     <>
-      {/* CTA section */}
-      <section ref={sectionRef} id="get-started" className="relative overflow-hidden bg-background">
-        <motion.div className="absolute inset-0 opacity-10" style={{ y: bgY }}>
-          <img src={heroWarm} alt="" className="w-full h-[120%] object-cover object-[center_25%]" />
-        </motion.div>
-        <div className="absolute inset-0 bg-background/50" />
-        <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-background to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
+      <section ref={sectionRef} id="get-started" className="relative overflow-hidden py-32 md:py-40">
+        {/* Beam glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100px] h-[400px] beam-glow pointer-events-none" />
 
-        <motion.div className="relative z-10 py-36 md:py-44 text-center px-6" style={{ y: contentY }}>
+        <motion.div className="relative z-10 text-center px-6" style={{ y: contentY }}>
           <FadeUp>
-            <h2 className="text-foreground text-3xl md:text-5xl lg:text-[3.25rem] font-display font-light tracking-tight mb-10 leading-[1.1]">
+            <h2 className="text-foreground text-2xl md:text-4xl font-mono font-light tracking-tight mb-10 leading-[1.2]">
               Your agents are waiting.
             </h2>
           </FadeUp>
           <FadeUp delay={0.08}>
-            <button onClick={handleCopy} className="cli-pill cli-glow inline-flex items-center gap-3 px-6 py-3.5 mb-3">
-              <span className="text-foreground/35">$</span>
-              <span className="text-foreground font-medium">npx init youmd</span>
-              <span className="cursor-blink text-teal">▌</span>
-              <span className="ml-1.5 text-foreground/30">
-                {copied ? <Check size={13} className="text-teal" /> : <Copy size={13} />}
+            <button onClick={handleCopy} className="cli-pill cli-glow inline-flex items-center gap-3 px-5 py-3 mb-3">
+              <span className="text-mist">$</span>
+              <span className="text-green font-medium">npx create-youmd</span>
+              <span className="cursor-blink text-green">▌</span>
+              <span className="ml-2 text-mist/30">
+                {copied ? <Check size={13} className="text-green" /> : <Copy size={13} />}
               </span>
             </button>
-            {copied && <p className="text-teal text-xs font-mono mt-1">Copied ✓</p>}
+            {copied && <p className="text-green text-[11px] mt-1">copied to clipboard</p>}
           </FadeUp>
         </motion.div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-background py-8 px-6">
+      <footer className="py-8 px-6">
         <div className="section-divider mb-8" />
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-foreground/70 font-display text-[13px] tracking-tight">You.md</span>
-          <div className="flex items-center gap-8">
-            <a href="#spec" className="text-muted-foreground/60 text-[11px] hover:text-foreground/70 transition-colors duration-300">Spec</a>
-            <a href="#" className="text-muted-foreground/60 text-[11px] hover:text-foreground/70 transition-colors duration-300">GitHub</a>
-            <a href="#pricing" className="text-muted-foreground/60 text-[11px] hover:text-foreground/70 transition-colors duration-300">Pricing</a>
-            <a href="#" className="text-muted-foreground/60 text-[11px] hover:text-foreground/70 transition-colors duration-300">Docs</a>
+        <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <span className="text-green/60 font-mono text-[12px]">
+            <span className="text-mist/30">~/</span>you.md
+          </span>
+          <div className="flex items-center gap-6">
+            <a href="#spec" className="text-mist/40 text-[10px] font-mono hover:text-mist transition-colors">spec</a>
+            <a href="#" className="text-mist/40 text-[10px] font-mono hover:text-mist transition-colors">github</a>
+            <a href="#pricing" className="text-mist/40 text-[10px] font-mono hover:text-mist transition-colors">pricing</a>
+            <a href="#" className="text-mist/40 text-[10px] font-mono hover:text-mist transition-colors">docs</a>
+            <Link to="/profiles" className="text-mist/40 text-[10px] font-mono hover:text-cyan transition-colors">/profiles</Link>
           </div>
-          <span className="text-muted-foreground/35 text-[10px]">you-md/v1 open spec · Built by BAMF Media</span>
+          <span className="text-mist/20 text-[9px] font-mono">you-md/v1 · BAMF Media</span>
         </div>
       </footer>
     </>

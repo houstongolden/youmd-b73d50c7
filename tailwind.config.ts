@@ -14,9 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Inter", "system-ui", "sans-serif"],
-        body: ["Inter", "system-ui", "sans-serif"],
+        display: ["JetBrains Mono", "monospace"],
+        body: ["JetBrains Mono", "monospace"],
         mono: ["JetBrains Mono", "monospace"],
+        sans: ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -24,22 +25,27 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        // PRD palette
-        coral: "hsl(var(--coral))",
-        blush: "hsl(var(--blush))",
-        sky: "hsl(var(--sky))",
-        ether: "hsl(var(--ether))",
-        gold: "hsl(var(--gold))",
-        light: "hsl(var(--light))",
+        // Terminal palette
         void: "hsl(var(--void))",
         ink: "hsl(var(--ink))",
+        panel: "hsl(var(--panel))",
+        surface: "hsl(var(--surface))",
         mist: "hsl(var(--mist))",
-        // Legacy
+        green: "hsl(var(--green))",
+        cyan: "hsl(var(--cyan))",
+        amber: "hsl(var(--amber))",
+        coral: "hsl(var(--coral))",
+        // Legacy aliases
         sand: "hsl(var(--sand))",
         mauve: "hsl(var(--mauve))",
         teal: "hsl(var(--teal))",
         golden: "hsl(var(--golden))",
         dusk: "hsl(var(--dusk))",
+        sky: "hsl(var(--sky))",
+        light: "hsl(var(--light))",
+        gold: "hsl(var(--gold))",
+        ether: "hsl(var(--ether))",
+        blush: "hsl(var(--blush))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

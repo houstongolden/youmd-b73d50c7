@@ -19,7 +19,7 @@ const TypewriterBlock = ({ lines, inView }: { lines: string[]; inView: boolean }
       } else {
         setVisibleChars(current);
       }
-    }, 14);
+    }, 12);
     return () => clearInterval(interval);
   }, [inView, totalChars]);
 
@@ -28,30 +28,32 @@ const TypewriterBlock = ({ lines, inView }: { lines: string[]; inView: boolean }
   const visibleLines = visibleText.split("\n");
 
   const renderLine = (line: string) => {
-    if (line.startsWith("# ")) return <span className="text-coral font-medium">{line}</span>;
-    if (line.startsWith("## ")) return <span className="text-light/60 font-medium">{line}</span>;
+    if (line === "---") return <span className="text-mist/20">{line}</span>;
+    if (line === "") return <span>&nbsp;</span>;
+    if (line.startsWith("# ")) return <span className="text-green font-medium">{line}</span>;
+    if (line.startsWith("## ")) return <span className="text-cyan/70">{line}</span>;
     if (line.startsWith("- **")) {
       const match = line.match(/^- \*\*(.+?)\*\*(.*)$/);
-      if (match) return <><span className="text-gold">- <strong>{match[1]}</strong></span><span className="text-mist">{match[2]}</span></>;
+      if (match) return <><span className="text-amber/80">- <strong>{match[1]}</strong></span><span className="text-mist/60">{match[2]}</span></>;
     }
-    if (line.startsWith("- ")) return <span className="text-mist">{line}</span>;
-    if (line.startsWith("> ")) return <span className="text-mist/50 italic">{line}</span>;
+    if (line.startsWith("- ")) return <span className="text-foreground/60">{line}</span>;
+    if (line.startsWith("> ")) return <span className="text-mist/30 italic">{line}</span>;
     const colonIdx = line.indexOf(":");
     if (colonIdx > 0 && colonIdx < 20) {
       const key = line.slice(0, colonIdx);
       const val = line.slice(colonIdx);
-      return <><span className="text-sky">{key}</span><span className="text-mist/40">{val}</span></>;
+      return <><span className="text-amber/70">{key}</span><span className="text-mist/50">{val}</span></>;
     }
-    return <span className="text-light/80">{line}</span>;
+    return <span className="text-foreground/60">{line}</span>;
   };
 
   return (
-    <pre className="font-mono text-[12px] md:text-[13px] leading-[1.9] whitespace-pre-wrap">
+    <pre className="font-mono text-[11px] md:text-[12px] leading-[1.9] whitespace-pre-wrap">
       <code>
         {visibleLines.map((line, i) => (
           <div key={i}>{renderLine(line)}</div>
         ))}
-        {visibleChars < totalChars && <span className="cursor-blink text-coral">▌</span>}
+        {visibleChars < totalChars && <span className="cursor-blink text-green">▌</span>}
       </code>
     </pre>
   );
@@ -66,19 +68,19 @@ const ProfilePage = () => {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-void flex items-center justify-center px-6">
+      <div className="min-h-screen flex items-center justify-center px-6">
         <div className="text-center">
-          <h1 className="text-light text-2xl font-display font-light mb-3">Profile not found</h1>
-          <p className="text-mist text-sm mb-6">This you.md username doesn't exist yet.</p>
-          <Link to="/profiles" className="cta-coral px-6 py-2.5 text-sm inline-block">
-            Browse profiles
+          <p className="text-red text-[11px] font-mono mb-2">ERROR 404</p>
+          <h1 className="text-foreground text-xl font-mono font-light mb-3">Profile not found</h1>
+          <p className="text-mist text-[12px] mb-6">This you.md username doesn't exist yet.</p>
+          <Link to="/profiles" className="cta-green px-5 py-2 text-[11px] inline-block">
+            $ ls /profiles
           </Link>
         </div>
       </div>
     );
   }
 
-  // Build you.md content
   const codeLines = [
     "---",
     "schema: you-md/v1",
@@ -126,165 +128,161 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-void relative overflow-hidden">
-      {/* Beam of light motif */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[800px] beam-glow pointer-events-none" />
+    <div className="min-h-screen relative">
+      {/* Beam glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80px] h-[600px] beam-glow pointer-events-none" />
 
-      {/* Top bar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-3 md:pt-4">
-        <div className="rounded-full flex items-center justify-between gap-6 px-5 py-2 w-full max-w-2xl glass-card-dark">
-          <Link to="/" className="text-light font-mono text-[14px] font-medium tracking-tight">
-            you.md
+      {/* Nav */}
+      <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:pt-4">
+        <div className="max-w-2xl mx-auto flex items-center justify-between gap-6 px-4 py-2 glass-scrolled rounded-lg">
+          <Link to="/" className="text-green font-mono text-[13px] font-medium">
+            <span className="text-mist/30">~/</span>you.md
           </Link>
-          <Link
-            to="/profiles"
-            className="text-mist text-[11px] uppercase tracking-[0.08em] font-medium hover:text-light transition-colors"
-          >
-            Directory
+          <Link to="/profiles" className="text-mist/50 text-[11px] font-mono hover:text-mist transition-colors">
+            /profiles
           </Link>
         </div>
       </nav>
 
       <div className="pt-24 pb-20 px-6 relative z-10">
         <div className="max-w-2xl mx-auto">
-          {/* Back link */}
+          {/* Back */}
           <motion.div
-            initial={{ opacity: 0, x: -10 }}
+            initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.3 }}
           >
             <Link
               to="/profiles"
-              className="inline-flex items-center gap-1.5 text-mist text-[12px] hover:text-light transition-colors mb-10"
+              className="inline-flex items-center gap-1.5 text-mist/40 text-[11px] font-mono hover:text-mist transition-colors mb-10"
             >
-              <ArrowLeft size={12} /> All profiles
+              <ArrowLeft size={11} /> cd ../profiles
             </Link>
           </motion.div>
 
-          {/* Identity section with subtle beam glow behind */}
+          {/* Identity */}
           <motion.div
-            className="relative mb-8"
-            initial={{ opacity: 0, y: 20 }}
+            className="relative mb-6"
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
-            {/* Subtle glow behind identity */}
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-[150px] h-[120px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
-
-            <h1 className="text-light text-2xl md:text-3xl font-display font-medium tracking-tight leading-tight relative">
+            <h1 className="text-foreground text-xl md:text-2xl font-mono font-medium tracking-tight leading-tight">
               {profile.name}
             </h1>
-            <p className="text-coral text-[14px] mt-1.5 font-medium">{profile.tagline}</p>
-            <div className="flex items-center gap-1 mt-2 text-mist/60 text-[12px]">
-              <MapPin size={11} />
+            <p className="text-green/80 text-[12px] font-mono mt-1">{profile.tagline}</p>
+            <div className="flex items-center gap-1 mt-2 text-mist/40 text-[11px] font-mono">
+              <MapPin size={10} />
               <span>{profile.location}</span>
             </div>
           </motion.div>
 
-          {/* URL bar — monospace, mimics terminal */}
+          {/* URL */}
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-8"
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="mb-6"
           >
             <button
               onClick={handleCopy}
-              className="glass-card-dark rounded-full px-5 py-2.5 flex items-center gap-3 w-full md:w-auto group hover:border-coral/30 transition-all"
+              className="terminal-panel px-4 py-2 flex items-center gap-3 group hover:border-green/30 transition-all rounded-lg"
             >
-              <span className="font-mono text-[12px] text-mist/60">
-                <span className="text-coral">you.md</span>/{profile.username}
+              <span className="font-mono text-[11px] text-mist/50">
+                <span className="text-green">you.md</span>/{profile.username}
               </span>
-              <span className="text-mist/30 group-hover:text-mist/60 transition-colors ml-auto md:ml-2">
-                {copied ? <Check size={13} className="text-coral" /> : <Copy size={13} />}
+              <span className="text-mist/20 group-hover:text-mist/50 transition-colors ml-auto">
+                {copied ? <Check size={12} className="text-green" /> : <Copy size={12} />}
               </span>
             </button>
           </motion.div>
 
           {/* Bio */}
           <motion.p
-            className="text-ether/80 text-[14px] leading-relaxed mb-8"
-            initial={{ opacity: 0, y: 12 }}
+            className="text-mist text-[12px] leading-relaxed mb-6"
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
           >
             {profile.bio.medium}
           </motion.p>
 
           {/* Topics */}
           <motion.div
-            className="flex flex-wrap gap-2 mb-8"
+            className="flex flex-wrap gap-2 mb-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
           >
             {profile.topics.map((topic) => (
               <span
                 key={topic}
-                className="text-[11px] font-mono px-3 py-1 rounded-full bg-sky/10 text-sky border border-sky/15"
+                className="text-[10px] font-mono px-2.5 py-1 rounded border border-cyan/15 text-cyan/60 bg-cyan/5"
               >
                 {topic}
               </span>
             ))}
           </motion.div>
 
-          {/* Credibility signals */}
+          {/* Credibility */}
           <motion.div
-            className="flex flex-col gap-1.5 mb-10"
+            className="flex flex-col gap-1 mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.33 }}
+            transition={{ duration: 0.4, delay: 0.33 }}
           >
             {profile.credibility.map((c) => (
-              <p key={c} className="text-gold/70 text-[12px] font-mono">↗ {c}</p>
+              <p key={c} className="text-amber/50 text-[10px] font-mono">↗ {c}</p>
             ))}
           </motion.div>
 
-          {/* Code block — the you.md file */}
+          {/* Code block */}
           <motion.div
             ref={codeRef}
-            className="glass-card-dark rounded-2xl p-6 md:p-8 mb-8"
-            initial={{ opacity: 0, y: 20 }}
+            className="terminal-panel mb-8"
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
+            transition={{ duration: 0.5, delay: 0.35 }}
           >
-            <div className="flex items-center gap-1.5 mb-5 pb-4 border-b border-mist/10">
-              <div className="w-[7px] h-[7px] rounded-full bg-mist/15" />
-              <div className="w-[7px] h-[7px] rounded-full bg-mist/15" />
-              <div className="w-[7px] h-[7px] rounded-full bg-mist/15" />
-              <span className="ml-3 text-mist/30 text-[11px] font-mono">{profile.username}.md</span>
+            <div className="terminal-panel-header">
+              <div className="terminal-dot" />
+              <div className="terminal-dot" />
+              <div className="terminal-dot" />
+              <span className="ml-2 text-mist/30 text-[10px] font-mono">{profile.username}.md</span>
             </div>
-            <TypewriterBlock lines={codeLines} inView={inView} />
+            <div className="p-5 md:p-6">
+              <TypewriterBlock lines={codeLines} inView={inView} />
+            </div>
           </motion.div>
 
           {/* Links */}
           <motion.div
-            className="flex flex-wrap gap-3 mb-16"
+            className="flex flex-wrap gap-2 mb-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.45 }}
+            transition={{ duration: 0.4, delay: 0.45 }}
           >
             {profile.links.map((link) => (
               <a
                 key={link.label}
                 href={link.url}
-                className="inline-flex items-center gap-1.5 text-[12px] text-mist/50 hover:text-coral transition-colors border border-mist/15 rounded-full px-4 py-1.5 hover:border-coral/30"
+                className="inline-flex items-center gap-1.5 text-[10px] font-mono text-mist/40 hover:text-green transition-colors border border-border rounded px-3 py-1.5 hover:border-green/30"
               >
                 {link.label}
-                <ExternalLink size={10} />
+                <ExternalLink size={9} />
               </a>
             ))}
           </motion.div>
 
-          {/* Powered by footer */}
+          {/* Footer */}
           <motion.div
-            className="text-center pt-8 border-t border-mist/8"
+            className="text-center pt-6 border-t border-border"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.5 }}
           >
-            <Link to="/" className="text-mist/30 text-[11px] font-mono hover:text-mist/50 transition-colors">
-              powered by <span className="text-coral/50">you.md</span>
+            <Link to="/" className="text-mist/20 text-[10px] font-mono hover:text-mist/40 transition-colors">
+              powered by <span className="text-green/40">you.md</span>
             </Link>
           </motion.div>
         </div>

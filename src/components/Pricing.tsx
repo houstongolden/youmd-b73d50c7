@@ -1,35 +1,42 @@
 import FadeUp from "@/components/FadeUp";
 
-const Dot = ({ golden = false }: { golden?: boolean }) => (
-  <span className={`w-1 h-1 rounded-full ${golden ? "bg-accent/60" : "bg-teal/35"} mt-[7px] shrink-0`} />
-);
+const Check = () => <span className="text-green text-[10px]">✓</span>;
+const Dot = () => <span className="text-amber text-[10px]">●</span>;
 
 const Pricing = () => (
-  <section id="pricing" className="py-24 md:py-32 bg-secondary">
-    <div className="max-w-4xl mx-auto px-6">
+  <section id="pricing" className="py-24 md:py-32">
+    <div className="max-w-3xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground text-[10px] font-mono uppercase tracking-[0.25em] mb-3">Pricing</p>
-        <p className="text-foreground/35 text-sm mb-14">Simple, fair, transparent.</p>
+        <p className="text-mist/30 text-[10px] font-mono uppercase tracking-widest mb-2">pricing</p>
+        <p className="text-mist text-[12px] mb-14">Simple. Fair. Transparent.</p>
       </FadeUp>
 
-      <div className="grid md:grid-cols-2 gap-5">
+      <div className="grid md:grid-cols-2 gap-4">
         {/* Free */}
         <FadeUp delay={0}>
-          <div className="glass-card rounded-2xl p-8 md:p-10 flex flex-col h-full">
-            <h3 className="text-foreground font-display text-lg font-normal mb-1 tracking-tight">Free</h3>
-            <p className="text-muted-foreground text-[13px] mb-6">Everything to get started.</p>
-            <p className="text-foreground text-4xl font-display font-light mb-8 tracking-tight">$0</p>
-            <ul className="space-y-3 text-[13px] text-muted-foreground mb-10 flex-1">
-              <li className="flex items-start gap-3"><Dot />CLI bundle creation</li>
-              <li className="flex items-start gap-3"><Dot />youmd.com/username publish</li>
-              <li className="flex items-start gap-3"><Dot />Sharing URL</li>
-              <li className="flex items-start gap-3"><Dot />3 pipeline runs/mo on platform keys</li>
+          <div className="terminal-panel p-6 md:p-8 flex flex-col h-full">
+            <div className="terminal-panel-header -mx-6 md:-mx-8 -mt-6 md:-mt-8 mb-6 px-4 rounded-t-lg">
+              <div className="terminal-dot" />
+              <div className="terminal-dot" />
+              <div className="terminal-dot" />
+              <span className="ml-2 text-mist/30 text-[10px] font-mono">free.plan</span>
+            </div>
+            <h3 className="text-foreground font-mono text-[14px] font-medium mb-1">Free</h3>
+            <p className="text-mist text-[11px] mb-5">Everything to get started.</p>
+            <p className="text-foreground text-3xl font-mono font-light mb-6">
+              $0<span className="text-mist/40 text-[11px] ml-1">/forever</span>
+            </p>
+            <ul className="space-y-2.5 text-[11px] text-mist mb-8 flex-1">
+              <li className="flex items-start gap-2.5"><Check />CLI bundle creation</li>
+              <li className="flex items-start gap-2.5"><Check />you.md/username publish</li>
+              <li className="flex items-start gap-2.5"><Check />Sharing URL</li>
+              <li className="flex items-start gap-2.5"><Check />3 pipeline runs/mo</li>
             </ul>
             <a
               href="#get-started"
-              className="block text-center border border-border/60 text-foreground/70 font-medium px-6 py-2.5 rounded-full text-[13px] hover:border-foreground/20 hover:text-foreground transition-all duration-300"
+              className="block text-center border border-border text-mist font-mono px-6 py-2.5 rounded-lg text-[11px] hover:border-green/30 hover:text-green transition-all"
             >
-              Get started free
+              $ youmd init
             </a>
           </div>
         </FadeUp>
@@ -37,39 +44,42 @@ const Pricing = () => (
         {/* Pro */}
         <FadeUp delay={0.08}>
           <div
-            className="glass-card rounded-2xl p-8 md:p-10 flex flex-col h-full relative overflow-hidden"
-            style={{
-              borderColor: "hsl(var(--golden) / 0.35)",
-              boxShadow: "0 0 32px -10px hsl(var(--golden) / 0.12)",
-            }}
+            className="terminal-panel p-6 md:p-8 flex flex-col h-full"
+            style={{ borderColor: "hsl(var(--amber) / 0.25)" }}
           >
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="text-foreground font-display text-lg font-normal tracking-tight">Pro</h3>
-              <span className="text-accent text-[9px] font-mono uppercase tracking-[0.15em]">Recommended</span>
+            <div className="terminal-panel-header -mx-6 md:-mx-8 -mt-6 md:-mt-8 mb-6 px-4 rounded-t-lg">
+              <div className="terminal-dot" />
+              <div className="terminal-dot" />
+              <div className="terminal-dot" />
+              <span className="ml-2 text-amber/40 text-[10px] font-mono">pro.plan</span>
             </div>
-            <p className="text-muted-foreground text-[13px] mb-6">For power users and heavy workflows.</p>
-            <p className="text-foreground text-4xl font-display font-light mb-8 tracking-tight">
-              $12<span className="text-muted-foreground text-[13px] font-body ml-1">/mo</span>
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-foreground font-mono text-[14px] font-medium">Pro</h3>
+              <span className="text-amber text-[9px] font-mono uppercase tracking-wider">recommended</span>
+            </div>
+            <p className="text-mist text-[11px] mb-5">For power users and heavy workflows.</p>
+            <p className="text-foreground text-3xl font-mono font-light mb-6">
+              $12<span className="text-mist/40 text-[11px] ml-1">/mo</span>
             </p>
-            <ul className="space-y-3 text-[13px] text-muted-foreground mb-10 flex-1">
-              <li className="flex items-start gap-3"><Dot golden />Unlimited pipeline runs</li>
-              <li className="flex items-start gap-3"><Dot golden />BYOK — OpenRouter, Perplexity, Apify, Firecrawl</li>
-              <li className="flex items-start gap-3"><Dot golden />Private encrypted vault</li>
-              <li className="flex items-start gap-3"><Dot golden />Version history</li>
-              <li className="flex items-start gap-3"><Dot golden />Custom domain</li>
-              <li className="flex items-start gap-3"><Dot golden />Analytics & scoped API keys</li>
+            <ul className="space-y-2.5 text-[11px] text-mist mb-8 flex-1">
+              <li className="flex items-start gap-2.5"><Dot />Unlimited pipeline runs</li>
+              <li className="flex items-start gap-2.5"><Dot />BYOK — OpenRouter, Perplexity, Apify</li>
+              <li className="flex items-start gap-2.5"><Dot />Private encrypted vault</li>
+              <li className="flex items-start gap-2.5"><Dot />Version history</li>
+              <li className="flex items-start gap-2.5"><Dot />Custom domain</li>
+              <li className="flex items-start gap-2.5"><Dot />Analytics & scoped API keys</li>
             </ul>
-            <a href="#get-started" className="cta-teal block text-center px-6 py-2.5 text-[13px]">
-              Start Pro
+            <a href="#get-started" className="cta-green block text-center px-6 py-2.5 text-[11px]">
+              $ youmd upgrade --pro
             </a>
-            <p className="text-muted-foreground/40 text-[10px] text-center mt-4">Keys stored locally, never on our servers.</p>
+            <p className="text-mist/30 text-[9px] text-center mt-3 font-mono">keys stored locally, never on our servers</p>
           </div>
         </FadeUp>
       </div>
 
       <FadeUp delay={0.15}>
-        <p className="text-muted-foreground/50 text-[11px] text-center mt-10">
-          We gate on usage intensity — never on core functionality.
+        <p className="text-mist/30 text-[10px] text-center mt-10 font-mono">
+          we gate on usage intensity — never on core functionality.
         </p>
       </FadeUp>
     </div>
