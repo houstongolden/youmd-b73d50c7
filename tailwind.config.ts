@@ -14,10 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["JetBrains Mono", "monospace"],
-        body: ["JetBrains Mono", "monospace"],
-        mono: ["JetBrains Mono", "monospace"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -25,27 +22,20 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        // Terminal palette
-        void: "hsl(var(--void))",
-        ink: "hsl(var(--ink))",
-        panel: "hsl(var(--panel))",
-        surface: "hsl(var(--surface))",
-        mist: "hsl(var(--mist))",
-        green: "hsl(var(--green))",
-        cyan: "hsl(var(--cyan))",
-        amber: "hsl(var(--amber))",
-        coral: "hsl(var(--coral))",
-        // Legacy aliases
-        sand: "hsl(var(--sand))",
-        mauve: "hsl(var(--mauve))",
-        teal: "hsl(var(--teal))",
-        golden: "hsl(var(--golden))",
-        dusk: "hsl(var(--dusk))",
-        sky: "hsl(var(--sky))",
-        light: "hsl(var(--light))",
-        gold: "hsl(var(--gold))",
-        ether: "hsl(var(--ether))",
-        blush: "hsl(var(--blush))",
+        // Accent system
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          900: "hsl(var(--accent-900))",
+          700: "hsl(var(--accent-700))",
+          500: "hsl(var(--accent-500))",
+          300: "hsl(var(--accent-300))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted-val))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        success: "hsl(var(--success))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -57,14 +47,6 @@ export default {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",

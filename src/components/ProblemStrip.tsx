@@ -14,14 +14,14 @@ const ProblemStrip = () => {
     <section ref={ref} className="py-24 md:py-32 overflow-hidden">
       <motion.div className="max-w-2xl mx-auto px-6 text-center" style={{ y }}>
         <FadeUp>
-          <p className="text-mist/30 text-[10px] mb-6 tracking-widest uppercase">the problem</p>
+          <p className="text-muted-foreground/40 text-[10px] mb-6 tracking-widest uppercase">the problem</p>
           <p className="text-foreground/70 text-lg md:text-xl font-mono font-light leading-[1.6] tracking-tight">
             Every agent you talk to starts from{" "}
-            <span className="text-amber">zero</span>.
+            <span className="text-accent">zero</span>.
             <br className="hidden md:block" />
             No memory. No context. No you.
           </p>
-          <p className="text-green/60 text-[13px] mt-6 font-mono">
+          <p className="text-accent/60 text-[13px] mt-6 font-mono">
             you.md changes that.
           </p>
         </FadeUp>

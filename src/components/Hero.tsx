@@ -1,35 +1,80 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 
+/* ── ASCII Art ── */
+const asciiLines = [
+  { text: "              █████████████████████", cls: "ascii-strong" },
+  { text: "         █████████████████████████████", cls: "ascii-strong" },
+  { text: "       █████████████████████████████████", cls: "ascii-strong" },
+  { text: "      ███████████████████████████████████", cls: "ascii-strong" },
+  { text: "       ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", cls: "ascii-mid" },
+  { text: "          ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒", cls: "ascii-soft" },
+  { text: "             ░░░░░░░░░░░░░░░░░░░░", cls: "ascii-glow" },
+  { text: "", cls: "" },
+  { text: "                  ╲░░░░░░░░░░░╱", cls: "ascii-glow" },
+  { text: "                   ╲░░░░░░░░░╱", cls: "ascii-glow" },
+  { text: "                   │░░░░░░░░░│", cls: "ascii-glow" },
+  { text: "                   │░░▒▒▒▒░░░│", cls: "ascii-soft" },
+  { text: "                   │░▒████▒░░│", cls: "ascii-mid" },
+  { text: "                   │░█    █░░│", cls: "ascii-strong" },
+  { text: "                   │░█ ██ █░░│", cls: "ascii-strong" },
+  { text: "                   │░█ ██ █░░│", cls: "ascii-strong" },
+  { text: "                   │░█____█░░│", cls: "ascii-strong" },
+  { text: "                   │░░ ░░ ░░░│", cls: "ascii-glow" },
+];
+
+/* ── Boot sequence ── */
+const bootLines = [
+  { text: "initializing identity...", delay: 0 },
+  { text: "loading memory...", delay: 600 },
+  { text: "connecting to agent network...", delay: 1200 },
+  { text: "status: ONLINE", delay: 1800, accent: true },
+];
+
+const BootSequence = () => {
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  useEffect(() => {
+    bootLines.forEach((line, i) => {
+      setTimeout(() => setVisibleCount(i + 1), line.delay + 400);
+    });
+  }, []);
+
+  return (
+    <div className="text-left inline-block">
+      {bootLines.slice(0, visibleCount).map((line, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className={`text-[11px] leading-relaxed ${line.accent ? "text-accent font-medium" : "text-muted-foreground"}`}
+        >
+          {line.accent ? `› ${line.text}` : `  ${line.text}`}
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
 const CliPill = () => {
   const [copied, setCopied] = useState(false);
-
   const handleCopy = () => {
-    navigator.clipboard.writeText("npx create-youmd");
+    navigator.clipboard.writeText("npx youmd init");
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="flex flex-col items-center gap-3">
-      <button onClick={handleCopy} className="cli-pill cli-glow flex items-center gap-3 px-5 py-3">
-        <span className="text-mist">$</span>
-        <span className="text-green font-medium">npx create-youmd</span>
-        <span className="cursor-blink text-green">▌</span>
-        <span className="ml-2 text-mist/40 hover:text-mist/70 transition-colors">
-          {copied ? <Check size={13} className="text-green" /> : <Copy size={13} />}
-        </span>
-      </button>
-      {copied ? (
-        <span className="text-green text-[11px]">copied to clipboard</span>
-      ) : (
-        <span className="text-mist/40 text-[11px]">
-          <span className="text-cyan/60">you.md</span>/username · public or private · readable by any agent
-        </span>
-      )}
-    </div>
+    <button onClick={handleCopy} className="cli-pill flex items-center gap-3 px-5 py-3">
+      <span className="text-muted-foreground">$</span>
+      <span className="text-accent font-medium">npx youmd init</span>
+      <span className="cursor-blink text-accent">█</span>
+      <span className="ml-2 text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors">
+        {copied ? <Check size={13} className="text-success" /> : <Copy size={13} />}
+      </span>
+    </button>
   );
 };
 
@@ -39,76 +84,108 @@ const Hero = () => {
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, -80]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.5, 0.8], [1, 0.8, 0]);
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* Subtle beam glow */}
+      {/* Beam glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[80%] beam-glow pointer-events-none" />
 
       <motion.div
         className="relative z-10 text-center px-6 max-w-2xl"
-        style={{ y: contentY, opacity: contentOpacity }}
+        style={{ opacity: contentOpacity }}
       >
-        {/* ASCII-art style header */}
+        {/* Version */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-muted-foreground/40 text-[10px] mb-6 tracking-widest uppercase"
+        >
+          v1.0.0
+        </motion.p>
+
+        {/* Boot sequence */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-8"
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="mb-8 flex justify-center"
         >
-          <p className="text-mist/30 text-[10px] mb-4 tracking-widest uppercase">v1.0.0</p>
+          <BootSequence />
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-foreground text-2xl md:text-4xl lg:text-[2.75rem] font-mono font-light mb-6 leading-[1.15] tracking-tight"
+        {/* ASCII Art */}
+        <motion.pre
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 2.4 }}
+          className="text-[8px] md:text-[10px] lg:text-[11px] leading-[1.3] mb-8 select-none"
         >
-          The agent internet
-          <br />
-          doesn't know who you are.
-          <br />
-          <span className="text-green">Yet.</span>
-        </motion.h1>
+          {asciiLines.map((line, i) => (
+            <div key={i} className={line.cls}>{line.text || "\u00A0"}</div>
+          ))}
+        </motion.pre>
 
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-mist text-[13px] md:text-[14px] mb-12 max-w-lg mx-auto leading-relaxed"
-        >
-          One command creates your identity file — context, voice, goals — and publishes it to a URL every AI can read.
-        </motion.p>
-
+        {/* Title */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.55 }}
+          transition={{ duration: 0.5, delay: 2.8 }}
+          className="mb-3"
+        >
+          <h1 className="text-foreground text-2xl md:text-4xl font-mono font-light tracking-tight">
+            YOU.MD
+          </h1>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 3.0 }}
+          className="text-muted-foreground text-[13px] mb-3"
+        >
+          your identity file for the agent internet
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 3.2 }}
+          className="text-muted-foreground/50 text-[11px] mb-10"
+        >
+          agent.md + memory.md + context.md → <span className="text-accent">you.md</span>
+        </motion.p>
+
+        {/* CLI pill */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 3.4 }}
           className="mb-10"
         >
           <CliPill />
         </motion.div>
 
+        {/* Command links */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ duration: 0.6, delay: 3.6 }}
           className="flex items-center justify-center gap-6 text-[12px]"
         >
-          <a href="#spec" className="text-mist/40 hover:text-mist transition-colors">
-            read the spec →
+          <a href="#spec" className="text-muted-foreground/50 hover:text-accent transition-colors">
+            &gt; docs
           </a>
-          <Link to="/profiles" className="text-cyan/50 hover:text-cyan transition-colors">
-            browse profiles →
+          <Link to="/profiles" className="text-muted-foreground/50 hover:text-accent transition-colors">
+            &gt; profiles
           </Link>
+          <a href="#" className="text-muted-foreground/50 hover:text-accent transition-colors">
+            &gt; github
+          </a>
         </motion.div>
       </motion.div>
 
-      {/* Bottom border */}
       <div className="absolute bottom-0 inset-x-0 section-divider" />
     </section>
   );

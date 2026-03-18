@@ -14,8 +14,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleScroll = useCallback(() => {
-    const y = window.scrollY;
-    setScrolled(y > 40);
+    setScrolled(window.scrollY > 40);
     const offsets = sections.map(({ id }) => {
       const el = document.getElementById(id);
       if (!el) return { id, top: Infinity };
@@ -39,12 +38,12 @@ const Navbar = () => {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:pt-4">
         <div
-          className={`max-w-3xl mx-auto flex items-center justify-between gap-6 px-4 py-2 transition-all duration-500 rounded-lg ${
-            scrolled ? "glass-scrolled" : "bg-transparent"
+          className={`max-w-3xl mx-auto flex items-center justify-between gap-6 px-4 py-2 transition-all duration-500 rounded ${
+            scrolled ? "glass-nav" : "bg-transparent"
           }`}
         >
-          <a href="/" className="text-green font-mono text-[13px] font-medium tracking-tight whitespace-nowrap">
-            <span className="text-mist">~/</span>you.md
+          <a href="/" className="text-accent font-mono text-[13px] font-medium tracking-tight whitespace-nowrap">
+            you.md
           </a>
 
           <div className="hidden md:flex items-center gap-6">
@@ -54,31 +53,31 @@ const Navbar = () => {
                 href={`#${id}`}
                 className={`text-[11px] font-mono transition-colors duration-200 ${
                   activeSection === id
-                    ? "text-green"
-                    : "text-mist/60 hover:text-mist"
+                    ? "text-accent"
+                    : "text-muted-foreground/60 hover:text-foreground"
                 }`}
               >
-                --{label}
+                &gt; {label}
               </a>
             ))}
             <Link
               to="/profiles"
-              className="text-[11px] font-mono text-mist/60 hover:text-cyan transition-colors"
+              className="text-[11px] font-mono text-muted-foreground/60 hover:text-accent transition-colors"
             >
-              /profiles
+              &gt; profiles
             </Link>
           </div>
 
           <div className="flex items-center gap-3">
             <a
               href="#get-started"
-              className="hidden md:inline-block cta-green px-4 py-1.5 text-[11px]"
+              className="hidden md:inline-block cta-primary px-4 py-1.5 text-[11px]"
             >
-              $ claim username
+              &gt; enter system
             </a>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden text-mist p-1"
+              className="md:hidden text-muted-foreground p-1"
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X size={18} /> : <Menu size={18} />}
@@ -88,32 +87,32 @@ const Navbar = () => {
       </nav>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-void/98 backdrop-blur-xl flex flex-col items-center justify-center gap-6">
+        <div className="fixed inset-0 z-40 bg-background/98 backdrop-blur-xl flex flex-col items-center justify-center gap-6">
           {sections.map(({ id, label }) => (
             <a
               key={id}
               href={`#${id}`}
               onClick={() => setMobileOpen(false)}
               className={`text-lg font-mono transition-colors duration-200 ${
-                activeSection === id ? "text-green" : "text-mist/60 hover:text-foreground"
+                activeSection === id ? "text-accent" : "text-muted-foreground/60 hover:text-foreground"
               }`}
             >
-              --{label}
+              &gt; {label}
             </a>
           ))}
           <Link
             to="/profiles"
             onClick={() => setMobileOpen(false)}
-            className="text-lg font-mono text-mist/60 hover:text-cyan transition-colors"
+            className="text-lg font-mono text-muted-foreground/60 hover:text-accent transition-colors"
           >
-            /profiles
+            &gt; profiles
           </Link>
           <a
             href="#get-started"
             onClick={() => setMobileOpen(false)}
-            className="cta-green px-7 py-3 text-sm mt-4"
+            className="cta-primary px-7 py-3 text-sm mt-4"
           >
-            $ claim username
+            &gt; enter system
           </a>
         </div>
       )}
