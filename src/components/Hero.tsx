@@ -2,81 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import PixelYOU from "@/components/PixelYOU";
-
-/* ── WIDESCREEN ASCII ART — UFO beaming David statue portrait ── */
-const asciiArt = `
-                                            ▄▄▓▓▓▓▓▓▓▓▄▄
-                                        ▄▓████████████████▓▄
-                                      ▓██████████████████████▓
-                                    ▓████████████████████████████▓
-                               ▄▓▓████████████████████████████████▓▓▄
-                          ▄▄▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▄▄
-                      ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-                    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-                       ▀▀▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▀▀
-                              ░  .  ░  .  ░  .  ░  .  ░  .  ░
-                             ░ . ░ . ░ . ░ . ░ . ░ . ░ . ░ .
-                              . ░ . ░ . ░ . ░ . ░ . ░ . ░ .
-                               ░ . ░ . ░ . ░ . ░ . ░ . ░ .
-                                . ░ . ░ . ░ . ░ . ░ . ░ .
-                                 ░ . ░ . ░ . ░ . ░ . ░ .
-                                  . ░ . ░ . ░ . ░ . ░ .
-                                   ░ . ░ . ░ . ░ . ░ .
-                                    ░ . ░ . ░ . ░ . ░
-                                   ▄▄▓▓████▓▓▄▄
-                                 ▓██▓▓▒▒▒▒▒▒▓▓██▓
-                                ▓█▓▒░░░░░░░░░░▒▓█▓
-                               ▓█▒░░░▄▒▒▒▒▄░░░░▒█▓
-                               █▓░░░▒████████▒░░░▓█
-                               █▒░░░████░░████░░░▒█
-                               █▓░░░▒████████▒░░░▓█
-                               ▓█░░░░░▀▓▓▓▓▀░░░░█▓
-                               ▓█▒░░░░░░░░░░░░░▒█▓
-                                █▓▒░▄▓▓▓▓▓▓▓▓▄░▒▓█
-                                ▓██▓█▓▒▒▒▒▒▒▓█▓██▓
-                                 ██▓░░░░░░░░░░▓██
-                                 █▓░░░░░░░░░░░░▓█
-                                ▓█░░░░░░░░░░░░░░█▓
-                                █▓░░░░░▄▄▄▄░░░░░▓█
-                               ▓█░░░▒▓██████▓▒░░░█▓
-                              ▓█▒░░▓██████████▓░░▒█▓
-                             ▓█▒░░░████████████░░░▒█▓
-                            ▓█▓░░░░████████████░░░░▓█▓
-                            █▓░░░░░▓██████████▓░░░░░▓█
-                           ▓█░░░░░░░▓████████▓░░░░░░░█▓
-                           █▒░░░░░░░░▒▓████▓▒░░░░░░░░▒█
-                          ▓█░░░░░░░░░░░░░░░░░░░░░░░░░░█▓
-                          █▓░░░░░░░░░░░░░░░░░░░░░░░░░░▓█
-                         ▓█░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▓
-                         █▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓█
-                        ▓█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▓
-                        █▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒█
-                       ▄█▄░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▄█▄
-                      ██████▓▒░░░░░░░░░░░░░░░░░░░░░░░▒▓██████
-                    ▓██▓  ▀▓██▓░░░░░░░░░░░░░░░░░░░░▓██▓▀  ▓██▓
-                   ▓█▓      ▓█▓░░░░░░░░░░░░░░░░░░░▓█▓      ▓█▓
-                  ▓█▓        ▓█▓░░░░░░░░░░░░░░░░░▓█▓        ▓█▓
-                 ██▓          ██░░░░░░░░░░░░░░░░░░██          ▓██
-                ██▓           ██░░░░░░░░░░░░░░░░░░██           ▓██
-`;
-
-const parseAsciiLines = () => {
-  const lines = asciiArt.split("\n").filter((l) => l.length > 0);
-  return lines.map((text, i) => {
-    let cls = "ascii-mid";
-    if (i < 4) cls = "ascii-strong";
-    else if (i < 6) cls = "ascii-mid";
-    else if (i < 8) cls = "ascii-soft";
-    else if (i < 9) cls = "ascii-mid";
-    else if (i < 18) cls = "ascii-beam";
-    else if (i < 24) cls = "ascii-strong";
-    else if (i < 30) cls = "ascii-mid";
-    else cls = "ascii-soft";
-    return { text, cls };
-  });
-};
-
-const asciiLines = parseAsciiLines();
+import HeroPortrait from "@/components/HeroPortrait";
 
 /* ── Boot sequence ── */
 const BootSequence = () => {
@@ -251,20 +177,16 @@ const Hero = () => {
             </motion.div>
           </div>
 
-          {/* RIGHT — ASCII art */}
+          {/* RIGHT — ASCII portrait */}
           <div className="flex-1 flex justify-center">
-            <motion.pre
+            <motion.div
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 1.2 }}
-              className="font-mono text-[3px] sm:text-[4px] md:text-[5px] lg:text-[6px] xl:text-[7px] leading-[1.15] select-none overflow-hidden whitespace-pre"
+              className="w-full max-w-md"
             >
-              {asciiLines.map((line, i) => (
-                <div key={i} className={line.cls}>
-                  {line.text || "\u00A0"}
-                </div>
-              ))}
-            </motion.pre>
+              <HeroPortrait />
+            </motion.div>
           </div>
         </div>
 

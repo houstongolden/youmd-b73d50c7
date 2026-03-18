@@ -74,7 +74,7 @@ const AsciiPortraitGenerator = () => {
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [asciiData, setAsciiData] = useState<AsciiCell[][] | null>(null);
-  const [cols, setCols] = useState(68);
+  const [cols, setCols] = useState(120);
   const [showPhoto, setShowPhoto] = useState(false);
   const [tab, setTab] = useState<"portrait" | "about">("portrait");
   const [urlInput, setUrlInput] = useState("");
@@ -291,7 +291,7 @@ const AsciiPortraitGenerator = () => {
 
           {/* Generate button */}
           {imgLoaded && (
-            <div className="flex gap-3 items-center">
+            <div className="flex gap-3 items-center flex-wrap">
               <button
                 onClick={handleGenerate}
                 disabled={generating}
@@ -302,13 +302,27 @@ const AsciiPortraitGenerator = () => {
                   : "▶  GENERATE PORTRAIT"}
               </button>
               {asciiData && (
-                <button
-                  onMouseEnter={() => setShowPhoto(true)}
-                  onMouseLeave={() => setShowPhoto(false)}
-                  className="cta-outline px-3 py-2.5 font-mono text-[10px]"
-                >
-                  hold: reveal photo
-                </button>
+                <>
+                  <button
+                    onMouseEnter={() => setShowPhoto(true)}
+                    onMouseLeave={() => setShowPhoto(false)}
+                    className="cta-outline px-3 py-2.5 font-mono text-[10px]"
+                  >
+                    hold: reveal photo
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (!portraitRef.current) return;
+                      const link = document.createElement("a");
+                      link.download = "you-portrait.png";
+                      link.href = portraitRef.current.toDataURL("image/png");
+                      link.click();
+                    }}
+                    className="cta-outline px-3 py-2.5 font-mono text-[10px]"
+                  >
+                    ↓ download .png
+                  </button>
+                </>
               )}
             </div>
           )}
