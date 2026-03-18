@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, MapPin } from "lucide-react";
+import { ArrowRight, MapPin, Shield } from "lucide-react";
 import { sampleProfiles } from "@/data/sampleProfiles";
 import FadeUp from "@/components/FadeUp";
 
@@ -23,9 +23,12 @@ const ProfileCard = ({ profile, index }: { profile: typeof sampleProfiles[0]; in
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="text-foreground font-mono text-[13px] font-medium tracking-tight truncate">
-              {profile.name}
-            </h3>
+            <div className="flex items-center gap-1.5 min-w-0">
+              <h3 className="text-foreground font-mono text-[13px] font-medium tracking-tight truncate">
+                {profile.name}
+              </h3>
+              {profile.verification.verified && <Shield size={10} className="text-success shrink-0" />}
+            </div>
             <ArrowRight
               size={12}
               className="text-muted-foreground/15 group-hover:text-accent group-hover:translate-x-0.5 transition-all shrink-0"
@@ -37,11 +40,9 @@ const ProfileCard = ({ profile, index }: { profile: typeof sampleProfiles[0]; in
               <MapPin size={9} />
               {profile.location}
             </span>
-            {profile.socialProof[0] && (
-              <span className="text-accent/40 font-mono text-[10px]">
-                {profile.socialProof[0].value} {profile.socialProof[0].metric.toLowerCase()}
-              </span>
-            )}
+            <span className="text-accent/30 font-mono text-[9px]">
+              {profile.agentMetrics.totalReads.toLocaleString()} reads · {profile.agentMetrics.activeIntegrations} agents
+            </span>
           </div>
         </div>
       </div>
