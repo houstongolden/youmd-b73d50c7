@@ -26,9 +26,12 @@ const CTAFooter = () => {
 
         <motion.div className="relative z-10 text-center px-6" style={{ y: contentY }}>
           <FadeUp>
-            <h2 className="text-foreground text-2xl md:text-4xl font-mono font-light tracking-tight mb-10 leading-[1.2]">
+            <p className="text-muted-foreground/30 text-[10px] mb-8 tracking-widest uppercase font-mono">
+              ── get started ──
+            </p>
+            <p className="text-foreground text-[16px] md:text-[20px] font-mono font-light tracking-tight mb-10 leading-relaxed">
               Your agents are waiting.
-            </h2>
+            </p>
           </FadeUp>
           <FadeUp delay={0.08}>
             <button onClick={handleCopy} className="cli-pill inline-flex items-center gap-3 px-5 py-3 mb-3">
@@ -39,25 +42,22 @@ const CTAFooter = () => {
                 {copied ? <Check size={13} className="text-success" /> : <Copy size={13} />}
               </span>
             </button>
-            {copied && <p className="text-success text-[11px] mt-1">copied to clipboard</p>}
+            {copied && <p className="text-success text-[10px] mt-1 font-mono">copied to clipboard</p>}
           </FadeUp>
         </motion.div>
       </section>
 
       <footer className="py-8 px-6">
         <div className="section-divider mb-8" />
-        <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-accent font-mono text-[12px]">
-            you.md
-          </span>
-          <div className="flex items-center gap-6">
-            <a href="#spec" className="text-muted-foreground/40 text-[10px] font-mono hover:text-accent transition-colors">&gt; spec</a>
-            <a href="#" className="text-muted-foreground/40 text-[10px] font-mono hover:text-accent transition-colors">&gt; github</a>
-            <a href="#pricing" className="text-muted-foreground/40 text-[10px] font-mono hover:text-accent transition-colors">&gt; pricing</a>
-            <a href="#" className="text-muted-foreground/40 text-[10px] font-mono hover:text-accent transition-colors">&gt; docs</a>
-            <Link to="/profiles" className="text-muted-foreground/40 text-[10px] font-mono hover:text-accent transition-colors">&gt; profiles</Link>
+        <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <span className="text-accent font-mono text-[11px]">you.md</span>
+          <div className="flex items-center gap-5">
+            <a href="#spec" className="text-muted-foreground/30 text-[10px] font-mono hover:text-accent transition-colors">&gt; spec</a>
+            <a href="#" className="text-muted-foreground/30 text-[10px] font-mono hover:text-accent transition-colors">&gt; github</a>
+            <a href="#pricing" className="text-muted-foreground/30 text-[10px] font-mono hover:text-accent transition-colors">&gt; pricing</a>
+            <Link to="/profiles" className="text-muted-foreground/30 text-[10px] font-mono hover:text-accent transition-colors">&gt; profiles</Link>
           </div>
-          <span className="text-muted-foreground/25 text-[9px] font-mono">you-md/v1 · BAMF Media</span>
+          <span className="text-muted-foreground/20 text-[9px] font-mono">you-md/v1</span>
         </div>
       </footer>
     </>

@@ -3,9 +3,9 @@ import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const sections = [
-  { id: "how-it-works", label: "how-it-works" },
-  { id: "pricing", label: "pricing" },
-  { id: "spec", label: "spec" },
+  { id: "how-it-works", label: "--how-it-works" },
+  { id: "spec", label: "--spec" },
+  { id: "pricing", label: "--pricing" },
 ];
 
 const Navbar = () => {
@@ -38,40 +38,40 @@ const Navbar = () => {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:pt-4">
         <div
-          className={`max-w-3xl mx-auto flex items-center justify-between gap-6 px-4 py-2 transition-all duration-500 rounded ${
+          className={`max-w-xl mx-auto flex items-center justify-between gap-6 px-4 py-2 transition-all duration-500 rounded ${
             scrolled ? "glass-nav" : "bg-transparent"
           }`}
         >
-          <a href="/" className="text-accent font-mono text-[13px] font-medium tracking-tight whitespace-nowrap">
+          <a href="/" className="text-accent font-mono text-[12px] tracking-tight whitespace-nowrap">
             you.md
           </a>
 
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-5">
             {sections.map(({ id, label }) => (
               <a
                 key={id}
                 href={`#${id}`}
-                className={`text-[11px] font-mono transition-colors duration-200 ${
+                className={`text-[10px] font-mono transition-colors duration-200 ${
                   activeSection === id
                     ? "text-accent"
-                    : "text-muted-foreground/60 hover:text-foreground"
+                    : "text-muted-foreground/40 hover:text-foreground"
                 }`}
               >
-                &gt; {label}
+                {label}
               </a>
             ))}
             <Link
               to="/profiles"
-              className="text-[11px] font-mono text-muted-foreground/60 hover:text-accent transition-colors"
+              className="text-[10px] font-mono text-muted-foreground/40 hover:text-accent transition-colors"
             >
-              &gt; profiles
+              --profiles
             </Link>
           </div>
 
           <div className="flex items-center gap-3">
             <a
               href="#get-started"
-              className="hidden md:inline-block cta-primary px-4 py-1.5 text-[11px]"
+              className="hidden md:inline-block cta-primary px-3 py-1 text-[10px]"
             >
               &gt; enter system
             </a>
@@ -80,7 +80,7 @@ const Navbar = () => {
               className="md:hidden text-muted-foreground p-1"
               aria-label="Toggle menu"
             >
-              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+              {mobileOpen ? <X size={16} /> : <Menu size={16} />}
             </button>
           </div>
         </div>
@@ -93,24 +93,24 @@ const Navbar = () => {
               key={id}
               href={`#${id}`}
               onClick={() => setMobileOpen(false)}
-              className={`text-lg font-mono transition-colors duration-200 ${
-                activeSection === id ? "text-accent" : "text-muted-foreground/60 hover:text-foreground"
+              className={`text-[14px] font-mono transition-colors ${
+                activeSection === id ? "text-accent" : "text-muted-foreground/50 hover:text-foreground"
               }`}
             >
-              &gt; {label}
+              {label}
             </a>
           ))}
           <Link
             to="/profiles"
             onClick={() => setMobileOpen(false)}
-            className="text-lg font-mono text-muted-foreground/60 hover:text-accent transition-colors"
+            className="text-[14px] font-mono text-muted-foreground/50 hover:text-accent transition-colors"
           >
-            &gt; profiles
+            --profiles
           </Link>
           <a
             href="#get-started"
             onClick={() => setMobileOpen(false)}
-            className="cta-primary px-7 py-3 text-sm mt-4"
+            className="cta-primary px-6 py-2.5 text-[12px] mt-4"
           >
             &gt; enter system
           </a>

@@ -22,19 +22,11 @@ const codeLines = [
   "",
   "Tone: direct, warm, no jargon",
   "Format: bullet points over paragraphs",
-  "Length: concise — max 3 paragraphs",
   "",
-  "## Tools",
+  "## Links",
   "",
-  "- Primary: Cursor, Claude Code",
-  "- Infra: Vercel, Supabase",
-];
-
-const callouts = [
-  { label: "Identity & context", desc: "Name, role, location — the basics agents need." },
-  { label: "Voice profile", desc: "Tone, style, and communication preferences." },
-  { label: "Goals & priorities", desc: "What you're working on now and next." },
-  { label: "Tool preferences", desc: "Your stack, so agents know what to reach for." },
+  "- Website: https://alexchen.dev",
+  "- LinkedIn: /in/alexchen",
 ];
 
 const TypewriterCode = () => {
@@ -63,36 +55,33 @@ const TypewriterCode = () => {
   const lines = visibleText.split("\n");
 
   const renderLine = (line: string) => {
-    if (line === "---") return <span className="text-muted-foreground/25">{line}</span>;
+    if (line === "---") return <span className="text-muted-foreground/20">{line}</span>;
     if (line === "") return <span>&nbsp;</span>;
-    if (line.startsWith("# ")) return <span className="text-accent font-medium">{line}</span>;
-    if (line.startsWith("## ")) return <span className="text-accent-700">{line}</span>;
+    if (line.startsWith("# ")) return <span className="text-accent">{line}</span>;
+    if (line.startsWith("## ")) return <span className="text-accent/70">{line}</span>;
     if (line.startsWith("- ")) return <span className="text-foreground/60">{line}</span>;
-
     const colonIdx = line.indexOf(":");
-    if (colonIdx > 0) {
-      const key = line.slice(0, colonIdx);
-      const val = line.slice(colonIdx);
+    if (colonIdx > 0 && colonIdx < 20) {
       return (
         <>
-          <span className="text-accent/70">{key}</span>
-          <span className="text-muted-foreground/60">{val}</span>
+          <span className="text-accent/60">{line.slice(0, colonIdx)}</span>
+          <span className="text-muted-foreground/50">{line.slice(colonIdx)}</span>
         </>
       );
     }
-    return <span className="text-foreground/60">{line}</span>;
+    return <span className="text-foreground/50">{line}</span>;
   };
 
   return (
-    <div ref={ref} className="terminal-panel overflow-x-auto">
-      <div className="terminal-panel-header">
-        <div className="terminal-dot" />
-        <div className="terminal-dot" />
-        <div className="terminal-dot" />
-        <span className="ml-2 text-muted-foreground/40 text-[10px] font-mono">you.md</span>
+    <div ref={ref} className="overflow-x-auto border border-border rounded">
+      <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-border">
+        <div className="w-2 h-2 rounded-full bg-muted-foreground/10" />
+        <div className="w-2 h-2 rounded-full bg-muted-foreground/10" />
+        <div className="w-2 h-2 rounded-full bg-muted-foreground/10" />
+        <span className="ml-2 text-muted-foreground/30 text-[10px] font-mono">you.md</span>
       </div>
-      <div className="p-5 md:p-6">
-        <pre className="font-mono text-[12px] md:text-[13px] leading-[1.9] min-h-[260px]">
+      <div className="p-5">
+        <pre className="font-mono text-[11px] md:text-[12px] leading-[1.9] min-h-[200px]">
           <code>
             {lines.map((line, i) => (
               <div key={i}>{renderLine(line)}</div>
@@ -109,29 +98,33 @@ const TypewriterCode = () => {
 
 const WhatsInside = () => (
   <section id="spec" className="py-24 md:py-32">
-    <div className="max-w-3xl mx-auto px-6">
+    <div className="max-w-xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground/40 text-[10px] font-mono uppercase tracking-widest mb-2">what's inside</p>
-        <p className="text-muted-foreground text-[12px] mb-14">A preview of a sample you.md identity bundle.</p>
+        <p className="text-muted-foreground/30 text-[10px] font-mono uppercase tracking-widest mb-2">
+          ── what's inside ──
+        </p>
+        <p className="text-muted-foreground text-[12px] mb-10">A sample identity bundle.</p>
       </FadeUp>
 
-      <div className="grid md:grid-cols-5 gap-8 md:gap-10 items-start">
-        <div className="md:col-span-3">
-          <FadeUp delay={0.1}>
-            <TypewriterCode />
-          </FadeUp>
-        </div>
-        <div className="md:col-span-2 flex flex-col gap-6 md:pt-4">
-          {callouts.map((c, i) => (
-            <FadeUp key={c.label} delay={0.15 + i * 0.06}>
-              <div className="border-l-2 border-accent/20 pl-4 py-0.5">
-                <h4 className="text-foreground text-[12px] font-mono font-medium mb-1">{c.label}</h4>
-                <p className="text-muted-foreground text-[11px] leading-relaxed">{c.desc}</p>
-              </div>
-            </FadeUp>
+      <FadeUp delay={0.1}>
+        <TypewriterCode />
+      </FadeUp>
+
+      <FadeUp delay={0.2}>
+        <div className="mt-8 grid grid-cols-2 gap-4">
+          {[
+            { label: "Identity", desc: "Name, role, location" },
+            { label: "Voice", desc: "Tone & style preferences" },
+            { label: "Goals", desc: "Current focus areas" },
+            { label: "Links", desc: "Verified connections" },
+          ].map((item) => (
+            <div key={item.label} className="py-3 border-l-2 border-accent/15 pl-3">
+              <p className="text-foreground text-[11px] font-mono mb-0.5">{item.label}</p>
+              <p className="text-muted-foreground/60 text-[10px]">{item.desc}</p>
+            </div>
           ))}
         </div>
-      </div>
+      </FadeUp>
     </div>
   </section>
 );

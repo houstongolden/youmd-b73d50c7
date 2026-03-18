@@ -12,17 +12,21 @@ const ProblemStrip = () => {
 
   return (
     <section ref={ref} className="py-24 md:py-32 overflow-hidden">
-      <motion.div className="max-w-2xl mx-auto px-6 text-center" style={{ y }}>
+      <motion.div className="max-w-xl mx-auto px-6 text-center" style={{ y }}>
         <FadeUp>
-          <p className="text-muted-foreground/40 text-[10px] mb-6 tracking-widest uppercase">the problem</p>
-          <p className="text-foreground/70 text-lg md:text-xl font-mono font-light leading-[1.6] tracking-tight">
-            Every agent you talk to starts from{" "}
-            <span className="text-accent">zero</span>.
-            <br className="hidden md:block" />
-            No memory. No context. No you.
+          <p className="text-muted-foreground/30 text-[10px] mb-8 tracking-widest uppercase">
+            ── the problem ──
           </p>
-          <p className="text-accent/60 text-[13px] mt-6 font-mono">
-            you.md changes that.
+          <p className="text-foreground/80 text-[15px] md:text-[17px] font-mono font-light leading-[1.8] tracking-tight">
+            The agent internet doesn't know who you are.{" "}
+            <span className="text-accent">Yet.</span>
+          </p>
+          <p className="text-muted-foreground text-[12px] mt-6 leading-relaxed max-w-md mx-auto">
+            Every agent starts from zero. No memory. No context. No you.
+            You re-explain yourself every time.
+          </p>
+          <p className="text-accent/50 text-[11px] mt-8 font-mono">
+            one command changes that →
           </p>
         </FadeUp>
       </motion.div>

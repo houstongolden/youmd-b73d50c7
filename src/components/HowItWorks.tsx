@@ -3,30 +3,28 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import FadeUp from "@/components/FadeUp";
 
 const steps = [
-  { number: "01", label: "Run the CLI", cmd: "$ npx youmd init", description: "Answer a few prompts. Your identity bundle is generated locally." },
-  { number: "02", label: "Get your URL", cmd: "$ youmd publish", description: "Your bundle publishes to you.md/username — readable by any agent." },
-  { number: "03", label: "Drop it anywhere", cmd: "$ youmd link create", description: "Share your context link with any agent, framework, or tool." },
+  { num: "01", cmd: "$ npx youmd init", desc: "Answer a few prompts. Your identity bundle is generated locally." },
+  { num: "02", cmd: "$ youmd publish", desc: "Your bundle publishes to you.md/username — readable by any agent." },
+  { num: "03", cmd: "$ youmd link create", desc: "Share your context link with any agent, framework, or tool." },
 ];
 
-const StepCard = ({ step, index }: { step: typeof steps[0]; index: number }) => {
+const Step = ({ step, index }: { step: typeof steps[0]; index: number }) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [20 + index * 8, -15]);
+  const y = useTransform(scrollYProgress, [0, 1], [20, -10]);
 
   return (
     <motion.div ref={ref} style={{ y }}>
       <FadeUp delay={index * 0.1}>
-        <div className="terminal-panel p-5 md:p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-accent text-[10px] font-mono">›</span>
-            <span className="text-muted-foreground/40 font-mono text-[10px] tracking-wider">{step.number}</span>
+        <div className="py-6 border-b border-border last:border-0">
+          <div className="flex items-baseline gap-4 mb-3">
+            <span className="text-muted-foreground/30 text-[10px] font-mono">{step.num}</span>
+            <span className="text-accent text-[12px] font-mono">{step.cmd}</span>
           </div>
-          <p className="text-accent/70 font-mono text-[11px] mb-3 bg-secondary rounded px-2 py-1 inline-block">{step.cmd}</p>
-          <h3 className="text-foreground font-mono text-[14px] font-medium mb-2 tracking-tight">{step.label}</h3>
-          <p className="text-muted-foreground text-[12px] leading-relaxed">{step.description}</p>
+          <p className="text-muted-foreground text-[12px] leading-relaxed pl-8">{step.desc}</p>
         </div>
       </FadeUp>
     </motion.div>
@@ -35,17 +33,17 @@ const StepCard = ({ step, index }: { step: typeof steps[0]; index: number }) => 
 
 const HowItWorks = () => (
   <section id="how-it-works" className="py-24 md:py-32 overflow-hidden">
-    <div className="max-w-3xl mx-auto px-6">
+    <div className="max-w-xl mx-auto px-6">
       <FadeUp>
-        <p className="text-muted-foreground/40 text-[10px] font-mono uppercase tracking-widest mb-2">
-          how it works
+        <p className="text-muted-foreground/30 text-[10px] font-mono uppercase tracking-widest mb-2">
+          ── how it works ──
         </p>
-        <p className="text-muted-foreground text-[12px] mb-14">Three steps. No signup required.</p>
+        <p className="text-muted-foreground text-[12px] mb-10">Three steps. No signup required.</p>
       </FadeUp>
 
-      <div className="grid md:grid-cols-3 gap-4">
+      <div>
         {steps.map((step, i) => (
-          <StepCard key={step.number} step={step} index={i} />
+          <Step key={step.num} step={step} index={i} />
         ))}
       </div>
     </div>
