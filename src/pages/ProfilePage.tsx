@@ -268,8 +268,8 @@ const ProfilePage = () => {
                   you.md/{profile.username}
                   {copied ? <Check size={10} className="text-success" /> : <Copy size={10} />}
                 </button>
-                <span className="font-mono text-[10px] text-success uppercase tracking-wider flex items-center gap-1">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+                <span className="font-mono text-[10px] text-success uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-success status-dot-pulse" />
                   active
                 </span>
               </div>
@@ -285,14 +285,7 @@ const ProfilePage = () => {
                   <VerifiedBadge methods={profile.verification.methods} level={profile.verification.level} />
                 </div>
               )}
-              <div className="flex items-center gap-4 pt-1">
-                <span className="font-mono text-[10px] text-muted-foreground/60">
-                  agent reads: <span className="text-foreground/80">{profile.agentMetrics.totalReads.toLocaleString()}</span>
-                </span>
-                <span className="font-mono text-[10px] text-muted-foreground/60">
-                  integrations: <span className="text-foreground/80">{profile.agentMetrics.activeIntegrations}</span>
-                </span>
-              </div>
+              <AgentMetricsInline profile={profile} />
             </div>
           </motion.div>
 
