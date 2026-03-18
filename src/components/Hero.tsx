@@ -108,10 +108,14 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.8 }}
+          className="flex items-center gap-6"
         >
           <a href="#spec" className="text-foreground/25 text-[13px] hover:text-foreground/50 transition-colors duration-300">
             Read the spec →
           </a>
+          <Link to="/profiles" className="text-teal/60 text-[13px] hover:text-teal transition-colors duration-300">
+            Browse profiles →
+          </Link>
         </motion.div>
       </motion.div>
     </section>
