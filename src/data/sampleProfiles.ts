@@ -107,7 +107,7 @@ export const sampleProfiles: Profile[] = [
     tagline: "Founder, BAMF Media. Building You.md.",
     location: "Miami, FL",
     voice: "Direct, high-energy, founder-coded.",
-    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+    avatarUrl: "/assets/houston-portrait.jpeg",
     coverUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=300&fit=crop",
     bio: {
       short: "Founder building identity infrastructure for the agent internet.",
