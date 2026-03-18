@@ -179,7 +179,7 @@ const Hero = () => {
           className="mb-4"
         >
           <h1 className="text-foreground text-2xl md:text-4xl font-mono font-light tracking-tight">
-            YOU.MD
+            YOU
           </h1>
         </motion.div>
 
