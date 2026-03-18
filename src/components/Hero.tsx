@@ -65,9 +65,9 @@ const Hero = () => {
           className="text-foreground text-4xl md:text-6xl lg:text-[4.5rem] font-display font-light mb-5 leading-[1.08]"
           style={{ letterSpacing: "0.01em" }}
         >
-          Your identity file for
+          The agent internet doesn't know
           <br />
-          the agent internet.
+          who you are. Yet.
         </motion.h1>
 
         <motion.p
