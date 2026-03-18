@@ -177,20 +177,16 @@ const Hero = () => {
             </motion.div>
           </div>
 
-          {/* RIGHT — ASCII art */}
+          {/* RIGHT — ASCII portrait */}
           <div className="flex-1 flex justify-center">
-            <motion.pre
+            <motion.div
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 1.2 }}
-              className="font-mono text-[3px] sm:text-[4px] md:text-[5px] lg:text-[6px] xl:text-[7px] leading-[1.15] select-none overflow-hidden whitespace-pre"
+              className="w-full max-w-md"
             >
-              {asciiLines.map((line, i) => (
-                <div key={i} className={line.cls}>
-                  {line.text || "\u00A0"}
-                </div>
-              ))}
-            </motion.pre>
+              <HeroPortrait />
+            </motion.div>
           </div>
         </div>
 
