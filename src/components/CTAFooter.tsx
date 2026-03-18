@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import heroWarm from "@/assets/hero-beam.png";
 import FadeUp from "@/components/FadeUp";
 
 const CTAFooter = () => {
   const [copied, setCopied] = useState(false);
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const bgY = useTransform(scrollYProgress, [0, 1], [-40, 40]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [60, -30]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText("npx init youmd");
@@ -15,15 +23,15 @@ const CTAFooter = () => {
   return (
     <>
       {/* CTA section */}
-      <section id="get-started" className="relative overflow-hidden bg-background">
-        <div className="absolute inset-0 opacity-10">
-          <img src={heroWarm} alt="" className="w-full h-full object-cover object-[center_25%]" />
-        </div>
+      <section ref={sectionRef} id="get-started" className="relative overflow-hidden bg-background">
+        <motion.div className="absolute inset-0 opacity-10" style={{ y: bgY }}>
+          <img src={heroWarm} alt="" className="w-full h-[120%] object-cover object-[center_25%]" />
+        </motion.div>
         <div className="absolute inset-0 bg-background/50" />
         <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-background to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
 
-        <div className="relative z-10 py-36 md:py-44 text-center px-6">
+        <motion.div className="relative z-10 py-36 md:py-44 text-center px-6" style={{ y: contentY }}>
           <FadeUp>
             <h2 className="text-foreground text-3xl md:text-5xl lg:text-[3.25rem] font-display font-light tracking-tight mb-10 leading-[1.1]">
               Your agents are waiting.
@@ -40,7 +48,7 @@ const CTAFooter = () => {
             </button>
             {copied && <p className="text-teal text-xs font-mono mt-1">Copied ✓</p>}
           </FadeUp>
-        </div>
+        </motion.div>
       </section>
 
       {/* Footer */}

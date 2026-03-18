@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
 import heroWarm from "@/assets/hero-beam.png";
@@ -34,16 +34,24 @@ const CliPill = () => {
 };
 
 const Hero = () => {
-  const { scrollY } = useScroll();
-  const parallaxY = useTransform(scrollY, [0, 800], [0, 140]);
-  const opacityFade = useTransform(scrollY, [0, 500], [1, 0.4]);
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const bgY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const bgOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [1, 0.5, 0.2]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.5, 0.8], [1, 0.8, 0]);
 
   return (
-    <section className="relative min-h-[110vh] flex flex-col items-center justify-end overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-[110vh] flex flex-col items-center justify-end overflow-hidden">
       {/* Hero image with parallax */}
       <motion.div
         className="absolute inset-0 -top-[100px]"
-        style={{ y: parallaxY, opacity: opacityFade }}
+        style={{ y: bgY, scale: bgScale, opacity: bgOpacity }}
       >
         <img
           src={heroWarm}
@@ -60,8 +68,11 @@ const Hero = () => {
         }}
       />
 
-      {/* Content */}
-      <div className="relative z-10 text-center pb-16 md:pb-24 px-6 max-w-3xl">
+      {/* Content with counter-parallax */}
+      <motion.div
+        className="relative z-10 text-center pb-16 md:pb-24 px-6 max-w-3xl"
+        style={{ y: contentY, opacity: contentOpacity }}
+      >
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -101,7 +112,7 @@ const Hero = () => {
             Read the spec →
           </a>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 };
