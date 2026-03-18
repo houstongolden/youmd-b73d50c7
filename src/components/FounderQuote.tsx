@@ -22,21 +22,12 @@ const FounderQuote = () => (
           <blockquote className="font-mono text-sm md:text-base leading-relaxed text-foreground/85 space-y-4">
             <p>
               <span className="text-accent">&gt;</span>{" "}
-              I got tired of re-introducing myself to every new agent I worked with.
-              Every session started from scratch — who I am, what I'm building,
-              what matters to me, how I think.
+              Every new agent started from zero — no idea who I am, what I'm building, or how I work. I kept re-explaining myself.
             </p>
             <p>
               <span className="text-accent">&gt;</span>{" "}
-              There was no standard way to give an agent context about you.
-              So I built one. A single file. A CLI. An identity context protocol
-              that lets any agent know you — instantly — without the blank-slate problem.
-            </p>
-            <p>
-              <span className="text-accent">&gt;</span>{" "}
-              Turns out I wasn't the only one. Others had hacked together
-              their own systems, or just lived with it. So I open-sourced it.
-              That's <span className="text-accent font-medium">you.md</span>.
+              So I built an identity context protocol. One shareable link gives any agent your full context — skills, preferences, projects — no blank slate. Turns out everyone had this problem. So I open-sourced it as{" "}
+              <span className="text-accent font-medium">you.md</span>.
             </p>
           </blockquote>
 
