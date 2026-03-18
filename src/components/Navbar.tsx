@@ -37,8 +37,8 @@ const Navbar = () => {
   }, [mobileOpen]);
 
   // Text color: white over hero, dark over light sections
-  const textColor = pastHero ? "text-foreground" : "text-sand";
-  const mutedColor = pastHero ? "text-muted-foreground" : "text-sand/60";
+  const textColor = "text-foreground";
+  const mutedColor = "text-foreground/60";
 
   return (
     <>
