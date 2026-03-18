@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Copy, Check } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroWarm from "@/assets/hero-beam.png";
 
 const CliPill = () => {
