@@ -47,7 +47,10 @@ const ProblemStrip = () => {
           </div>
         </FadeUp>
         <FadeUp delay={0.25}>
-          <p className="text-accent/70 font-mono text-[11px] mt-8">
+          <p className="text-foreground/60 font-mono text-[12px] mt-8 italic">
+            you shouldn't have to onboard <span className="text-accent">yourself</span> to your own tools.
+          </p>
+          <p className="text-accent/70 font-mono text-[11px] mt-3">
             you.md makes this go away →
           </p>
         </FadeUp>
