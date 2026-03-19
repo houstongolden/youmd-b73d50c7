@@ -643,6 +643,10 @@ const ProfilePage = () => {
             </Link>
           </motion.div>
 
+              </motion.div>
+            )}
+          </AnimatePresence>
+
         </div>
       </div>
     </div>
