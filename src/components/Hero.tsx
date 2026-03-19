@@ -83,10 +83,10 @@ const CliPill = () => {
 
 /* ── CLI commands list ── */
 const commands = [
-  ["you init", "set up your identity"],
-  ["you sync", "pull from github / linkedin / x"],
-  ["you portrait", "generate ascii portrait"],
-  ["you share", "publish context to agents"],
+  ["you init", "create your identity bundle"],
+  ["you sync", "pull from linkedin / github / x"],
+  ["you publish", "go live at you.md/username"],
+  ["you share", "give any agent your context"],
   ["you agent", "start identity context server"],
 ];
 
@@ -138,15 +138,15 @@ const Hero = () => {
               <BootSequence />
             </motion.div>
 
-            {/* Value prop */}
+            {/* Value prop — pain-point first */}
             <motion.div
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 1.1 }}
               className="font-mono text-[11px] leading-relaxed text-muted-foreground/60 mb-6 max-w-sm"
             >
-              <p>help agents find you, know you, work with you — instantly.</p>
-              <p className="mt-1">one file. public or private context. scoped, shareable, managed via cli.</p>
+              <p>every agent starts from scratch. you re-explain yourself endlessly.</p>
+              <p className="mt-1.5 text-foreground/70">you.md fixes that — one link, full context, every agent.</p>
             </motion.div>
 
             {/* Divider */}
@@ -185,7 +185,7 @@ const Hero = () => {
               transition={{ duration: 0.4, delay: 2.1 }}
               className="flex items-center gap-3 font-mono text-[8px] text-muted-foreground/30 uppercase tracking-widest"
             >
-              <span>YOU/V1 · OPEN SPEC</span>
+              <span>YOU/V1 · OPEN SPEC · FREE</span>
             </motion.div>
           </div>
 
@@ -199,7 +199,7 @@ const Hero = () => {
               >
                 <HeroPortrait />
                 <p className="text-center font-mono text-[9px] text-muted-foreground/40 mt-2 group-hover:text-accent/60 transition-colors">
-                  &gt; view profile example
+                  &gt; view live profile
                 </p>
               </motion.div>
             </Link>
@@ -214,7 +214,7 @@ const Hero = () => {
           className="flex items-center justify-center gap-8 font-mono text-[12px] mt-12"
         >
           <a href="#get-started" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">
-            &gt; enter system
+            &gt; get started
           </a>
           <a href="#spec" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">
             &gt; view spec

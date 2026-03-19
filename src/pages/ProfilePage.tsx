@@ -1,9 +1,10 @@
 import { useParams, Link } from "react-router-dom";
-import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw } from "lucide-react";
+import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw, Code, Eye } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { sampleProfiles, type ActivityItem, type Project, type AgentConnection, type ConnectedSource } from "@/data/sampleProfiles";
 import ProfileAsciiHeader from "@/components/ProfileAsciiHeader";
+import RawJsonView from "@/components/RawJsonView";
 import { useCountUp } from "@/hooks/useCountUp";
 
 /* ── Helpers ─────────────────────────────────── */
@@ -260,6 +261,7 @@ const ProfilePage = () => {
   const { username } = useParams();
   const profile = sampleProfiles.find((p) => p.username === username);
   const [copied, setCopied] = useState(false);
+  const [rawView, setRawView] = useState(false);
 
   useEffect(() => { window.scrollTo(0, 0); }, [username]);
 
@@ -292,7 +294,20 @@ const ProfilePage = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:pt-4">
         <div className="max-w-[680px] mx-auto flex items-center justify-between px-4 py-2 glass-nav rounded">
           <Link to="/" className="text-accent font-mono text-[12px]">you.md</Link>
-          <Link to="/profiles" className="text-muted-foreground/60 font-mono text-[10px] hover:text-accent transition-colors">/profiles</Link>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setRawView(!rawView)}
+              className={`flex items-center gap-1.5 font-mono text-[10px] px-2.5 py-1 rounded border transition-all duration-200 ${
+                rawView
+                  ? "text-accent border-accent/30 bg-accent-wash/40"
+                  : "text-muted-foreground/60 border-border hover:text-accent hover:border-accent/20"
+              }`}
+            >
+              {rawView ? <Eye size={10} /> : <Code size={10} />}
+              {rawView ? "rendered" : "raw"}
+            </button>
+            <Link to="/profiles" className="text-muted-foreground/60 font-mono text-[10px] hover:text-accent transition-colors">/profiles</Link>
+          </div>
         </div>
       </nav>
 
@@ -305,6 +320,27 @@ const ProfilePage = () => {
       {/* Content */}
       <div className="px-6 pb-20 relative z-10">
         <div className="max-w-[680px] mx-auto">
+
+          <AnimatePresence mode="wait">
+            {rawView ? (
+              <motion.div
+                key="raw"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="mt-4"
+              >
+                <RawJsonView profile={profile} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="rendered"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+              >
 
           {/* ═══ SYSTEM HEADER ═══ */}
           <motion.div {...delay(0)} className="mt-4 mb-6">
@@ -320,8 +356,6 @@ const ProfilePage = () => {
                 <p className="text-muted-foreground font-body text-[12px] mt-0.5 truncate">{profile.tagline}</p>
               </div>
             </div>
-
-            {/* System status block */}
             <div className="terminal-panel p-4 space-y-1.5">
               <div className="flex items-center justify-between">
                 <button onClick={handleCopy}
@@ -610,6 +644,10 @@ const ProfilePage = () => {
               &gt; claim yours
             </Link>
           </motion.div>
+
+              </motion.div>
+            )}
+          </AnimatePresence>
 
         </div>
       </div>

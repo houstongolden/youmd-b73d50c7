@@ -22,7 +22,7 @@ const Integrations = () => (
           ── works everywhere ──
         </p>
         <p className="text-muted-foreground/70 font-body text-[12px] mb-10 text-center">
-          Your identity travels with you. No per-tool setup — just share your link.
+          Share one link. Every agent gets your context. No per-tool setup, no system prompt hacks.
         </p>
       </FadeUp>
 
@@ -51,7 +51,7 @@ const Integrations = () => (
       <FadeUp delay={0.15}>
         <p className="text-center mt-8">
           <span className="text-muted-foreground/50 font-mono text-[10px]">
-            + any agent that supports structured context injection
+            + any tool that supports structured context or MCP
           </span>
         </p>
       </FadeUp>

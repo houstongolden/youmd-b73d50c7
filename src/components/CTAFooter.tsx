@@ -31,10 +31,10 @@ const CTAFooter = () => {
               ── get started ──
             </p>
             <p className="text-foreground font-mono text-[16px] md:text-[20px] font-light tracking-tight mb-4 leading-relaxed">
-              Stop re-explaining yourself.
+              Stop re-explaining yourself to machines.
             </p>
             <p className="text-muted-foreground font-body text-[13px] mb-10">
-              One command. Persistent identity. Every agent knows you.
+              One command. Persistent identity context. Every agent knows you from the first message.
             </p>
           </FadeUp>
           <FadeUp delay={0.08}>
