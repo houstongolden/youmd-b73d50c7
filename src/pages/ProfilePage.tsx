@@ -321,9 +321,26 @@ const ProfilePage = () => {
       <div className="px-6 pb-20 relative z-10">
         <div className="max-w-[680px] mx-auto">
 
-          {/* ═══ SYSTEM HEADER ═══ */}
-          <motion.div {...delay(0)} className="mt-4 mb-6">
-            <div className="flex items-end gap-4 mb-4">
+          <AnimatePresence mode="wait">
+            {rawView ? (
+              <motion.div
+                key="raw"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="mt-4"
+              >
+                <RawJsonView profile={profile} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="rendered"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+              >
               <img src={profile.avatarUrl} alt={profile.name}
                 className="w-16 h-16 md:w-20 md:h-20 rounded border-2 border-background object-cover" loading="lazy" />
               <div className="pb-1 flex-1 min-w-0">
