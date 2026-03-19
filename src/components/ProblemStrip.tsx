@@ -24,12 +24,11 @@ const ProblemStrip = () => {
             ── the problem ──
           </p>
           <p className="text-foreground/90 font-mono text-[15px] md:text-[17px] font-light leading-[1.8] tracking-tight">
-            You shouldn't have to onboard{" "}
-            <span className="text-accent">yourself</span>{" "}
-            to your own tools.
+            every agent starts from scratch.{" "}
+            <span className="text-accent">you re-explain yourself endlessly.</span>
           </p>
           <p className="text-muted-foreground text-[13px] font-body mt-6 leading-relaxed max-w-md mx-auto">
-            Every new agent, every new session — you start from zero. Your identity, preferences, and context don't carry between tools. It's broken.
+            you.md fixes that — one link, full context, every agent.
           </p>
         </FadeUp>
         <FadeUp delay={0.15}>
