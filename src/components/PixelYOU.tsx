@@ -91,19 +91,52 @@ function drawYOU(canvas: HTMLCanvasElement) {
   ctx.clearRect(0, 0, totalWidth, totalHeight);
   ctx.imageSmoothingEnabled = false;
 
-  let cursorX = 0;
-
+  // For each letter, merge consecutive horizontal runs into single rectangles
+  // and merge vertical single-column runs into tall rectangles
   for (const char of "YOU") {
     const glyph = FONT[char];
     if (!glyph) continue;
 
-    for (let row = 0; row < CELL_ROWS; row++) {
-      for (let col = 0; col < CELL_COLS; col++) {
-        if (!glyph[row][col]) continue;
+    // Track which cells have been drawn (to avoid double-drawing)
+    const drawn = Array.from({ length: CELL_ROWS }, () => Array(CELL_COLS).fill(false));
 
-        const x = cursorX + col * (CELL_SIZE + CELL_GAP);
-        const y = row * (CELL_SIZE + CELL_GAP);
-        drawCell(ctx, x, y, CELL_SIZE, colors);
+    // Pass 1: merge vertical runs (single-width columns of consecutive 1s, length >= 2)
+    for (let col = 0; col < CELL_COLS; col++) {
+      let runStart = -1;
+      for (let row = 0; row <= CELL_ROWS; row++) {
+        const on = row < CELL_ROWS && glyph[row][col] === 1;
+        if (on && runStart === -1) {
+          runStart = row;
+        } else if (!on && runStart !== -1) {
+          const runLen = row - runStart;
+          // Only merge if it's a vertical-only run (check no horizontal neighbors form a wider block)
+          if (runLen >= 2) {
+            const x = cursorX + col * (CELL_SIZE + CELL_GAP);
+            const y = runStart * (CELL_SIZE + CELL_GAP);
+            const h = runLen * CELL_SIZE + (runLen - 1) * CELL_GAP;
+            drawRect(ctx, x, y, CELL_SIZE, h, colors);
+            for (let r = runStart; r < row; r++) drawn[r][col] = true;
+          }
+          runStart = -1;
+        }
+      }
+    }
+
+    // Pass 2: merge horizontal runs for remaining cells
+    for (let row = 0; row < CELL_ROWS; row++) {
+      let runStart = -1;
+      for (let col = 0; col <= CELL_COLS; col++) {
+        const on = col < CELL_COLS && glyph[row][col] === 1 && !drawn[row][col];
+        if (on && runStart === -1) {
+          runStart = col;
+        } else if (!on && runStart !== -1) {
+          const runLen = col - runStart;
+          const x = cursorX + runStart * (CELL_SIZE + CELL_GAP);
+          const y = row * (CELL_SIZE + CELL_GAP);
+          const w = runLen * CELL_SIZE + (runLen - 1) * CELL_GAP;
+          drawRect(ctx, x, y, w, CELL_SIZE, colors);
+          runStart = -1;
+        }
       }
     }
 
