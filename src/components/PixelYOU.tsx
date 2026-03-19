@@ -81,7 +81,7 @@ function drawYOU(canvas: HTMLCanvasElement) {
 
   const styles = getComputedStyle(document.documentElement);
   const colors = {
-    face: getCssHsl(styles, "--foreground"),
+    face: getCssHsl(styles, "--accent"),
     stroke: getCssHsl(styles, "--accent-dark"),
     shadowNear: getCssHsl(styles, "--accent", 0.85),
     shadowFar: getCssHsl(styles, "--muted-foreground", 0.55),
