@@ -145,8 +145,8 @@ const Hero = () => {
               transition={{ duration: 0.4, delay: 1.1 }}
               className="font-mono text-[11px] leading-relaxed text-muted-foreground/60 mb-6 max-w-sm"
             >
-              <p>every agent starts from scratch. you re-explain yourself endlessly.</p>
-              <p className="mt-1.5 text-foreground/70">you.md fixes that — one link, full context, every agent.</p>
+              <p>help agents find you, know you, work with you — instantly.</p>
+              <p className="mt-1">one file. public or private context. scoped, shareable, managed via cli.</p>
             </motion.div>
 
             {/* Divider */}
