@@ -261,6 +261,7 @@ const ProfilePage = () => {
   const { username } = useParams();
   const profile = sampleProfiles.find((p) => p.username === username);
   const [copied, setCopied] = useState(false);
+  const [rawView, setRawView] = useState(false);
 
   useEffect(() => { window.scrollTo(0, 0); }, [username]);
 
