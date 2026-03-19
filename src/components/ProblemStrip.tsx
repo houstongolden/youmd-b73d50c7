@@ -2,6 +2,12 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import FadeUp from "@/components/FadeUp";
 
+const painPoints = [
+  "re-explain who you are",
+  "lost context between tools",
+  "agents that forget everything",
+];
+
 const ProblemStrip = () => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -18,17 +24,17 @@ const ProblemStrip = () => {
             ── the problem ──
           </p>
           <p className="text-foreground/90 font-mono text-[15px] md:text-[17px] font-light leading-[1.8] tracking-tight">
-            Every agent you use starts from scratch.{" "}
-            <span className="text-accent">Every. Single. Time.</span>
+            You shouldn't have to onboard{" "}
+            <span className="text-accent">yourself</span>{" "}
+            to your own tools.
           </p>
           <p className="text-muted-foreground text-[13px] font-body mt-6 leading-relaxed max-w-md mx-auto">
-            You re-explain who you are, what you're building, how you like to work.
-            Context is lost between sessions, tools, and teams. Your identity doesn't carry.
+            Every new agent, every new session — you start from zero. Your identity, preferences, and context don't carry between tools. It's broken.
           </p>
         </FadeUp>
         <FadeUp delay={0.15}>
-          <div className="mt-10 flex justify-center gap-6 font-mono text-[10px]">
-            {["context lost every session", "re-explain yourself endlessly", "agents that don't know you"].map((item, i) => (
+          <div className="mt-10 flex flex-wrap justify-center gap-3 font-mono text-[10px]">
+            {painPoints.map((item, i) => (
               <motion.span
                 key={item}
                 className="text-destructive/70 border border-destructive/20 px-3 py-1 rounded"
@@ -43,7 +49,7 @@ const ProblemStrip = () => {
         </FadeUp>
         <FadeUp delay={0.25}>
           <p className="text-accent/70 font-mono text-[11px] mt-8">
-            one command fixes this →
+            you.md makes this go away →
           </p>
         </FadeUp>
       </motion.div>

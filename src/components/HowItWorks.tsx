@@ -3,9 +3,21 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import FadeUp from "@/components/FadeUp";
 
 const steps = [
-  { num: "01", cmd: "$ npx youmd init", desc: "Answer a few prompts. Your identity bundle is generated locally — who you are, what you build, how you work." },
-  { num: "02", cmd: "$ youmd publish", desc: "Your context goes live at you.md/username. Any agent can read it instantly — no onboarding, no repetition." },
-  { num: "03", cmd: "$ youmd link create", desc: "Generate scoped, shareable links. Control exactly what each agent or collaborator can see." },
+  {
+    num: "01",
+    cmd: "$ npx youmd init",
+    desc: "Answer a few prompts. Your identity bundle is generated locally — who you are, what you build, how you like to work. No signup required.",
+  },
+  {
+    num: "02",
+    cmd: "$ youmd publish",
+    desc: "Your context goes live at you.md/username. Any agent can read it — no re-introductions, no copy-pasting system prompts.",
+  },
+  {
+    num: "03",
+    cmd: "$ youmd link create",
+    desc: "Generate scoped, shareable links. Control exactly what each agent sees — public identity or full private context.",
+  },
 ];
 
 const Step = ({ step, index }: { step: typeof steps[0]; index: number }) => {
@@ -38,7 +50,7 @@ const HowItWorks = () => (
         <p className="text-muted-foreground/60 font-mono text-[10px] uppercase tracking-widest mb-2">
           ── how it works ──
         </p>
-        <p className="text-muted-foreground text-[13px] font-body mb-10">Three steps. No signup. No blank slate.</p>
+        <p className="text-muted-foreground text-[13px] font-body mb-10">Three commands. No signup. No blank slate ever again.</p>
       </FadeUp>
 
       <div>

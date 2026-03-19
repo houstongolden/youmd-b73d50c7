@@ -8,7 +8,7 @@ const Pricing = () => (
         <p className="text-muted-foreground/60 font-mono text-[10px] uppercase tracking-widest mb-2">
           ── pricing ──
         </p>
-        <p className="text-muted-foreground text-[13px] font-body mb-14">Core identity is free. Power features when you need them.</p>
+        <p className="text-muted-foreground text-[13px] font-body mb-14">Your identity is free. Power features for power users.</p>
       </FadeUp>
 
       <div className="space-y-6">
@@ -25,10 +25,10 @@ const Pricing = () => (
               </span>
             </div>
             <div className="space-y-2 font-mono text-[11px] text-muted-foreground mb-5">
-              <p>  ✓ Full identity bundle via CLI</p>
+              <p>  ✓ Full identity bundle — generated locally via CLI</p>
               <p>  ✓ Public profile at you.md/username</p>
-              <p>  ✓ Shareable context link for any agent</p>
-              <p>  ✓ 3 pipeline syncs/mo</p>
+              <p>  ✓ Shareable context link — works with any agent</p>
+              <p>  ✓ 3 auto-syncs/month from connected sources</p>
             </div>
             <a href="#get-started" className="cta-outline block text-center px-4 py-2.5 text-[11px]">
               &gt; youmd init
@@ -48,16 +48,16 @@ const Pricing = () => (
               <span className="text-accent font-mono text-[9px] uppercase tracking-wider">recommended</span>
             </div>
             <div className="flex items-baseline justify-between mb-4">
-              <span className="text-muted-foreground font-body text-[11px]">For builders who live in agents.</span>
+              <span className="text-muted-foreground font-body text-[11px]">For builders who live in agents daily.</span>
               <span className="text-foreground font-mono text-[20px] font-light">
                 $12<span className="text-muted-foreground/60 text-[10px] ml-1">/mo</span>
               </span>
             </div>
             <div className="space-y-2 font-mono text-[11px] text-muted-foreground mb-5">
-              <p>  › Unlimited pipeline syncs — always fresh context</p>
+              <p>  › Unlimited auto-syncs — identity always current</p>
               <p>  › BYOK — OpenRouter, Perplexity, Apify</p>
               <p>  › Private encrypted vault for sensitive context</p>
-              <p>  › Version history — roll back anytime</p>
+              <p>  › Version history — roll back any change</p>
               <p>  › Custom domain — your identity, your URL</p>
               <p>  › Analytics & scoped API keys</p>
             </div>
