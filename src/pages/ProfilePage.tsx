@@ -341,6 +341,10 @@ const ProfilePage = () => {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
               >
+
+          {/* ═══ SYSTEM HEADER ═══ */}
+          <motion.div {...delay(0)} className="mt-4 mb-6">
+            <div className="flex items-end gap-4 mb-4">
               <img src={profile.avatarUrl} alt={profile.name}
                 className="w-16 h-16 md:w-20 md:h-20 rounded border-2 border-background object-cover" loading="lazy" />
               <div className="pb-1 flex-1 min-w-0">
@@ -352,8 +356,6 @@ const ProfilePage = () => {
                 <p className="text-muted-foreground font-body text-[12px] mt-0.5 truncate">{profile.tagline}</p>
               </div>
             </div>
-
-            {/* System status block */}
             <div className="terminal-panel p-4 space-y-1.5">
               <div className="flex items-center justify-between">
                 <button onClick={handleCopy}
