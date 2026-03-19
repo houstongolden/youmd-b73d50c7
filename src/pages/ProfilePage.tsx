@@ -1,9 +1,10 @@
 import { useParams, Link } from "react-router-dom";
-import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw } from "lucide-react";
+import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw, Code, Eye } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { sampleProfiles, type ActivityItem, type Project, type AgentConnection, type ConnectedSource } from "@/data/sampleProfiles";
 import ProfileAsciiHeader from "@/components/ProfileAsciiHeader";
+import RawJsonView from "@/components/RawJsonView";
 import { useCountUp } from "@/hooks/useCountUp";
 
 /* ── Helpers ─────────────────────────────────── */
