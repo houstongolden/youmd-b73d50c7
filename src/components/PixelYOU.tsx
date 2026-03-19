@@ -91,6 +91,8 @@ function drawYOU(canvas: HTMLCanvasElement) {
   ctx.clearRect(0, 0, totalWidth, totalHeight);
   ctx.imageSmoothingEnabled = false;
 
+  let cursorX = 0;
+
   // For each letter, merge consecutive horizontal runs into single rectangles
   // and merge vertical single-column runs into tall rectangles
   for (const char of "YOU") {
