@@ -42,29 +42,28 @@ const getCssHsl = (styles: CSSStyleDeclaration, variable: string, alpha?: number
   return alpha === undefined ? `hsl(${value})` : `hsl(${value} / ${alpha})`;
 };
 
-function drawCell(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, colors: {
+function drawRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, colors: {
   face: string;
   stroke: string;
   shadowNear: string;
   shadowFar: string;
 }) {
-  const farOffset = 7;
-  const nearOffset = 4;
+  const farOffset = 6;
+  const nearOffset = 3;
   const lineInset = 0.5;
-  const strokeSize = size - 1;
 
   ctx.lineWidth = 1;
   ctx.strokeStyle = colors.shadowFar;
-  ctx.strokeRect(x + farOffset + lineInset, y + farOffset + lineInset, strokeSize, strokeSize);
+  ctx.strokeRect(x + farOffset + lineInset, y + farOffset + lineInset, w - 1, h - 1);
 
   ctx.strokeStyle = colors.shadowNear;
-  ctx.strokeRect(x + nearOffset + lineInset, y + nearOffset + lineInset, strokeSize, strokeSize);
+  ctx.strokeRect(x + nearOffset + lineInset, y + nearOffset + lineInset, w - 1, h - 1);
 
   ctx.fillStyle = colors.face;
-  ctx.fillRect(x, y, size, size);
+  ctx.fillRect(x, y, w, h);
 
   ctx.strokeStyle = colors.stroke;
-  ctx.strokeRect(x + lineInset, y + lineInset, strokeSize, strokeSize);
+  ctx.strokeRect(x + lineInset, y + lineInset, w - 1, h - 1);
 }
 
 function drawYOU(canvas: HTMLCanvasElement) {
