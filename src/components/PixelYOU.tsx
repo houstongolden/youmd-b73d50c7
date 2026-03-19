@@ -1,117 +1,116 @@
 import { useEffect, useRef } from "react";
 
-/* ── Bold pixel font 7×9 glyphs — 2-wide strokes for chunky feel ── */
-const FONT: Record<string, number[][]> = {
+/*
+ * Bold blocky "YOU" — inspired by Skills.sh / Claude Code style.
+ * Large solid rectangles, not tiny pixels. Each letter is hand-designed
+ * as a set of filled rectangles on a coarse grid.
+ */
+
+type Rect = [x: number, y: number, w: number, h: number];
+
+// Letters on a 10×12 unit grid using thick solid blocks
+const LETTERS: Record<string, Rect[]> = {
   Y: [
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [0, 1, 1, 0, 1, 1, 0],
-    [0, 0, 1, 1, 1, 0, 0],
-    [0, 0, 1, 1, 0, 0, 0],
-    [0, 0, 1, 1, 0, 0, 0],
-    [0, 0, 1, 1, 0, 0, 0],
-    [0, 0, 1, 1, 0, 0, 0],
-    [0, 0, 1, 1, 0, 0, 0],
+    // Left arm
+    [0, 0, 3, 4],
+    // Right arm
+    [7, 0, 3, 4],
+    // Diagonal meeting
+    [2, 3, 3, 3],
+    [5, 3, 3, 3],
+    // Stem
+    [3, 5, 4, 7],
   ],
   O: [
-    [0, 1, 1, 1, 1, 1, 0],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [0, 1, 1, 1, 1, 1, 0],
+    // Top bar
+    [2, 0, 6, 3],
+    // Bottom bar
+    [2, 9, 6, 3],
+    // Left wall
+    [0, 2, 3, 8],
+    // Right wall
+    [7, 2, 3, 8],
   ],
   U: [
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 0, 0, 1, 1],
-    [1, 1, 1, 0, 1, 1, 1],
-    [0, 1, 1, 1, 1, 1, 0],
+    // Left wall
+    [0, 0, 3, 10],
+    // Right wall
+    [7, 0, 3, 10],
+    // Bottom bar
+    [2, 9, 6, 3],
   ],
 };
 
-const COLS = 7;
-const ROWS = 9;
-const GAP = 1; // columns between letters
+const GRID = 12; // rows tall
+const LETTER_W = 10;
+const LETTER_GAP = 3;
 
 function drawYOU(canvas: HTMLCanvasElement, dpr: number) {
-  const bs = 14; // block size
-  const shadow = 4; // 3D depth offset
-  const totalCols = COLS * 3 + GAP * 2;
+  const unit = 10; // px per grid unit
+  const depth = 5; // 3D shadow depth
+  const totalW = LETTER_W * 3 + LETTER_GAP * 2;
 
-  canvas.width = (totalCols * bs + shadow) * dpr;
-  canvas.height = (ROWS * bs + shadow) * dpr;
-  canvas.style.width = `${totalCols * bs + shadow}px`;
-  canvas.style.height = `${ROWS * bs + shadow}px`;
+  const w = totalW * unit + depth;
+  const h = GRID * unit + depth;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = `${w}px`;
+  canvas.style.height = `${h}px`;
 
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Collect all active cells first for shadow pass
-  const cells: { x: number; y: number }[] = [];
-  let cx = 0;
+  // Collect all rects with absolute positions
+  const allRects: Rect[] = [];
+  let ox = 0;
   for (const ch of "YOU") {
-    const g = FONT[ch];
-    if (!g) continue;
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        if (!g[r][c]) continue;
-        cells.push({ x: cx + c * bs, y: r * bs });
-      }
+    const rects = LETTERS[ch];
+    if (!rects) continue;
+    for (const [rx, ry, rw, rh] of rects) {
+      allRects.push([
+        ox + rx * unit,
+        ry * unit,
+        rw * unit,
+        rh * unit,
+      ]);
     }
-    cx += (COLS + GAP) * bs;
+    ox += (LETTER_W + LETTER_GAP) * unit;
   }
 
-  // Pass 1: Deep shadow layer
-  for (const { x, y } of cells) {
-    ctx.fillStyle = "hsl(20 40% 12%)";
-    ctx.fillRect(x + shadow, y + shadow, bs - 1, bs - 1);
+  // Shadow layer
+  for (const [x, y, w, h] of allRects) {
+    ctx.fillStyle = "hsl(20 35% 14%)";
+    ctx.fillRect(x + depth, y + depth, w, h);
   }
 
-  // Pass 2: Mid shadow / outline
-  for (const { x, y } of cells) {
-    ctx.fillStyle = "hsl(20 50% 22%)";
-    ctx.fillRect(x + 2, y + 2, bs - 1, bs - 1);
+  // Outline / border layer
+  const border = 2;
+  for (const [x, y, w, h] of allRects) {
+    ctx.fillStyle = "hsl(20 45% 28%)";
+    ctx.fillRect(x - border, y - border, w + border * 2, h + border * 2);
   }
 
-  // Pass 3: Main face with highlights
-  for (const { x, y } of cells) {
-    // Main block face
-    ctx.fillStyle = "hsl(20 60% 52%)";
-    ctx.fillRect(x, y, bs - 1, bs - 1);
+  // Main face
+  for (const [x, y, w, h] of allRects) {
+    ctx.fillStyle = "hsl(20 58% 50%)";
+    ctx.fillRect(x, y, w, h);
 
-    // Top highlight edge
-    ctx.fillStyle = "hsl(20 55% 62%)";
-    ctx.fillRect(x, y, bs - 1, 2);
+    // Top highlight
+    ctx.fillStyle = "hsl(20 52% 60%)";
+    ctx.fillRect(x, y, w, 3);
 
-    // Left highlight edge
-    ctx.fillStyle = "hsl(20 55% 58%)";
-    ctx.fillRect(x, y, 2, bs - 1);
+    // Left highlight
+    ctx.fillStyle = "hsl(20 50% 56%)";
+    ctx.fillRect(x, y, 3, h);
 
-    // Bottom dark edge
+    // Bottom edge
     ctx.fillStyle = "hsl(20 55% 36%)";
-    ctx.fillRect(x, y + bs - 3, bs - 1, 2);
+    ctx.fillRect(x, y + h - 3, w, 3);
 
-    // Right dark edge
+    // Right edge
     ctx.fillStyle = "hsl(20 55% 38%)";
-    ctx.fillRect(x + bs - 3, y, 2, bs - 1);
-
-    // Corner shadow
-    ctx.fillStyle = "hsl(20 50% 28%)";
-    ctx.fillRect(x + bs - 3, y + bs - 3, 2, 2);
-
-    // Corner highlight
-    ctx.fillStyle = "hsl(20 50% 68%)";
-    ctx.fillRect(x, y, 2, 2);
+    ctx.fillRect(x + w - 3, y, 3, h);
   }
 }
 
@@ -119,13 +118,10 @@ const PixelYOU = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (canvasRef.current) {
-      const dpr = window.devicePixelRatio || 1;
-      drawYOU(canvasRef.current, dpr);
-    }
+    if (canvasRef.current) drawYOU(canvasRef.current, window.devicePixelRatio || 1);
   }, []);
 
-  return <canvas ref={canvasRef} className="block" style={{ imageRendering: "pixelated" }} />;
+  return <canvas ref={canvasRef} className="block" style={{ imageRendering: "auto" }} />;
 };
 
 export default PixelYOU;
