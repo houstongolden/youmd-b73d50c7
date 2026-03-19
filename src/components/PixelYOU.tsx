@@ -1,86 +1,114 @@
 import { useEffect, useRef } from "react";
 
-/*
- * Clean bold "YOU" — flat blocks with subtle border, no faux-3D noise.
- * 5-wide × 7-tall grid per letter, 2-wide strokes for weight.
- */
-
 const FONT: Record<string, number[][]> = {
   Y: [
-    [1,1,0,0,0,1,1],
-    [1,1,0,0,0,1,1],
-    [0,1,1,0,1,1,0],
-    [0,0,1,1,1,0,0],
-    [0,0,1,1,0,0,0],
-    [0,0,1,1,0,0,0],
-    [0,0,1,1,0,0,0],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [0, 1, 0, 1, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
   ],
   O: [
-    [0,1,1,1,1,1,0],
-    [1,1,0,0,0,1,1],
-    [1,1,0,0,0,1,1],
-    [1,1,0,0,0,1,1],
-    [1,1,0,0,0,1,1],
-    [1,1,0,0,0,1,1],
-    [0,1,1,1,1,1,0],
+    [0, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [0, 1, 1, 1, 0],
   ],
   U: [
-    [1,1,0,0,0,1,1],
-    [1,1,0,0,0,1,1],
-    [1,1,0,0,0,1,1],
-    [1,1,0,0,0,1,1],
-    [1,1,0,0,0,1,1],
-    [1,1,0,0,0,1,1],
-    [0,1,1,1,1,1,0],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1],
+    [0, 1, 1, 1, 0],
   ],
 };
 
-const CELL_COLS = 7;
+const CELL_COLS = 5;
 const CELL_ROWS = 7;
-const LETTER_GAP = 2;
+const CELL_SIZE = 20;
+const CELL_GAP = 2;
+const LETTER_GAP = 18;
 
-function drawYOU(canvas: HTMLCanvasElement, dpr: number) {
-  const bs = 18;
-  const gap = 3;
-  const totalCols = CELL_COLS * 3 + LETTER_GAP * 2;
+const getCssHsl = (styles: CSSStyleDeclaration, variable: string, alpha?: number) => {
+  const value = styles.getPropertyValue(variable).trim();
+  if (!value) return alpha === undefined ? "transparent" : `hsl(0 0% 0% / ${alpha})`;
+  return alpha === undefined ? `hsl(${value})` : `hsl(${value} / ${alpha})`;
+};
 
-  const w = totalCols * bs;
-  const h = CELL_ROWS * bs;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  canvas.style.width = `${w}px`;
-  canvas.style.height = `${h}px`;
+function drawCell(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, colors: {
+  face: string;
+  stroke: string;
+  shadowNear: string;
+  shadowFar: string;
+}) {
+  const farOffset = 7;
+  const nearOffset = 4;
+  const lineInset = 0.5;
+  const strokeSize = size - 1;
+
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = colors.shadowFar;
+  ctx.strokeRect(x + farOffset + lineInset, y + farOffset + lineInset, strokeSize, strokeSize);
+
+  ctx.strokeStyle = colors.shadowNear;
+  ctx.strokeRect(x + nearOffset + lineInset, y + nearOffset + lineInset, strokeSize, strokeSize);
+
+  ctx.fillStyle = colors.face;
+  ctx.fillRect(x, y, size, size);
+
+  ctx.strokeStyle = colors.stroke;
+  ctx.strokeRect(x + lineInset, y + lineInset, strokeSize, strokeSize);
+}
+
+function drawYOU(canvas: HTMLCanvasElement) {
+  const dpr = window.devicePixelRatio || 1;
+  const totalWidth = CELL_COLS * CELL_SIZE * 3 + CELL_GAP * (CELL_COLS - 1) * 3 + LETTER_GAP * 2 + 8;
+  const totalHeight = CELL_ROWS * CELL_SIZE + CELL_GAP * (CELL_ROWS - 1) + 8;
+
+  canvas.width = totalWidth * dpr;
+  canvas.height = totalHeight * dpr;
+  canvas.style.width = `${totalWidth}px`;
+  canvas.style.height = `${totalHeight}px`;
 
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
-  ctx.scale(dpr, dpr);
 
-  let cx = 0;
-  for (const ch of "YOU") {
-    const g = FONT[ch];
-    if (!g) continue;
-    for (let r = 0; r < CELL_ROWS; r++) {
-      for (let c = 0; c < CELL_COLS; c++) {
-        if (!g[r][c]) continue;
-        const x = cx + c * bs;
-        const y = r * bs;
-        const s = bs - gap;
+  const styles = getComputedStyle(document.documentElement);
+  const colors = {
+    face: getCssHsl(styles, "--foreground"),
+    stroke: getCssHsl(styles, "--accent-dark"),
+    shadowNear: getCssHsl(styles, "--accent", 0.85),
+    shadowFar: getCssHsl(styles, "--muted-foreground", 0.55),
+  };
 
-        // Border
-        ctx.fillStyle = "hsl(20 40% 28%)";
-        ctx.fillRect(x, y, s, s);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, totalWidth, totalHeight);
+  ctx.imageSmoothingEnabled = false;
 
-        // Face — inset 1px
-        ctx.fillStyle = "hsl(20 55% 48%)";
-        ctx.fillRect(x + 1, y + 1, s - 2, s - 2);
+  let cursorX = 0;
 
-        // Subtle top/left highlight
-        ctx.fillStyle = "hsl(20 45% 56%)";
-        ctx.fillRect(x + 1, y + 1, s - 2, 2);
-        ctx.fillRect(x + 1, y + 1, 2, s - 2);
+  for (const char of "YOU") {
+    const glyph = FONT[char];
+    if (!glyph) continue;
+
+    for (let row = 0; row < CELL_ROWS; row++) {
+      for (let col = 0; col < CELL_COLS; col++) {
+        if (!glyph[row][col]) continue;
+
+        const x = cursorX + col * (CELL_SIZE + CELL_GAP);
+        const y = row * (CELL_SIZE + CELL_GAP);
+        drawCell(ctx, x, y, CELL_SIZE, colors);
       }
     }
-    cx += (CELL_COLS + LETTER_GAP) * bs;
+
+    cursorX += CELL_COLS * (CELL_SIZE + CELL_GAP) - CELL_GAP + LETTER_GAP;
   }
 }
 
@@ -88,10 +116,27 @@ const PixelYOU = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (canvasRef.current) drawYOU(canvasRef.current, window.devicePixelRatio || 1);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const render = () => drawYOU(canvas);
+    render();
+
+    window.addEventListener("resize", render);
+
+    const observer = new MutationObserver(render);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "style"],
+    });
+
+    return () => {
+      window.removeEventListener("resize", render);
+      observer.disconnect();
+    };
   }, []);
 
-  return <canvas ref={canvasRef} className="block" style={{ imageRendering: "auto" }} />;
+  return <canvas ref={canvasRef} aria-hidden="true" className="block" style={{ imageRendering: "pixelated" }} />;
 };
 
 export default PixelYOU;
