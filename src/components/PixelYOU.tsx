@@ -1,57 +1,55 @@
 import { useEffect, useRef } from "react";
 
 /*
- * Bold blocky "YOU" — inspired by Skills.sh / Claude Code style.
- * Large solid rectangles, not tiny pixels. Each letter is hand-designed
- * as a set of filled rectangles on a coarse grid.
+ * Bold blocky "YOU" — clean geometric style inspired by Skills.sh / Claude Code.
+ * Each letter drawn as filled cells on a coarse grid with 3D depth.
  */
 
-type Rect = [x: number, y: number, w: number, h: number];
-
-// Letters on a 10×12 unit grid using thick solid blocks
-const LETTERS: Record<string, Rect[]> = {
+// 6 wide × 8 tall grid, 1 = filled block
+const FONT: Record<string, number[][]> = {
   Y: [
-    // Left arm
-    [0, 0, 3, 4],
-    // Right arm
-    [7, 0, 3, 4],
-    // Diagonal meeting
-    [2, 3, 3, 3],
-    [5, 3, 3, 3],
-    // Stem
-    [3, 5, 4, 7],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [0,1,1,1,1,0],
+    [0,0,1,1,0,0],
+    [0,0,1,1,0,0],
+    [0,0,1,1,0,0],
+    [0,0,1,1,0,0],
+    [0,0,1,1,0,0],
   ],
   O: [
-    // Top bar
-    [2, 0, 6, 3],
-    // Bottom bar
-    [2, 9, 6, 3],
-    // Left wall
-    [0, 2, 3, 8],
-    // Right wall
-    [7, 2, 3, 8],
+    [0,1,1,1,1,0],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [0,1,1,1,1,0],
   ],
   U: [
-    // Left wall
-    [0, 0, 3, 10],
-    // Right wall
-    [7, 0, 3, 10],
-    // Bottom bar
-    [2, 9, 6, 3],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [1,1,0,0,1,1],
+    [0,1,1,1,1,0],
   ],
 };
 
-const GRID = 12; // rows tall
-const LETTER_W = 10;
-const LETTER_GAP = 3;
+const COLS = 6;
+const ROWS = 8;
+const GAP = 1; // grid cells between letters
 
 function drawYOU(canvas: HTMLCanvasElement, dpr: number) {
-  const unit = 10; // px per grid unit
-  const depth = 5; // 3D shadow depth
-  const totalW = LETTER_W * 3 + LETTER_GAP * 2;
+  const bs = 16; // block size in px
+  const depth = 4;
+  const totalCols = COLS * 3 + GAP * 2;
 
-  const w = totalW * unit + depth;
-  const h = GRID * unit + depth;
+  const w = totalCols * bs + depth;
+  const h = ROWS * bs + depth;
   canvas.width = w * dpr;
   canvas.height = h * dpr;
   canvas.style.width = `${w}px`;
@@ -61,56 +59,57 @@ function drawYOU(canvas: HTMLCanvasElement, dpr: number) {
   if (!ctx) return;
   ctx.scale(dpr, dpr);
 
-  // Collect all rects with absolute positions
-  const allRects: Rect[] = [];
-  let ox = 0;
+  // Collect cells
+  const cells: { x: number; y: number }[] = [];
+  let cx = 0;
   for (const ch of "YOU") {
-    const rects = LETTERS[ch];
-    if (!rects) continue;
-    for (const [rx, ry, rw, rh] of rects) {
-      allRects.push([
-        ox + rx * unit,
-        ry * unit,
-        rw * unit,
-        rh * unit,
-      ]);
+    const g = FONT[ch];
+    if (!g) continue;
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        if (!g[r][c]) continue;
+        cells.push({ x: cx + c * bs, y: r * bs });
+      }
     }
-    ox += (LETTER_W + LETTER_GAP) * unit;
+    cx += (COLS + GAP) * bs;
   }
 
-  // Shadow layer
-  for (const [x, y, w, h] of allRects) {
-    ctx.fillStyle = "hsl(20 35% 14%)";
-    ctx.fillRect(x + depth, y + depth, w, h);
+  const gap = 2; // pixel gap between blocks
+  const size = bs - gap;
+
+  // Pass 1: shadow
+  for (const { x, y } of cells) {
+    ctx.fillStyle = "hsl(20 30% 15%)";
+    ctx.fillRect(x + depth, y + depth, size, size);
   }
 
-  // Outline / border layer
-  const border = 2;
-  for (const [x, y, w, h] of allRects) {
-    ctx.fillStyle = "hsl(20 45% 28%)";
-    ctx.fillRect(x - border, y - border, w + border * 2, h + border * 2);
+  // Pass 2: dark outline border
+  for (const { x, y } of cells) {
+    ctx.fillStyle = "hsl(20 40% 25%)";
+    ctx.fillRect(x - 1, y - 1, size + 2, size + 2);
   }
 
-  // Main face
-  for (const [x, y, w, h] of allRects) {
-    ctx.fillStyle = "hsl(20 58% 50%)";
-    ctx.fillRect(x, y, w, h);
+  // Pass 3: main face
+  for (const { x, y } of cells) {
+    // Base color
+    ctx.fillStyle = "hsl(20 55% 48%)";
+    ctx.fillRect(x, y, size, size);
 
     // Top highlight
-    ctx.fillStyle = "hsl(20 52% 60%)";
-    ctx.fillRect(x, y, w, 3);
+    ctx.fillStyle = "hsl(20 50% 58%)";
+    ctx.fillRect(x, y, size, 3);
 
     // Left highlight
-    ctx.fillStyle = "hsl(20 50% 56%)";
-    ctx.fillRect(x, y, 3, h);
+    ctx.fillStyle = "hsl(20 48% 54%)";
+    ctx.fillRect(x, y + 3, 3, size - 6);
 
-    // Bottom edge
-    ctx.fillStyle = "hsl(20 55% 36%)";
-    ctx.fillRect(x, y + h - 3, w, 3);
+    // Bottom shadow edge
+    ctx.fillStyle = "hsl(20 50% 34%)";
+    ctx.fillRect(x, y + size - 3, size, 3);
 
-    // Right edge
-    ctx.fillStyle = "hsl(20 55% 38%)";
-    ctx.fillRect(x + w - 3, y, 3, h);
+    // Right shadow edge
+    ctx.fillStyle = "hsl(20 50% 36%)";
+    ctx.fillRect(x + size - 3, y + 3, 3, size - 6);
   }
 }
 
