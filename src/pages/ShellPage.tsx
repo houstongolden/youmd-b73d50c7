@@ -216,8 +216,23 @@ const ShellPage = () => {
         }
 
         setTimeout(() => {
-          const reaction = agent.getSourceReaction(val);
-          addLine(<span className="text-foreground/80">{reaction}</span>);
+          const scrapedCtx: ScrapedContext = {
+            platform: data?.data?.platform || (platformLabel === "x.com" ? "x" : platformLabel),
+            username: data?.data?.username || "unknown",
+            displayName: data?.data?.displayName || null,
+            bio: data?.data?.bio || null,
+          };
+          const existingCtxs = profileData.sources.map((s) => ({
+            platform: s.platform,
+            username: s.username,
+            displayName: s.displayName,
+            bio: s.bio,
+          }));
+          const reaction = agent.getSourceReaction(scrapedCtx, existingCtxs);
+          // Handle multi-line reactions (cross-source insights)
+          reaction.split("\n\n").forEach((line) => {
+            if (line.trim()) addLine(<span className="text-foreground/80">{line}</span>);
+          });
           addLine("\u00A0");
           addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">source added — context updated</span></span>);
           addLine("\u00A0");

@@ -163,7 +163,7 @@ const InitializePage = () => {
       } else {
         // Non-X link: standard flow
         setTimeout(() => {
-          const reaction = agent.getSourceReaction(val);
+          const reaction = agent.getSourceReaction({ platform: "unknown", username: val, displayName: null, bio: null }, []);
           addLine(<span className="text-foreground/80">{reaction}</span>);
           addLine("\u00A0");
           addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">source added — context extracted</span></span>);
