@@ -757,10 +757,19 @@ const ProfilePage = () => {
             <p className="text-muted-foreground/50 font-mono text-[10px]">
               Powered by <Link to="/" className="text-accent/60 hover:text-accent transition-colors">you.md</Link>
             </p>
-            <Link to="/#get-started"
-              className="text-muted-foreground/40 font-mono text-[10px] hover:text-accent/70 transition-colors">
-              &gt; claim yours
-            </Link>
+            <div className="flex items-center justify-center gap-4 mt-2">
+              <Link to="/create"
+                className="text-muted-foreground/40 font-mono text-[10px] hover:text-accent/70 transition-colors">
+                &gt; create yours
+              </Link>
+              {profile && (
+                <ReportDialog profileId={dbProfile?.id || profile.username}>
+                  <button className="font-mono text-[10px] text-muted-foreground/30 hover:text-destructive transition-colors flex items-center gap-1">
+                    <Flag size={9} /> report
+                  </button>
+                </ReportDialog>
+              )}
+            </div>
           </motion.div>
 
               </motion.div>
