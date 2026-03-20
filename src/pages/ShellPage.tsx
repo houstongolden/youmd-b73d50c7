@@ -48,14 +48,19 @@ const ShellPage = () => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [lines]);
 
-  // Initial shell boot
+  // Initial shell boot — agent is proactive and starts conversation
   useEffect(() => {
+    const question = agent.getNextQuestion();
     const timers = [
       setTimeout(() => addLine(<span className="text-accent">you.md shell v0.1.0</span>), 200),
       setTimeout(() => addLine(<span className="text-muted-foreground/50">logged in as <span className="text-foreground">@{username}</span></span>), 500),
       setTimeout(() => addLine("\u00A0"), 700),
-      setTimeout(() => addLine(<span className="text-muted-foreground/50">type <span className="text-accent">/help</span> for available commands</span>), 900),
-      setTimeout(() => addLine("\u00A0"), 1100),
+      setTimeout(() => addLine(<span className="text-foreground/80">welcome back. let's keep building your context.</span>), 1000),
+      setTimeout(() => addLine("\u00A0"), 1300),
+      setTimeout(() => addLine(<span className="text-foreground/80">{question}</span>), 1600),
+      setTimeout(() => addLine("\u00A0"), 1900),
+      setTimeout(() => addLine(<span className="text-muted-foreground/40">you can also paste links, use <span className="text-accent">/help</span> for commands, or just talk to me.</span>), 2100),
+      setTimeout(() => addLine("\u00A0"), 2300),
     ];
     return () => timers.forEach(clearTimeout);
   }, [addLine, username]);
