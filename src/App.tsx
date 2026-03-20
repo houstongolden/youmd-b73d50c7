@@ -7,6 +7,9 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import ProfilesDirectory from "./pages/ProfilesDirectory.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
+import AuthTerminal from "./pages/AuthTerminal.tsx";
+import InitializePage from "./pages/InitializePage.tsx";
+import ShellPage from "./pages/ShellPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +21,9 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<AuthTerminal />} />
+          <Route path="/initialize" element={<InitializePage />} />
+          <Route path="/shell" element={<ShellPage />} />
           <Route path="/profiles" element={<ProfilesDirectory />} />
           <Route path="/profile/:username" element={<ProfilePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
