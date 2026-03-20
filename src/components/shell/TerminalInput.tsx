@@ -29,6 +29,7 @@ const TerminalInput = ({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && value.trim()) {
       onSubmit(value.trim());
+      setValue("");
     }
   };
 

@@ -211,9 +211,9 @@ const ShellPage = () => {
             {line.content || "\u00A0"}
           </div>
         ))}
-        <div className="mt-1">
-          <TerminalInput prompt=">" placeholder="/help" onSubmit={handleCommand} />
-        </div>
+      </div>
+      <div className="shrink-0 border-t border-border px-3 sm:px-4 py-2.5 bg-card">
+        <TerminalInput prompt=">" placeholder="/help" onSubmit={handleCommand} />
       </div>
     </div>
   );
