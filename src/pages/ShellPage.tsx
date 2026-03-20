@@ -158,7 +158,7 @@ const ShellPage = () => {
   );
 
   const previewContent = (
-    <div className="overflow-y-auto h-full bg-background">
+    <div className="overflow-y-auto h-full bg-card">
       <ShellPreviewPane
         activePane={activePane}
         username={username}
@@ -168,7 +168,7 @@ const ShellPage = () => {
   );
 
   return (
-    <div className="h-screen bg-background flex flex-col">
+    <div className="h-screen bg-card flex flex-col">
       {/* Top bar */}
       <div className="border-b border-border bg-card flex items-center justify-between px-3 sm:px-4 py-2">
         <div className="flex items-center gap-2 sm:gap-3">
