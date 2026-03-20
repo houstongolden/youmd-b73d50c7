@@ -6,6 +6,15 @@ export interface ScrapedSource {
   displayName: string | null;
   bio: string | null;
   profileImageUrl: string | null;
+  location: string | null;
+  website: string | null;
+  followers: number | null;
+  following: number | null;
+  posts: number | null;
+  headline: string | null;
+  company: string | null;
+  links: string[];
+  extras: Record<string, string | number | null>;
   status: "synced" | "verified" | "pending" | "failed";
 }
 
@@ -13,6 +22,12 @@ export interface ProfileData {
   displayName: string | null;
   bio: string | null;
   profileImageUrl: string | null;
+  location: string | null;
+  website: string | null;
+  headline: string | null;
+  company: string | null;
+  followers: number | null;
+  allLinks: string[];
   sources: ScrapedSource[];
 }
 
