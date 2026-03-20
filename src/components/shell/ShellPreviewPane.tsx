@@ -1,4 +1,4 @@
-import ProfilePreview from "./panes/ProfilePreview";
+import ProfilePreview, { type ProfileData } from "./panes/ProfilePreview";
 import SettingsPane from "./panes/SettingsPane";
 import BillingPane from "./panes/BillingPane";
 import TokensPane from "./panes/TokensPane";
@@ -13,12 +13,13 @@ interface ShellPreviewPaneProps {
   activePane: string;
   username: string;
   mode: "public" | "private";
+  profileData?: ProfileData;
 }
 
-const ShellPreviewPane = ({ activePane, username, mode }: ShellPreviewPaneProps) => {
+const ShellPreviewPane = ({ activePane, username, mode, profileData }: ShellPreviewPaneProps) => {
   switch (activePane) {
     case "profile":
-      return <ProfilePreview username={username} mode={mode} />;
+      return <ProfilePreview username={username} mode={mode} profileData={profileData} />;
     case "settings":
       return <SettingsPane username={username} />;
     case "billing":
@@ -38,7 +39,7 @@ const ShellPreviewPane = ({ activePane, username, mode }: ShellPreviewPaneProps)
     case "agents":
       return <AgentsPane username={username} />;
     default:
-      return <ProfilePreview username={username} mode={mode} />;
+      return <ProfilePreview username={username} mode={mode} profileData={profileData} />;
   }
 };
 
