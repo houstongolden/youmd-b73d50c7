@@ -61,7 +61,7 @@ const ProfilePreview = ({
   const website = profileData?.website;
   const headline = profileData?.headline;
   const company = profileData?.company;
-  const totalFollowers = profileData?.followers ?? sources.reduce((sum, s) => sum + (s.followers ?? 0), 0) || null;
+  const totalFollowers = profileData?.followers ?? (sources.reduce((sum, s) => sum + (s.followers ?? 0), 0) || null);
 
   return (
     <div className="p-4 sm:p-8 max-w-xl mx-auto">
