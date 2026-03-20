@@ -7,6 +7,7 @@ import TerminalHeader from "@/components/shell/TerminalHeader";
 import TerminalInput from "@/components/shell/TerminalInput";
 import ShellPreviewPane from "@/components/shell/ShellPreviewPane";
 import { useIsMobile } from "@/hooks/use-mobile";
+import type { ProfileData, ScrapedSource } from "@/components/shell/panes/ProfilePreview";
 
 interface Line {
   id: string;
@@ -36,6 +37,12 @@ const ShellPage = () => {
   const [activePane, setActivePane] = useState<string>("profile");
   const [previewMode, setPreviewMode] = useState<"public" | "private">("public");
   const [mobileView, setMobileView] = useState<"terminal" | "preview">("terminal");
+  const [profileData, setProfileData] = useState<ProfileData>({
+    displayName: null,
+    bio: null,
+    profileImageUrl: null,
+    sources: [],
+  });
   const scrollRef = useRef<HTMLDivElement>(null);
   const lineCounter = useRef(0);
 
@@ -156,10 +163,26 @@ const ShellPage = () => {
       }).then(({ data, error }) => {
         if (error || !data?.success || !data?.data?.profileImageUrl) {
           addLine(<span className="text-muted-foreground/50">→ couldn't grab the profile photo — adding as text source instead</span>);
+          // Still add as a source with failed status
+          const newSource: ScrapedSource = {
+            platform: platformLabel === "x.com" ? "x" : platformLabel,
+            username: val.match(/\/([a-zA-Z0-9_-]+)\/?$/)?.[1] || "unknown",
+            displayName: null,
+            bio: null,
+            profileImageUrl: null,
+            status: "failed",
+          };
+          setProfileData((prev) => ({
+            ...prev,
+            sources: [...prev.sources.filter((s) => s.platform !== newSource.platform || s.username !== newSource.username), newSource],
+          }));
         } else {
           const imgUrl = data.data.profileImageUrl;
           const name = data.data.displayName;
           const fetchedUsername = data.data.username;
+          const fetchedBio = data.data.bio;
+          const fetchedPlatform = data.data.platform || (platformLabel === "x.com" ? "x" : platformLabel);
+
           if (name) {
             addLine(<span className="text-foreground/80">found — {name} (@{fetchedUsername})</span>);
           }
@@ -169,6 +192,27 @@ const ShellPage = () => {
               <AsciiAvatar src={imgUrl} cols={80} canvasWidth={400} className="max-w-full" />
             </div>
           );
+
+          // Update profile data with scraped info
+          const newSource: ScrapedSource = {
+            platform: fetchedPlatform,
+            username: fetchedUsername,
+            displayName: name,
+            bio: fetchedBio,
+            profileImageUrl: imgUrl,
+            status: "synced",
+          };
+
+          setProfileData((prev) => {
+            const updatedSources = [...prev.sources.filter((s) => s.platform !== newSource.platform || s.username !== newSource.username), newSource];
+            return {
+              // Use the first available name/bio/photo — prioritize new data if we don't have it yet
+              displayName: prev.displayName || name,
+              bio: prev.bio || fetchedBio,
+              profileImageUrl: prev.profileImageUrl || imgUrl,
+              sources: updatedSources,
+            };
+          });
         }
 
         setTimeout(() => {
@@ -224,6 +268,7 @@ const ShellPage = () => {
         activePane={activePane}
         username={username}
         mode={previewMode}
+        profileData={profileData}
       />
     </div>
   );
