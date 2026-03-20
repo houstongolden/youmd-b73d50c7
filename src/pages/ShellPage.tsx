@@ -268,6 +268,7 @@ const ShellPage = () => {
         activePane={activePane}
         username={username}
         mode={previewMode}
+        profileData={profileData}
       />
     </div>
   );
