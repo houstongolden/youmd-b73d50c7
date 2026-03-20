@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useYouAgent, type ScrapedContext } from "@/hooks/useYouAgent";
 import AsciiAvatar from "@/components/AsciiAvatar";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +7,8 @@ import TerminalHeader from "@/components/shell/TerminalHeader";
 import TerminalInput from "@/components/shell/TerminalInput";
 import ShellPreviewPane from "@/components/shell/ShellPreviewPane";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/hooks/useAuth";
+import { getProfileByUsername, getProfileById, getProfileSources, updateProfile, upsertProfileSource } from "@/lib/profiles";
 import type { ProfileData, ScrapedSource } from "@/components/shell/panes/ProfilePreview";
 
 interface Line {
@@ -30,8 +32,13 @@ const SLASH_COMMANDS: Record<string, string> = {
 
 const ShellPage = () => {
   const location = useLocation();
-  const username = (location.state as any)?.username || "houston";
-  const agent = useYouAgent(username);
+  const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
+  const passedUsername = (location.state as any)?.username;
+  const [username, setUsername] = useState(passedUsername || "");
+  const [profileId, setProfileId] = useState<string | undefined>(undefined);
+  const [dbLoaded, setDbLoaded] = useState(false);
+  const agent = useYouAgent(username || "you");
   const isMobile = useIsMobile();
   const [lines, setLines] = useState<Line[]>([]);
   const [activePane, setActivePane] = useState<string>("profile");
@@ -61,8 +68,81 @@ const ShellPage = () => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [lines]);
 
-  // Initial shell boot — agent is proactive and starts conversation
+  // Load user's owned profile from DB when authenticated
   useEffect(() => {
+    if (authLoading) return;
+    if (dbLoaded) return;
+
+    const loadProfile = async () => {
+      let profile = null;
+
+      // If user is logged in, find their owned profile first
+      if (user) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("owner_id", user.id)
+          .limit(1)
+          .maybeSingle();
+        if (data) profile = data;
+      }
+
+      // Fallback: load by passed username
+      if (!profile && passedUsername) {
+        profile = await getProfileByUsername(passedUsername);
+      }
+
+      if (profile) {
+        setUsername(profile.username);
+        setProfileId(profile.id);
+
+        // Load sources
+        const sources = await getProfileSources(profile.id);
+        const scrapedSources: ScrapedSource[] = sources.map((s) => ({
+          platform: s.platform,
+          username: s.platform_username || "",
+          displayName: s.display_name,
+          bio: s.bio,
+          profileImageUrl: s.profile_image_url,
+          location: s.location,
+          website: s.website,
+          followers: s.followers,
+          following: s.following,
+          posts: s.posts,
+          headline: s.headline,
+          company: s.company,
+          links: s.links || [],
+          extras: (s.extras as Record<string, any>) || {},
+          status: s.status as any,
+        }));
+
+        setProfileData({
+          displayName: profile.name,
+          bio: profile.bio_medium || profile.bio_short,
+          profileImageUrl: profile.avatar_url,
+          location: profile.location,
+          website: profile.website,
+          headline: null,
+          company: null,
+          followers: null,
+          allLinks: Array.isArray(profile.links) ? (profile.links as any[]).map((l: any) => l.url).filter(Boolean) : [],
+          sources: scrapedSources,
+        });
+      } else if (!passedUsername) {
+        // No profile found and no username — redirect to create
+        navigate("/create", { replace: true });
+        return;
+      }
+
+      setDbLoaded(true);
+    };
+
+    loadProfile().catch(console.error);
+  }, [user, authLoading, passedUsername, dbLoaded, navigate]);
+
+  // Initial shell boot
+  useEffect(() => {
+    if (!dbLoaded || !username) return;
     const question = agent.getNextQuestion();
     const timers = [
       setTimeout(() => addLine(<span className="text-accent">you.md shell v0.1.0</span>), 200),
@@ -76,7 +156,7 @@ const ShellPage = () => {
       setTimeout(() => addLine("\u00A0"), 2300),
     ];
     return () => timers.forEach(clearTimeout);
-  }, [addLine, username]);
+  }, [dbLoaded, username]);
 
   const showHelp = useCallback(() => {
     addLine("\u00A0");
@@ -145,7 +225,6 @@ const ShellPage = () => {
     if (SLASH_COMMANDS[cmd]) {
       setActivePane(SLASH_COMMANDS[cmd]);
       addLine(<span className="text-muted-foreground/50">→ loading {SLASH_COMMANDS[cmd]}...</span>);
-      // On mobile, auto-switch to preview when a pane command is used
       if (isMobile) {
         setTimeout(() => setMobileView("preview"), 300);
       }
@@ -156,7 +235,7 @@ const ShellPage = () => {
       return;
     }
 
-    // Detect profile URLs (x.com, github.com, linkedin.com) and fetch photo
+    // Detect profile URLs
     const isProfileUrl = /(?:x\.com|twitter\.com|github\.com|linkedin\.com\/in)\/[a-zA-Z0-9_-]+/i.test(cmd);
     if (isProfileUrl) {
       const platformLabel = /x\.com|twitter\.com/i.test(cmd) ? "x.com" : /github\.com/i.test(cmd) ? "github" : "linkedin";
@@ -166,7 +245,7 @@ const ShellPage = () => {
 
       supabase.functions.invoke('fetch-x-profile', {
         body: { url: val },
-      }).then(({ data, error }) => {
+      }).then(async ({ data, error }) => {
         if (error || !data?.success || !data?.data?.profileImageUrl) {
           addLine(<span className="text-muted-foreground/50">→ couldn't grab the profile photo — adding as text source instead</span>);
           const newSource: ScrapedSource = {
@@ -189,10 +268,7 @@ const ShellPage = () => {
           const fetchedBio = d.bio;
           const fetchedPlatform = d.platform || (platformLabel === "x.com" ? "x" : platformLabel);
 
-          if (name) {
-            addLine(<span className="text-foreground/80">found — {name} (@{fetchedUsername})</span>);
-          }
-          // Show scraped details
+          if (name) addLine(<span className="text-foreground/80">found — {name} (@{fetchedUsername})</span>);
           if (fetchedBio) addLine(<span className="text-muted-foreground/50">bio: "{fetchedBio}"</span>);
           if (d.location) addLine(<span className="text-muted-foreground/50">location: {d.location}</span>);
           if (d.company) addLine(<span className="text-muted-foreground/50">company: {d.company}</span>);
@@ -204,18 +280,6 @@ const ShellPage = () => {
             addLine(<span className="text-muted-foreground/50">{stats.join(" · ")}</span>);
           }
           if (d.website) addLine(<span className="text-muted-foreground/50">website: {d.website}</span>);
-          if (d.extras?.languages) addLine(<span className="text-muted-foreground/50">languages: {d.extras.languages}</span>);
-          if (d.extras?.topRepos) {
-            try {
-              const repos = JSON.parse(d.extras.topRepos as string);
-              const repoList = repos.map((r: any) => `${r.name}${r.stars ? ` ★${r.stars}` : ''}`).join(', ');
-              addLine(<span className="text-muted-foreground/50">top repos: {repoList}</span>);
-            } catch {}
-          }
-          if (d.links?.length > 0) {
-            const extraLinks = d.links.filter((l: string) => l !== d.website);
-            if (extraLinks.length > 0) addLine(<span className="text-muted-foreground/50">links: {extraLinks.join(', ')}</span>);
-          }
 
           addLine(<span className="text-muted-foreground/50">→ generating ascii portrait...</span>);
           addLine(
@@ -225,7 +289,6 @@ const ShellPage = () => {
           );
 
           addLine(<span className="text-foreground/80">updated your profile with {name ? `${name}'s` : "your"} {fetchedPlatform} data.</span>);
-          addLine(<span className="text-foreground/80">your ascii portrait has been regenerated — this is your identity in code.</span>);
 
           const newSource: ScrapedSource = {
             platform: fetchedPlatform,
@@ -262,56 +325,66 @@ const ShellPage = () => {
               sources: updatedSources,
             };
           });
+
+          // Persist to DB if we have a profileId
+          if (profileId) {
+            try {
+              await upsertProfileSource(profileId, {
+                platform: fetchedPlatform,
+                platform_username: fetchedUsername,
+                display_name: name,
+                bio: fetchedBio,
+                profile_image_url: imgUrl,
+                location: d.location,
+                website: d.website,
+                headline: d.headline,
+                company: d.company,
+                followers: d.followers,
+                following: d.following,
+                posts: d.posts,
+                links: d.links || [],
+                extras: d.extras || {},
+                status: "synced",
+              });
+              await updateProfile(profileId, {
+                name: name || undefined,
+                bio_short: fetchedBio || undefined,
+                location: d.location || undefined,
+                website: d.website || undefined,
+                avatar_url: imgUrl || undefined,
+              } as any);
+            } catch (e) {
+              console.error("Failed to persist source:", e);
+            }
+          }
         }
 
-        // Use AI agent for contextual reaction
+        // AI agent reaction
         setTimeout(async () => {
-          const currentSources = profileData.sources.map((s) => ({
-            platform: s.platform,
-            username: s.username,
-            displayName: s.displayName,
-            bio: s.bio,
-            status: s.status,
-          }));
-          // Add the new source to context
-          if (data?.data) {
-            currentSources.push({
-              platform: data.data.platform || platformLabel,
-              username: data.data.username || "unknown",
-              displayName: data.data.displayName || null,
-              bio: data.data.bio || null,
-              status: "synced",
-            });
-          }
-
           try {
             const { data: aiData } = await supabase.functions.invoke('you-agent-chat', {
               body: {
-                messages: [
-                  { role: 'user', content: `i just added my ${platformLabel} profile: ${val}` },
-                ],
+                messages: [{ role: 'user', content: `i just added my ${platformLabel} profile: ${val}` }],
                 profileContext: {
                   displayName: profileData.displayName || data?.data?.displayName,
                   bio: profileData.bio || data?.data?.bio,
-                  sources: currentSources,
+                  sources: profileData.sources.map((s) => ({
+                    platform: s.platform, username: s.username, displayName: s.displayName, bio: s.bio, status: s.status,
+                  })),
                 },
               },
             });
-            if (aiData?.reply) {
-              addLine(<span className="text-foreground/80">{aiData.reply}</span>);
-            }
+            if (aiData?.reply) addLine(<span className="text-foreground/80">{aiData.reply}</span>);
           } catch {
-            // Fallback to template reaction
             const scrapedCtx: ScrapedContext = {
               platform: data?.data?.platform || (platformLabel === "x.com" ? "x" : platformLabel),
               username: data?.data?.username || "unknown",
               displayName: data?.data?.displayName || null,
               bio: data?.data?.bio || null,
             };
-            const existingCtxs = profileData.sources.map((s) => ({
+            const reaction = agent.getSourceReaction(scrapedCtx, profileData.sources.map((s) => ({
               platform: s.platform, username: s.username, displayName: s.displayName, bio: s.bio,
-            }));
-            const reaction = agent.getSourceReaction(scrapedCtx, existingCtxs);
+            })));
             reaction.split("\n\n").forEach((line) => {
               if (line.trim()) addLine(<span className="text-foreground/80">{line}</span>);
             });
@@ -324,56 +397,50 @@ const ShellPage = () => {
       return;
     }
 
-    // Natural language — use AI agent for intelligent responses
+    // Natural language
     const thinkPhrase = agent.getThinkingPhrase("analysis");
     addLine(<span className="text-muted-foreground/50">{thinkPhrase}</span>);
 
     (async () => {
       try {
-        const currentSources = profileData.sources.map((s) => ({
-          platform: s.platform,
-          username: s.username,
-          displayName: s.displayName,
-          bio: s.bio,
-          status: s.status,
-        }));
-
         const { data: aiData } = await supabase.functions.invoke('you-agent-chat', {
           body: {
-            messages: [
-              { role: 'user', content: val },
-            ],
+            messages: [{ role: 'user', content: val }],
             profileContext: {
               displayName: profileData.displayName,
               bio: profileData.bio,
-              sources: currentSources,
+              sources: profileData.sources.map((s) => ({
+                platform: s.platform, username: s.username, displayName: s.displayName, bio: s.bio, status: s.status,
+              })),
             },
           },
         });
-
         if (aiData?.reply) {
-          // Split multi-line AI responses
           aiData.reply.split('\n').forEach((line: string) => {
-            if (line.trim()) {
-              addLine(<span className="text-foreground/80">{line}</span>);
-            } else {
-              addLine("\u00A0");
-            }
+            if (line.trim()) addLine(<span className="text-foreground/80">{line}</span>);
+            else addLine("\u00A0");
           });
         } else {
           throw new Error('No AI reply');
         }
       } catch {
-        // Fallback to template responses
-        const existingCtxs = profileData.sources.map((s) => ({
+        const reaction = agent.getConversationalResponse(val, profileData.sources.map((s) => ({
           platform: s.platform, username: s.username, displayName: s.displayName, bio: s.bio,
-        }));
-        const reaction = agent.getConversationalResponse(val, existingCtxs);
+        })));
         addLine(<span className="text-foreground/80">{reaction}</span>);
       }
       addLine("\u00A0");
     })();
-  }, [addLine, showHelp, isMobile, agent, profileData]);
+  }, [addLine, showHelp, isMobile, agent, profileData, profileId]);
+
+  // Show loading while DB loads
+  if (!dbLoaded) {
+    return (
+      <div className="h-screen bg-card flex items-center justify-center">
+        <span className="font-mono text-[12px] text-muted-foreground/50 animate-pulse">loading shell...</span>
+      </div>
+    );
+  }
 
   const terminalContent = (
     <div className="flex flex-col min-h-0 h-full">
@@ -399,72 +466,48 @@ const ShellPage = () => {
         username={username}
         mode={previewMode}
         profileData={profileData}
-        profileId={undefined}
+        profileId={profileId}
       />
     </div>
   );
 
   return (
     <div className="h-screen bg-card flex flex-col">
-      {/* Top bar */}
       <div className="border-b border-border bg-card flex items-center justify-between px-3 sm:px-4 py-2">
         <div className="flex items-center gap-2 sm:gap-3">
           <span className="font-mono text-accent text-xs sm:text-sm font-semibold">YOU</span>
           <span className="font-mono text-[10px] sm:text-[11px] text-muted-foreground/50">v0.1.0</span>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Mobile view toggle */}
           {isMobile && (
             <div className="flex items-center border border-border rounded overflow-hidden">
               <button
                 onClick={() => setMobileView("terminal")}
-                className={`font-mono text-[10px] px-2 py-1 transition-colors ${
-                  mobileView === "terminal"
-                    ? "bg-accent/20 text-accent"
-                    : "text-muted-foreground/50 hover:text-muted-foreground"
-                }`}
+                className={`px-2 py-1 text-[10px] font-mono transition-colors ${mobileView === "terminal" ? "bg-accent text-accent-foreground" : "text-muted-foreground/60 hover:text-foreground"}`}
               >
                 terminal
               </button>
               <button
                 onClick={() => setMobileView("preview")}
-                className={`font-mono text-[10px] px-2 py-1 transition-colors ${
-                  mobileView === "preview"
-                    ? "bg-accent/20 text-accent"
-                    : "text-muted-foreground/50 hover:text-muted-foreground"
-                }`}
+                className={`px-2 py-1 text-[10px] font-mono transition-colors ${mobileView === "preview" ? "bg-accent text-accent-foreground" : "text-muted-foreground/60 hover:text-foreground"}`}
               >
                 preview
               </button>
             </div>
           )}
-          <button
-            onClick={() => setPreviewMode(previewMode === "public" ? "private" : "public")}
-            className="font-mono text-[10px] sm:text-[11px] text-muted-foreground/60 hover:text-accent transition-colors"
-          >
-            {previewMode === "public" ? "◉ public" : "◎ private"}
-          </button>
-          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-sm bg-accent/20 border border-accent/30 flex items-center justify-center">
-            <span className="font-mono text-[8px] sm:text-[9px] text-accent font-bold">
-              {username[0]?.toUpperCase()}
-            </span>
-          </div>
+          <span className={`inline-block w-1.5 h-1.5 rounded-full ${user ? "bg-success" : "bg-muted-foreground/30"}`} />
+          <span className="font-mono text-[10px] sm:text-[11px] text-muted-foreground/60">@{username}</span>
         </div>
       </div>
 
-      {/* Layout */}
       {isMobile ? (
         <div className="flex-1 min-h-0">
           {mobileView === "terminal" ? terminalContent : previewContent}
         </div>
       ) : (
         <div className="flex-1 flex min-h-0">
-          <div className="w-[35%] border-r border-border flex flex-col min-h-0">
-            {terminalContent}
-          </div>
-          <div className="w-[65%] overflow-y-auto bg-background">
-            {previewContent}
-          </div>
+          <div className="w-1/2 border-r border-border min-h-0">{terminalContent}</div>
+          <div className="w-1/2 min-h-0">{previewContent}</div>
         </div>
       )}
     </div>

@@ -23,6 +23,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<AuthTerminal />} />
           <Route path="/create" element={<CreateProfilePage />} />
+          {/* /initialize redirects to /create */}
           <Route path="/initialize" element={<CreateProfilePage />} />
           <Route path="/shell" element={<ShellPage />} />
           <Route path="/profiles" element={<ProfilesDirectory />} />
