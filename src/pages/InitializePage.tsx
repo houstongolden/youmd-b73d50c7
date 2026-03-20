@@ -35,7 +35,6 @@ const InitializePage = () => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [lines, phase]);
 
-  // Boot sequence
   useEffect(() => {
     const timers = BOOT_SEQUENCE.map((item, i) =>
       setTimeout(() => {
@@ -48,7 +47,6 @@ const InitializePage = () => {
     return () => timers.forEach(clearTimeout);
   }, [addLine]);
 
-  // Claim username
   useEffect(() => {
     if (phase !== "claim") return;
     const timers = [
@@ -62,13 +60,11 @@ const InitializePage = () => {
     return () => timers.forEach(clearTimeout);
   }, [phase, username, addLine]);
 
-  // Generate portrait
   useEffect(() => {
     if (phase !== "portrait") return;
     const timers = [
       setTimeout(() => addLine("generating ascii portrait...", "text-muted-foreground/50"), 0),
       setTimeout(() => {
-        // Mini ASCII art as portrait preview
         const art = [
           "    ░░▒▒▓▓██▓▓▒▒░░    ",
           "  ░▒▓██████████████▓▒░  ",
@@ -90,7 +86,6 @@ const InitializePage = () => {
     return () => timers.forEach(clearTimeout);
   }, [phase, addLine]);
 
-  // Agent greeting
   useEffect(() => {
     if (phase !== "greet") return;
     const timers = [
@@ -107,7 +102,6 @@ const InitializePage = () => {
     return () => timers.forEach(clearTimeout);
   }, [phase, username, addLine]);
 
-  // Handle context link input
   const handleLink = useCallback((val: string) => {
     addLine(<span><span className="text-accent">&gt;</span> <span className="text-foreground">{val}</span></span>);
     setTimeout(() => {
@@ -143,13 +137,13 @@ const InitializePage = () => {
   }, [addLine, handleLink, navigate, username]);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-3 sm:p-4">
       <div className="w-full max-w-2xl terminal-panel shadow-2xl">
         <TerminalHeader title="you.md — initialize" />
 
-        <div ref={scrollRef} className="p-6 min-h-[500px] max-h-[80vh] overflow-y-auto">
+        <div ref={scrollRef} className="p-4 sm:p-6 min-h-[350px] sm:min-h-[500px] max-h-[80vh] overflow-y-auto">
           {lines.map((line) => (
-            <div key={line.id} className={`font-mono text-[13px] leading-relaxed ${line.className || ""}`}>
+            <div key={line.id} className={`font-mono text-[12px] sm:text-[13px] leading-relaxed ${line.className || ""}`}>
               {line.content || "\u00A0"}
             </div>
           ))}
@@ -163,7 +157,7 @@ const InitializePage = () => {
           )}
 
           {phase === "ready" && (
-            <div className="font-mono text-[13px] text-muted-foreground/50 flex items-center gap-2">
+            <div className="font-mono text-[12px] sm:text-[13px] text-muted-foreground/50 flex items-center gap-2">
               <span className="animate-pulse">◌</span> loading shell...
             </div>
           )}

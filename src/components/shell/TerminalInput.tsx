@@ -36,12 +36,11 @@ const TerminalInput = ({
 
   return (
     <div
-      className="flex items-center gap-2 font-mono text-sm cursor-text"
+      className="flex items-center gap-1.5 sm:gap-2 font-mono text-[12px] sm:text-sm cursor-text"
       onClick={() => inputRef.current?.focus()}
     >
       <span className="text-accent shrink-0">{prompt}</span>
       <div className="relative flex-1 min-w-0">
-        {/* Hidden real input */}
         <input
           ref={inputRef}
           type="text"
@@ -54,8 +53,7 @@ const TerminalInput = ({
           autoComplete="off"
           spellCheck={false}
         />
-        {/* Visible display */}
-        <span className="text-foreground">{displayValue}</span>
+        <span className="text-foreground break-all">{displayValue}</span>
         {!disabled && (
           <span className="cursor-blink text-accent ml-[1px]">█</span>
         )}
