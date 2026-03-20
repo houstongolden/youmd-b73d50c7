@@ -491,7 +491,52 @@ const ProfilePage = () => {
                   )}
                 </motion.div>
 
-                {/* ═══ SAMPLE-ENRICHED SECTIONS ═══ */}
+                {/* ═══ DB FRESHNESS (for non-sample profiles) ═══ */}
+                {!hasSampleEnrichment && dbSources.length > 0 && (() => {
+                  const dim = computeDimensionFreshness(dbSources);
+                  const fl = freshnessLabel(dim.score);
+                  return (
+                    <>
+                      <Divider />
+                      <motion.div {...delay(4)}>
+                        <SectionHeader>freshness</SectionHeader>
+                        <div className="space-y-1.5 mb-3">
+                          <StatusLine label="identity" value={dim.identity} color={stateColor(dim.identity)} />
+                          <StatusLine label="projects" value={dim.projects} color={stateColor(dim.projects)} />
+                          <StatusLine label="voice" value={dim.voice} color={stateColor(dim.voice)} />
+                          <StatusLine label="sources" value={dim.sources} color={stateColor(dim.sources)} />
+                        </div>
+                        <FreshnessScore score={dim.score} />
+                      </motion.div>
+                    </>
+                  );
+                })()}
+
+                {/* ═══ DB VERIFICATION SIGNALS ═══ */}
+                {!hasSampleEnrichment && dbVerifications.length > 0 && (
+                  <>
+                    <Divider />
+                    <motion.div {...delay(4.5)}>
+                      <SectionHeader>verification signals</SectionHeader>
+                      <div className="space-y-1.5">
+                        {dbVerifications.map((v: any) => (
+                          <div key={v.id} className="flex items-center gap-2 py-1">
+                            <span className="text-success font-mono text-[11px]">✓</span>
+                            <span className="text-foreground/80 font-mono text-[11px]">{v.signal_type}</span>
+                            {v.signal_value && <span className="text-muted-foreground/50 font-mono text-[9px]">{v.signal_value}</span>}
+                            {v.verified_at && (
+                              <span className="text-muted-foreground/40 font-mono text-[9px] ml-auto">
+                                {new Date(v.verified_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+
+
                 {hasSampleEnrichment && sampleProfile && (
                   <>
                     <Divider />
