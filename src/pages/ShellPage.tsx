@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useYouAgent } from "@/hooks/useYouAgent";
+import { useYouAgent, type ScrapedContext } from "@/hooks/useYouAgent";
 import AsciiAvatar from "@/components/AsciiAvatar";
 import { supabase } from "@/integrations/supabase/client";
 import TerminalHeader from "@/components/shell/TerminalHeader";
@@ -216,8 +216,23 @@ const ShellPage = () => {
         }
 
         setTimeout(() => {
-          const reaction = agent.getSourceReaction(val);
-          addLine(<span className="text-foreground/80">{reaction}</span>);
+          const scrapedCtx: ScrapedContext = {
+            platform: data?.data?.platform || (platformLabel === "x.com" ? "x" : platformLabel),
+            username: data?.data?.username || "unknown",
+            displayName: data?.data?.displayName || null,
+            bio: data?.data?.bio || null,
+          };
+          const existingCtxs = profileData.sources.map((s) => ({
+            platform: s.platform,
+            username: s.username,
+            displayName: s.displayName,
+            bio: s.bio,
+          }));
+          const reaction = agent.getSourceReaction(scrapedCtx, existingCtxs);
+          // Handle multi-line reactions (cross-source insights)
+          reaction.split("\n\n").forEach((line) => {
+            if (line.trim()) addLine(<span className="text-foreground/80">{line}</span>);
+          });
           addLine("\u00A0");
           addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">source added — context updated</span></span>);
           addLine("\u00A0");
@@ -226,25 +241,21 @@ const ShellPage = () => {
       return;
     }
 
-    // Natural language — agent responds conversationally and asks follow-ups
+    // Natural language — agent responds with context from scraped sources
     const thinkPhrase = agent.getThinkingPhrase("analysis");
     addLine(<span className="text-muted-foreground/50">{thinkPhrase}</span>);
     setTimeout(() => {
-      // Agent reacts to what the user said, then asks a deeper question
-      const reactions = [
-        () => `interesting. tell me more about that — how does it connect to what you do day to day?`,
-        () => `noted. that's useful context. ${agent.getNextQuestion()}`,
-        () => `i'm adding that to your identity layer. ${agent.getNextQuestion()}`,
-        () => `good — that fills in some gaps. ${agent.getNextQuestion()}`,
-        () => `got it. that changes how i'd describe you to an agent. ${agent.getNextQuestion()}`,
-        () => `that's the kind of thing that doesn't show up on a resume. noted. ${agent.getNextQuestion()}`,
-        () => `interesting angle. let me think about how to weave that in. ${agent.getNextQuestion()}`,
-      ];
-      const reaction = reactions[Math.floor(Math.random() * reactions.length)]();
+      const existingCtxs = profileData.sources.map((s) => ({
+        platform: s.platform,
+        username: s.username,
+        displayName: s.displayName,
+        bio: s.bio,
+      }));
+      const reaction = agent.getConversationalResponse(val, existingCtxs);
       addLine(<span className="text-foreground/80">{reaction}</span>);
       addLine("\u00A0");
     }, 800);
-  }, [addLine, showHelp, isMobile, agent]);
+  }, [addLine, showHelp, isMobile, agent, profileData]);
 
   const terminalContent = (
     <div className="flex flex-col min-h-0 h-full">
