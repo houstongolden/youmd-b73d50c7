@@ -91,4 +91,4 @@
 
 **Total: 26 items across 6 phases**
 
-Current completion estimate: **~60-65%** of V1 scope is built (schemas, edge functions, UI shells). The remaining work is primarily **wiring real data**, **unifying render paths**, and **testing end-to-end flows**.
+Current completion estimate: **~85%** of V1 scope is built. Remaining: chat context persistence (3.3), token validation testing (3.4), profile matching (4.4), ASCII caching (5.4), and Phase 6 (OG tags, OAuth, rate limiting).
