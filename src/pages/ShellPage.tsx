@@ -9,6 +9,7 @@ import ShellPreviewPane from "@/components/shell/ShellPreviewPane";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
 import { getProfileByUsername, getProfileById, getProfileSources, updateProfile, upsertProfileSource } from "@/lib/profiles";
+import { computeFreshnessScore } from "@/lib/freshness";
 import type { ProfileData, ScrapedSource } from "@/components/shell/panes/ProfilePreview";
 
 interface Line {
@@ -217,10 +218,64 @@ const ShellPage = () => {
     if (cmd === "/sync") {
       const syncPhrase = agent.getThinkingPhrase("sync");
       addLine(<span className="text-muted-foreground/50">{syncPhrase}</span>);
-      setTimeout(() => {
-        addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">4 sources synced — freshness score: 94</span></span>);
-        addLine("\u00A0");
-      }, 1200);
+      addLine(<span className="text-muted-foreground/50">→ re-fetching all connected sources...</span>);
+
+      (async () => {
+        if (!profileId) {
+          addLine(<span className="text-destructive">✗ no profile loaded</span>);
+          addLine("\u00A0");
+          return;
+        }
+        try {
+          const sources = await getProfileSources(profileId);
+          let synced = 0;
+          for (const source of sources) {
+            if (!source.platform_username && !source.website) continue;
+            // Build URL from source platform
+            let url = "";
+            if (source.platform === "x" || source.platform === "twitter") url = `https://x.com/${source.platform_username}`;
+            else if (source.platform === "github") url = `https://github.com/${source.platform_username}`;
+            else if (source.platform === "linkedin") url = `https://linkedin.com/in/${source.platform_username}`;
+            else continue;
+
+            addLine(<span className="text-muted-foreground/50">→ syncing {source.platform} @{source.platform_username}...</span>);
+            const { data, error } = await supabase.functions.invoke('fetch-x-profile', { body: { url } });
+            if (!error && data?.success && data?.data) {
+              const d = data.data;
+              await upsertProfileSource(profileId, {
+                platform: source.platform,
+                platform_username: d.username || source.platform_username,
+                display_name: d.displayName,
+                bio: d.bio,
+                profile_image_url: d.profileImageUrl,
+                location: d.location,
+                website: d.website,
+                headline: d.headline,
+                company: d.company,
+                followers: d.followers,
+                following: d.following,
+                posts: d.posts,
+                links: d.links || [],
+                extras: d.extras || {},
+                status: "synced",
+              });
+              synced++;
+              addLine(<span className="text-success">  ✓ {source.platform} synced</span>);
+            } else {
+              addLine(<span className="text-destructive">  ✗ {source.platform} failed</span>);
+            }
+          }
+          // Recalculate freshness
+          const updatedSources = await getProfileSources(profileId);
+          const freshness = computeFreshnessScore(updatedSources.map(s => s.last_synced_at));
+          addLine("\u00A0");
+          addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">{synced} source{synced !== 1 ? "s" : ""} synced — freshness score: {freshness}</span></span>);
+          addLine("\u00A0");
+        } catch (e: any) {
+          addLine(<span className="text-destructive">✗ sync failed: {e.message}</span>);
+          addLine("\u00A0");
+        }
+      })();
       return;
     }
 

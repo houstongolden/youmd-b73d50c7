@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Code, Eye, Flag } from "lucide-react";
+import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Code, Eye, Flag, Download } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sampleProfiles, type Profile as SampleProfile, type ActivityItem, type Project, type AgentConnection, type ConnectedSource } from "@/data/sampleProfiles";
@@ -10,6 +10,8 @@ import { getProfileByUsername, getProfileSources, getProfileVerifications, type 
 import { useAuth } from "@/hooks/useAuth";
 import ClaimBanner from "@/components/ClaimBanner";
 import ReportDialog from "@/components/ReportDialog";
+import { computeDimensionFreshness, freshnessLabel } from "@/lib/freshness";
+import { generateYouJson, generateYouMd, downloadFile } from "@/lib/exportProfile";
 
 /* ── Helpers ─────────────────────────────────── */
 
@@ -237,6 +239,7 @@ const ProfilePage = () => {
   const sampleProfile = sampleProfiles.find((p) => p.username === username);
   const [dbProfile, setDbProfile] = useState<DbProfile | null>(null);
   const [dbSources, setDbSources] = useState<DbProfileSource[]>([]);
+  const [dbVerifications, setDbVerifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [rawView, setRawView] = useState(false);
@@ -249,8 +252,12 @@ const ProfilePage = () => {
     getProfileByUsername(username).then(async (p) => {
       setDbProfile(p);
       if (p) {
-        const sources = await getProfileSources(p.id);
+        const [sources, verifications] = await Promise.all([
+          getProfileSources(p.id),
+          getProfileVerifications(p.id),
+        ]);
         setDbSources(sources);
+        setDbVerifications(verifications);
       }
       setLoading(false);
     }).catch(() => setLoading(false));
@@ -411,6 +418,14 @@ const ProfilePage = () => {
                     {!hasSampleEnrichment && dbSources.length > 0 && (
                       <StatusLine label="connected sources" value={String(dbSources.length)} color="text-accent" />
                     )}
+                    {!hasSampleEnrichment && dbVerifications.length > 0 && (
+                      <div className="pt-1">
+                        <VerifiedBadge
+                          methods={dbVerifications.map((v: any) => v.signal_type)}
+                          level={dbVerifications.length >= 3 ? "high" : dbVerifications.length >= 2 ? "medium" : "basic"}
+                        />
+                      </div>
+                    )}
                   </div>
                 </motion.div>
 
@@ -476,7 +491,52 @@ const ProfilePage = () => {
                   )}
                 </motion.div>
 
-                {/* ═══ SAMPLE-ENRICHED SECTIONS ═══ */}
+                {/* ═══ DB FRESHNESS (for non-sample profiles) ═══ */}
+                {!hasSampleEnrichment && dbSources.length > 0 && (() => {
+                  const dim = computeDimensionFreshness(dbSources);
+                  const fl = freshnessLabel(dim.score);
+                  return (
+                    <>
+                      <Divider />
+                      <motion.div {...delay(4)}>
+                        <SectionHeader>freshness</SectionHeader>
+                        <div className="space-y-1.5 mb-3">
+                          <StatusLine label="identity" value={dim.identity} color={stateColor(dim.identity)} />
+                          <StatusLine label="projects" value={dim.projects} color={stateColor(dim.projects)} />
+                          <StatusLine label="voice" value={dim.voice} color={stateColor(dim.voice)} />
+                          <StatusLine label="sources" value={dim.sources} color={stateColor(dim.sources)} />
+                        </div>
+                        <FreshnessScore score={dim.score} />
+                      </motion.div>
+                    </>
+                  );
+                })()}
+
+                {/* ═══ DB VERIFICATION SIGNALS ═══ */}
+                {!hasSampleEnrichment && dbVerifications.length > 0 && (
+                  <>
+                    <Divider />
+                    <motion.div {...delay(4.5)}>
+                      <SectionHeader>verification signals</SectionHeader>
+                      <div className="space-y-1.5">
+                        {dbVerifications.map((v: any) => (
+                          <div key={v.id} className="flex items-center gap-2 py-1">
+                            <span className="text-success font-mono text-[11px]">✓</span>
+                            <span className="text-foreground/80 font-mono text-[11px]">{v.signal_type}</span>
+                            {v.signal_value && <span className="text-muted-foreground/50 font-mono text-[9px]">{v.signal_value}</span>}
+                            {v.verified_at && (
+                              <span className="text-muted-foreground/40 font-mono text-[9px] ml-auto">
+                                {new Date(v.verified_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+
+
                 {hasSampleEnrichment && sampleProfile && (
                   <>
                     <Divider />
@@ -636,6 +696,36 @@ const ProfilePage = () => {
                       ))}
                     </div>
                   </motion.div>
+                )}
+
+                {/* ═══ EXPORT ═══ */}
+                {dbProfile && (
+                  <>
+                    <Divider />
+                    <motion.div {...delay(12.5)}>
+                      <SectionHeader>export</SectionHeader>
+                      <div className="flex flex-wrap gap-3">
+                        <button
+                          onClick={() => {
+                            const json = generateYouJson(dbProfile, dbSources, dbVerifications);
+                            downloadFile(JSON.stringify(json, null, 2), `${username}.you.json`, "application/json");
+                          }}
+                          className="flex items-center gap-1.5 font-mono text-[11px] px-3 py-1.5 rounded border border-border text-muted-foreground/70 hover:text-accent hover:border-accent/30 transition-colors"
+                        >
+                          <Download size={10} /> you.json
+                        </button>
+                        <button
+                          onClick={() => {
+                            const md = generateYouMd(dbProfile, dbSources, dbVerifications);
+                            downloadFile(md, `${username}.you.md`, "text/markdown");
+                          }}
+                          className="flex items-center gap-1.5 font-mono text-[11px] px-3 py-1.5 rounded border border-border text-muted-foreground/70 hover:text-accent hover:border-accent/30 transition-colors"
+                        >
+                          <Download size={10} /> you.md
+                        </button>
+                      </div>
+                    </motion.div>
+                  </>
                 )}
 
                 {/* Footer */}

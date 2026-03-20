@@ -12,7 +12,7 @@
 | 1.1 | Seed 6 sample profiles into DB via migration | FR-01 | ✅ Done | 1hr |
 | 1.2 | Remove InitializePage (dead code, already aliased to CreateProfilePage) | FR-19 | ✅ Done | 15min |
 | 1.3 | Fix auth → shell redirect to load user's owned profile | FR-03 | ✅ Done | 1hr |
-| 1.4 | Test & fix full claim flow (ClaimBanner → auth → claim-profile → redirect) | FR-04 | ⬜ Todo | 2hr |
+| 1.4 | Test & fix full claim flow (ClaimBanner → auth → claim-profile → redirect) | FR-04 | ✅ Done | 2hr |
 | 1.5 | Wire ShellPage to load/save profile data from DB | FR-02 | ✅ Done | 3hr |
 
 ---
@@ -47,10 +47,10 @@
 | # | Task | Ref | Status | Est |
 |---|------|-----|--------|-----|
 | 4.1 | Audit & fix all landing page CTAs (primary → /create) | FR-11 | ✅ Done | 30min |
-| 4.2 | Improve ClaimBanner copy and auto-claim after auth | FR-12 | ⬜ Todo | 1hr |
-| 4.3 | Wire /sync command to re-fetch all connected sources | FR-15 | ⬜ Todo | 2hr |
+| 4.2 | Improve ClaimBanner copy and auto-claim after auth | FR-12 | ✅ Done | 1hr |
+| 4.3 | Wire /sync command to re-fetch all connected sources | FR-15 | ✅ Done | 2hr |
 | 4.4 | Add profile matching by name + links before creation | FR-10 | ⬜ Todo | 1hr |
-| 4.5 | Mobile responsiveness audit (375px all flows) | FR-18 | ⬜ Todo | 2hr |
+| 4.5 | Mobile responsiveness audit (375px all flows) | FR-18 | ✅ Done | 2hr |
 | 4.6 | Add profile deletion UI in Settings pane | FR-23 | ✅ Done | 1hr |
 
 ---
@@ -60,9 +60,9 @@
 
 | # | Task | Ref | Status | Est |
 |---|------|-----|--------|-----|
-| 5.1 | Generate downloadable you.md and you.json files | FR-20 | ⬜ Todo | 3hr |
-| 5.2 | Display verification signals on profile pages | FR-16 | ⬜ Todo | 2hr |
-| 5.3 | Real freshness scoring based on source sync age | FR-14 | ⬜ Todo | 2hr |
+| 5.1 | Generate downloadable you.md and you.json files | FR-20 | ✅ Done | 3hr |
+| 5.2 | Display verification signals on profile pages | FR-16 | ✅ Done | 2hr |
+| 5.3 | Real freshness scoring based on source sync age | FR-14 | ✅ Done | 2hr |
 | 5.4 | Cache/persist ASCII portrait output | FR-21 | ⬜ Todo | 2hr |
 
 ---
@@ -91,4 +91,4 @@
 
 **Total: 26 items across 6 phases**
 
-Current completion estimate: **~60-65%** of V1 scope is built (schemas, edge functions, UI shells). The remaining work is primarily **wiring real data**, **unifying render paths**, and **testing end-to-end flows**.
+Current completion estimate: **~85%** of V1 scope is built. Remaining: chat context persistence (3.3), token validation testing (3.4), profile matching (4.4), ASCII caching (5.4), and Phase 6 (OG tags, OAuth, rate limiting).
