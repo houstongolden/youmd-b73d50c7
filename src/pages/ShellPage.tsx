@@ -41,6 +41,12 @@ const ShellPage = () => {
     displayName: null,
     bio: null,
     profileImageUrl: null,
+    location: null,
+    website: null,
+    headline: null,
+    company: null,
+    followers: null,
+    allLinks: [],
     sources: [],
   });
   const scrollRef = useRef<HTMLDivElement>(null);
