@@ -19,82 +19,73 @@ Deno.serve(async (req) => {
     }
 
     const cleanUsername = username.replace(/^@/, '').trim();
-    console.log(`Fetching X profile for: ${cleanUsername}`);
+    console.log(`Fetching X profile photo for: ${cleanUsername}`);
 
-    // Fetch the X profile page server-side (no CORS restrictions)
-    const response = await fetch(`https://x.com/${cleanUsername}`, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.9',
-      },
-      redirect: 'follow',
-    });
-
-    if (!response.ok) {
-      console.error(`X.com returned status ${response.status}`);
-      return new Response(
-        JSON.stringify({ success: false, error: `Failed to fetch profile (${response.status})` }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const html = await response.text();
-
-    // Extract profile image from meta tags
     let profileImageUrl: string | null = null;
-
-    // Try og:image first (usually the profile photo)
-    const ogImageMatch = html.match(/<meta\s+(?:property|name)="og:image"\s+content="([^"]+)"/i)
-      || html.match(/content="([^"]+)"\s+(?:property|name)="og:image"/i);
-
-    if (ogImageMatch?.[1]) {
-      profileImageUrl = ogImageMatch[1];
-    }
-
-    // Try twitter:image
-    if (!profileImageUrl) {
-      const twitterImageMatch = html.match(/<meta\s+(?:property|name)="twitter:image"\s+content="([^"]+)"/i)
-        || html.match(/content="([^"]+)"\s+(?:property|name)="twitter:image"/i);
-      if (twitterImageMatch?.[1]) {
-        profileImageUrl = twitterImageMatch[1];
-      }
-    }
-
-    // Try profile_image_url in any JSON-LD or inline script
-    if (!profileImageUrl) {
-      const profileImgMatch = html.match(/"profile_image_url_https?"\s*:\s*"([^"]+)"/i);
-      if (profileImgMatch?.[1]) {
-        profileImageUrl = profileImgMatch[1].replace(/\\/g, '');
-      }
-    }
-
-    // Extract display name from og:title or title tag
     let displayName: string | null = null;
-    const ogTitleMatch = html.match(/<meta\s+(?:property|name)="og:title"\s+content="([^"]+)"/i)
-      || html.match(/content="([^"]+)"\s+(?:property|name)="og:title"/i);
-    if (ogTitleMatch?.[1]) {
-      displayName = ogTitleMatch[1].split(/[(@]/)[0].trim();
-    }
-
-    // Extract bio from og:description
     let bio: string | null = null;
-    const ogDescMatch = html.match(/<meta\s+(?:property|name)="og:description"\s+content="([^"]+)"/i)
-      || html.match(/content="([^"]+)"\s+(?:property|name)="og:description"/i);
-    if (ogDescMatch?.[1]) {
-      bio = ogDescMatch[1];
+
+    // Strategy 1: Twitter syndication API (returns server-rendered HTML with profile data)
+    try {
+      const syndicationRes = await fetch(
+        `https://syndication.twitter.com/srv/timeline-profile/screen-name/${cleanUsername}`,
+        {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+            'Accept': 'text/html',
+          },
+          redirect: 'follow',
+        }
+      );
+
+      if (syndicationRes.ok) {
+        const html = await syndicationRes.text();
+
+        // Profile images in syndication HTML
+        const imgMatch = html.match(/https:\/\/pbs\.twimg\.com\/profile_images\/[^"'\s]+/);
+        if (imgMatch?.[0]) {
+          profileImageUrl = imgMatch[0]
+            .replace(/_normal\.(jpg|jpeg|png|gif|webp)/i, '_400x400.$1')
+            .replace(/_bigger\.(jpg|jpeg|png|gif|webp)/i, '_400x400.$1')
+            .replace(/_mini\.(jpg|jpeg|png|gif|webp)/i, '_400x400.$1');
+        }
+
+        // Try to extract name
+        const nameMatch = html.match(/data-testid="UserName"[^>]*>([^<]+)/i)
+          || html.match(/"name"\s*:\s*"([^"]+)"/);
+        if (nameMatch?.[1]) {
+          displayName = nameMatch[1];
+        }
+      } else {
+        await syndicationRes.text(); // consume body
+      }
+    } catch (e) {
+      console.log('Syndication attempt failed:', e);
     }
 
-    console.log(`Found image: ${profileImageUrl ? 'yes' : 'no'}, name: ${displayName || 'unknown'}`);
+    // Strategy 2: unavatar.io — reliable avatar proxy that handles X/Twitter
+    if (!profileImageUrl) {
+      try {
+        const unavatarRes = await fetch(`https://unavatar.io/x/${cleanUsername}`, {
+          method: 'HEAD',
+          redirect: 'follow',
+        });
 
-    // If we got an image, try to get the higher-res version
-    if (profileImageUrl) {
-      // X profile images often come as _normal (48x48) or _200x200 or _400x400
-      // Try to get the original (no size suffix)
-      profileImageUrl = profileImageUrl
-        .replace(/_normal\.(jpg|jpeg|png|gif|webp)/i, '_400x400.$1')
-        .replace(/_200x200\.(jpg|jpeg|png|gif|webp)/i, '_400x400.$1');
+        if (unavatarRes.ok || unavatarRes.status === 302 || unavatarRes.status === 301) {
+          // unavatar.io redirects to the actual image — use the final URL or the service URL directly
+          profileImageUrl = unavatarRes.url || `https://unavatar.io/x/${cleanUsername}`;
+        }
+      } catch (e) {
+        console.log('unavatar.io attempt failed:', e);
+      }
     }
+
+    // Strategy 3: Direct unavatar URL as last resort (it proxies in real-time)
+    if (!profileImageUrl) {
+      profileImageUrl = `https://unavatar.io/x/${cleanUsername}`;
+    }
+
+    console.log(`Result — image: ${profileImageUrl ? 'found' : 'none'}, name: ${displayName || 'unknown'}`);
 
     return new Response(
       JSON.stringify({
