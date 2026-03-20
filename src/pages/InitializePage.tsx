@@ -2,7 +2,9 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TerminalHeader from "@/components/shell/TerminalHeader";
 import TerminalInput from "@/components/shell/TerminalInput";
+import AsciiAvatar from "@/components/AsciiAvatar";
 import { useYouAgent } from "@/hooks/useYouAgent";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Line {
   id: string;
@@ -116,17 +118,57 @@ const InitializePage = () => {
     const thinkingPhrase = agent.getThinkingPhrase("discovery");
     setTimeout(() => {
       addLine(<span className="text-muted-foreground/50">→ {thinkingPhrase}</span>);
-      setTimeout(() => {
-        // Agent reacts to what it found
-        const reaction = agent.getSourceReaction(val);
-        addLine(<span className="text-foreground/80">{reaction}</span>);
-        addLine("\u00A0");
-        addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">source added — context extracted</span></span>);
-        addLine("\u00A0");
-        const followUp = agent.getSourceFollowUp();
-        addLine(<span className="text-foreground/70">{followUp}</span>);
-        addLine("\u00A0");
-      }, 800);
+
+      // Detect x.com / twitter.com URLs and fetch real profile photo
+      const xMatch = val.match(/(?:x\.com|twitter\.com)\/([a-zA-Z0-9_]+)/i);
+      if (xMatch) {
+        const xUsername = xMatch[1];
+        addLine(<span className="text-muted-foreground/50">→ fetching @{xUsername}'s profile from x.com...</span>);
+
+        supabase.functions.invoke('fetch-x-profile', {
+          body: { username: xUsername },
+        }).then(({ data, error }) => {
+          if (error || !data?.success || !data?.data?.profileImageUrl) {
+            addLine(<span className="text-muted-foreground/50">→ couldn't grab the profile photo — i'll use the default portrait</span>);
+          } else {
+            const imgUrl = data.data.profileImageUrl;
+            const name = data.data.displayName;
+            if (name) {
+              addLine(<span className="text-foreground/80">found you — {name} (@{xUsername})</span>);
+            }
+            addLine(<span className="text-muted-foreground/50">→ generating ascii portrait from your real photo...</span>);
+            addLine(
+              <div className="my-2">
+                <AsciiAvatar src={imgUrl} cols={80} canvasWidth={400} className="max-w-full" />
+              </div>
+            );
+          }
+
+          // Standard source reaction
+          setTimeout(() => {
+            const reaction = agent.getSourceReaction(val);
+            addLine(<span className="text-foreground/80">{reaction}</span>);
+            addLine("\u00A0");
+            addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">source added — context extracted</span></span>);
+            addLine("\u00A0");
+            const followUp = agent.getSourceFollowUp();
+            addLine(<span className="text-foreground/70">{followUp}</span>);
+            addLine("\u00A0");
+          }, 600);
+        });
+      } else {
+        // Non-X link: standard flow
+        setTimeout(() => {
+          const reaction = agent.getSourceReaction(val);
+          addLine(<span className="text-foreground/80">{reaction}</span>);
+          addLine("\u00A0");
+          addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">source added — context extracted</span></span>);
+          addLine("\u00A0");
+          const followUp = agent.getSourceFollowUp();
+          addLine(<span className="text-foreground/70">{followUp}</span>);
+          addLine("\u00A0");
+        }, 800);
+      }
     }, 300);
   }, [addLine, agent]);
 
