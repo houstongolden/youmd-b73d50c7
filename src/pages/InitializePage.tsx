@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TerminalHeader from "@/components/shell/TerminalHeader";
 import TerminalInput from "@/components/shell/TerminalInput";
+import { useYouAgent } from "@/hooks/useYouAgent";
 
 interface Line {
   id: string;
@@ -21,6 +22,7 @@ const InitializePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const username = (location.state as any)?.username || "houston";
+  const agent = useYouAgent(username);
   const [lines, setLines] = useState<Line[]>([]);
   const [phase, setPhase] = useState<"boot" | "claim" | "portrait" | "greet" | "gather" | "ready">("boot");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -62,8 +64,9 @@ const InitializePage = () => {
 
   useEffect(() => {
     if (phase !== "portrait") return;
+    const thinkingPhrase = agent.getThinkingPhrase("portrait");
     const timers = [
-      setTimeout(() => addLine("generating ascii portrait...", "text-muted-foreground/50"), 0),
+      setTimeout(() => addLine(thinkingPhrase, "text-muted-foreground/50"), 0),
       setTimeout(() => {
         const art = [
           "    ░░▒▒▓▓██▓▓▒▒░░    ",
@@ -84,48 +87,71 @@ const InitializePage = () => {
       setTimeout(() => setPhase("greet"), 1800),
     ];
     return () => timers.forEach(clearTimeout);
-  }, [phase, addLine]);
+  }, [phase, addLine, agent]);
 
+  // Use agent greeting instead of hardcoded text
   useEffect(() => {
     if (phase !== "greet") return;
-    const timers = [
-      setTimeout(() => addLine(<span className="text-accent">hey {username}.</span>), 0),
-      setTimeout(() => addLine(<span className="text-foreground/80">welcome to you.md — your identity context layer for the agent internet.</span>), 400),
-      setTimeout(() => addLine("\u00A0"), 600),
-      setTimeout(() => addLine(<span className="text-foreground/80">i'm your identity agent. i'll help you build your context profile</span>), 800),
-      setTimeout(() => addLine(<span className="text-foreground/80">so agents can understand who you are and what you do.</span>), 1000),
-      setTimeout(() => addLine("\u00A0"), 1200),
-      setTimeout(() => addLine(<span className="text-foreground/70">let's start with your links — drop a few and i'll pull context from them.</span>), 1400),
-      setTimeout(() => addLine("\u00A0"), 1600),
-      setTimeout(() => setPhase("gather"), 1800),
-    ];
+    const greeting = agent.getGreeting();
+    const timers = greeting.map((text, i) =>
+      setTimeout(() => {
+        if (text === "") {
+          addLine("\u00A0");
+        } else if (i === 0) {
+          addLine(<span className="text-accent">{text}</span>);
+        } else {
+          addLine(<span className="text-foreground/80">{text}</span>);
+        }
+      }, i * 300)
+    );
+    timers.push(setTimeout(() => {
+      addLine("\u00A0");
+      setPhase("gather");
+    }, greeting.length * 300 + 200));
     return () => timers.forEach(clearTimeout);
-  }, [phase, username, addLine]);
+  }, [phase, addLine, agent]);
 
   const handleLink = useCallback((val: string) => {
     addLine(<span><span className="text-accent">&gt;</span> <span className="text-foreground">{val}</span></span>);
+    const thinkingPhrase = agent.getThinkingPhrase("discovery");
     setTimeout(() => {
-      addLine(<span className="text-muted-foreground/50">→ indexing {val}...</span>);
+      addLine(<span className="text-muted-foreground/50">→ {thinkingPhrase}</span>);
       setTimeout(() => {
+        // Agent reacts to what it found
+        const reaction = agent.getSourceReaction(val);
+        addLine(<span className="text-foreground/80">{reaction}</span>);
+        addLine("\u00A0");
         addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">source added — context extracted</span></span>);
         addLine("\u00A0");
-        addLine(<span className="text-foreground/70">nice. drop another link, or type <span className="text-accent">/done</span> to continue.</span>);
+        const followUp = agent.getSourceFollowUp();
+        addLine(<span className="text-foreground/70">{followUp}</span>);
         addLine("\u00A0");
       }, 800);
     }, 300);
-  }, [addLine]);
+  }, [addLine, agent]);
 
   const handleGatherInput = useCallback((val: string) => {
     if (val === "/done") {
       addLine(<span><span className="text-accent">&gt;</span> <span className="text-foreground">/done</span></span>);
       addLine("\u00A0");
+      const doneMsg = agent.getDoneMessage();
       setTimeout(() => {
-        addLine(<span className="text-muted-foreground/50">building identity context from sources...</span>);
+        doneMsg.forEach((text) => addLine(<span className="text-muted-foreground/50">{text}</span>));
+        const synthPhrase = agent.getThinkingPhrase("identity");
         setTimeout(() => {
-          addLine(<span><span className="text-success">✓</span> <span className="text-foreground">identity context initialized</span></span>);
-          addLine("\u00A0");
-          addLine(<span className="text-foreground/80">your profile is live at <span className="text-accent">you.md/{username}</span></span>);
-          addLine(<span className="text-foreground/70">entering shell environment...</span>);
+          addLine(<span className="text-muted-foreground/50">{synthPhrase}</span>);
+        }, 500);
+        setTimeout(() => {
+          const result = agent.getDoneResult();
+          result.forEach((text, i) => {
+            if (text === "") {
+              addLine("\u00A0");
+            } else if (i === 0) {
+              addLine(<span><span className="text-success">✓</span> <span className="text-foreground">{text}</span></span>);
+            } else {
+              addLine(<span className="text-foreground/70">{text}</span>);
+            }
+          });
           addLine("\u00A0");
           setPhase("ready");
           setTimeout(() => navigate("/shell", { state: { username } }), 2000);
@@ -134,7 +160,7 @@ const InitializePage = () => {
     } else {
       handleLink(val);
     }
-  }, [addLine, handleLink, navigate, username]);
+  }, [addLine, handleLink, navigate, username, agent]);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-3 sm:p-4">
