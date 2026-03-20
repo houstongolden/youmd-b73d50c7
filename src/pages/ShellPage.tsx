@@ -281,20 +281,55 @@ const ShellPage = () => {
       return;
     }
 
-    // Natural language — agent responds with context from scraped sources
+    // Natural language — use AI agent for intelligent responses
     const thinkPhrase = agent.getThinkingPhrase("analysis");
     addLine(<span className="text-muted-foreground/50">{thinkPhrase}</span>);
-    setTimeout(() => {
-      const existingCtxs = profileData.sources.map((s) => ({
-        platform: s.platform,
-        username: s.username,
-        displayName: s.displayName,
-        bio: s.bio,
-      }));
-      const reaction = agent.getConversationalResponse(val, existingCtxs);
-      addLine(<span className="text-foreground/80">{reaction}</span>);
+
+    (async () => {
+      try {
+        const currentSources = profileData.sources.map((s) => ({
+          platform: s.platform,
+          username: s.username,
+          displayName: s.displayName,
+          bio: s.bio,
+          status: s.status,
+        }));
+
+        const { data: aiData } = await supabase.functions.invoke('you-agent-chat', {
+          body: {
+            messages: [
+              { role: 'user', content: val },
+            ],
+            profileContext: {
+              displayName: profileData.displayName,
+              bio: profileData.bio,
+              sources: currentSources,
+            },
+          },
+        });
+
+        if (aiData?.reply) {
+          // Split multi-line AI responses
+          aiData.reply.split('\n').forEach((line: string) => {
+            if (line.trim()) {
+              addLine(<span className="text-foreground/80">{line}</span>);
+            } else {
+              addLine("\u00A0");
+            }
+          });
+        } else {
+          throw new Error('No AI reply');
+        }
+      } catch {
+        // Fallback to template responses
+        const existingCtxs = profileData.sources.map((s) => ({
+          platform: s.platform, username: s.username, displayName: s.displayName, bio: s.bio,
+        }));
+        const reaction = agent.getConversationalResponse(val, existingCtxs);
+        addLine(<span className="text-foreground/80">{reaction}</span>);
+      }
       addLine("\u00A0");
-    }, 800);
+    })();
   }, [addLine, showHelp, isMobile, agent, profileData]);
 
   const terminalContent = (
