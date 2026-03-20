@@ -213,15 +213,15 @@ const Hero = () => {
           transition={{ duration: 0.5, delay: 2.3 }}
           className="flex items-center justify-center gap-8 font-mono text-[12px] mt-12"
         >
-          <a href="#get-started" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">
-            &gt; get started
-          </a>
+          <Link to="/create" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">
+            &gt; create profile
+          </Link>
           <a href="#spec" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">
             &gt; view spec
           </a>
-          <a href="#" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">
-            &gt; github
-          </a>
+          <Link to="/profiles" className="text-muted-foreground/50 hover:text-accent transition-colors duration-200">
+            &gt; browse profiles
+          </Link>
         </motion.div>
       </motion.div>
 

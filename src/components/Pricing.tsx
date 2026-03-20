@@ -61,8 +61,8 @@ const Pricing = () => (
               <p>  › Custom domain — your identity, your URL</p>
               <p>  › Analytics & scoped API keys</p>
             </div>
-            <a href="#get-started" className="cta-primary block text-center px-4 py-2.5 text-[11px]">
-              &gt; youmd upgrade --pro
+            <a href="/create" className="cta-primary block text-center px-4 py-2.5 text-[11px]">
+              &gt; create profile
             </a>
             <p className="text-muted-foreground/50 font-mono text-[9px] text-center mt-2">
               your keys stay local — never stored on our servers
