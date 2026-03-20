@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useYouAgent } from "@/hooks/useYouAgent";
+import { useYouAgent, type ScrapedContext } from "@/hooks/useYouAgent";
 import AsciiAvatar from "@/components/AsciiAvatar";
 import { supabase } from "@/integrations/supabase/client";
 import TerminalHeader from "@/components/shell/TerminalHeader";
