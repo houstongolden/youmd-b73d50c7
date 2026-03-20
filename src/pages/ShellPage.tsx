@@ -113,7 +113,8 @@ const ShellPage = () => {
     }
 
     if (cmd === "/sync") {
-      addLine(<span className="text-muted-foreground/50">syncing connected sources...</span>);
+      const syncPhrase = agent.getThinkingPhrase("sync");
+      addLine(<span className="text-muted-foreground/50">{syncPhrase}</span>);
       setTimeout(() => {
         addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">4 sources synced — freshness score: 94</span></span>);
         addLine("\u00A0");
@@ -135,10 +136,11 @@ const ShellPage = () => {
       return;
     }
 
-    // Treat as natural language / agent chat
-    addLine(<span className="text-muted-foreground/50">thinking...</span>);
+    // Treat as natural language / agent chat — use agent personality
+    const thinkPhrase = agent.getThinkingPhrase("analysis");
+    addLine(<span className="text-muted-foreground/50">{thinkPhrase}</span>);
     setTimeout(() => {
-      addLine(<span className="text-foreground/80">i can help with that. try a slash command like <span className="text-accent">/profile</span> to navigate, or just tell me what you'd like to update.</span>);
+      addLine(<span className="text-foreground/80">i hear you. try a slash command like <span className="text-accent">/profile</span> to navigate, or just tell me what you'd like to update and i'll handle it.</span>);
       addLine("\u00A0");
     }, 800);
   }, [addLine, showHelp, isMobile]);
