@@ -3,7 +3,7 @@
  *
  * This hook provides:
  * - Rotating thinking phrases (never repeats in a session)
- * - Source reactions (comments on what was found)
+ * - Context-aware source reactions based on scraped data
  * - Progressive greeting and question logic
  * - Agent-voice response templates
  *
@@ -70,39 +70,145 @@ const THINKING_SYNC = [
   "pulling the latest from your sources...",
 ];
 
-// --- Source Reactions (agent comments on what it found) ---
+export interface ScrapedContext {
+  platform: string;
+  username: string;
+  displayName: string | null;
+  bio: string | null;
+}
 
-const SOURCE_REACTIONS_GITHUB = [
-  (username: string) => `your github tells a story — lots of ${username.length > 5 ? "focused" : "varied"} repos. let me pull the highlights.`,
-  () => "interesting commit history — you've been building consistently.",
-  () => "good repos in here. pulling your most active projects and tech stack.",
-];
+// --- Context-aware source reactions ---
 
-const SOURCE_REACTIONS_LINKEDIN = [
-  () => "your linkedin's got some solid experience. let me extract the narrative.",
-  () => "interesting career path — i see a few pivots. that's usually where the good stuff is.",
-  () => "pulling your roles and the story between them.",
-];
+function buildSourceReaction(ctx: ScrapedContext, existingSources: ScrapedContext[]): string {
+  const { platform, username, displayName, bio } = ctx;
+  const name = displayName || username;
+  const sourceCount = existingSources.length;
 
-const SOURCE_REACTIONS_TWITTER = [
-  () => "your twitter's a different side of you — pulling the signal from the noise.",
-  () => "interesting feed. your tweets say things your linkedin doesn't.",
-  () => "good threads in here. extracting the themes.",
-];
+  if (platform === "github") {
+    if (bio) {
+      return `${name}'s github bio says "${bio}" — that's a useful signal. let me map your repos and tech stack.`;
+    }
+    if (displayName) {
+      return `found ${displayName} on github. pulling your repos, languages, and contribution patterns.`;
+    }
+    return `your github tells a story. let me pull the highlights and map your stack.`;
+  }
 
-const SOURCE_REACTIONS_BLOG = [
-  () => "your writing's revealing — processing the themes.",
-  () => "good content. your blog tells me more than most profiles would.",
-  () => "interesting perspective in your posts. pulling the key ideas.",
-];
+  if (platform === "x") {
+    if (displayName && bio) {
+      return `${displayName} on x — "${bio.slice(0, 80)}${bio.length > 80 ? "..." : ""}". your tweets say things your other profiles don't.`;
+    }
+    if (displayName) {
+      return `found ${displayName} on x. your feed's a different side of you — pulling the signal from the noise.`;
+    }
+    return `your twitter's a different lens. extracting the themes and voice.`;
+  }
 
-const SOURCE_REACTIONS_GENERIC = [
-  () => "reading through this now...",
-  () => "found some useful context in here.",
-  () => "interesting — adding this to your identity graph.",
-  () => "good source. pulling what's relevant.",
-  () => "this fills in some gaps. nice.",
-];
+  if (platform === "linkedin") {
+    if (displayName && bio) {
+      return `${displayName} — "${bio.slice(0, 80)}${bio.length > 80 ? "..." : ""}". linkedin's got the career arc. let me extract the narrative between the roles.`;
+    }
+    if (displayName) {
+      return `found ${displayName} on linkedin. pulling your roles and the story between them.`;
+    }
+    return `your linkedin's got the professional layer. let me see what the career arc says about you.`;
+  }
+
+  return `interesting source. pulling what's relevant for your identity context.`;
+}
+
+function buildCrossSourceInsight(newCtx: ScrapedContext, existingSources: ScrapedContext[]): string | null {
+  if (existingSources.length === 0) return null;
+
+  const platforms = existingSources.map((s) => s.platform);
+  const newName = newCtx.displayName;
+
+  // Cross-referencing observations
+  if (newCtx.platform === "github" && platforms.includes("x")) {
+    const xSource = existingSources.find((s) => s.platform === "x");
+    if (xSource?.displayName && newName) {
+      return `interesting — your x presence as ${xSource.displayName} and your github work paint two complementary pictures. the code backs up what you talk about.`;
+    }
+  }
+
+  if (newCtx.platform === "x" && platforms.includes("github")) {
+    return `your github shows what you build, your x shows how you think about it. that's a strong combination for context.`;
+  }
+
+  if (newCtx.platform === "linkedin" && platforms.includes("github")) {
+    return `linkedin gives me the career narrative, github shows the actual output. i can see the through-line now.`;
+  }
+
+  if (newCtx.platform === "linkedin" && platforms.includes("x")) {
+    return `your linkedin's the polished version, your x is the real-time version. both are useful — agents need both layers.`;
+  }
+
+  if (existingSources.length >= 2) {
+    return `that's ${existingSources.length + 1} sources now — your identity context is getting sharper with each one.`;
+  }
+
+  return null;
+}
+
+// --- Context-aware conversation responses ---
+
+function buildConversationalResponse(userInput: string, existingSources: ScrapedContext[], questionFn: () => string): string {
+  const lower = userInput.toLowerCase();
+  const hasSources = existingSources.length > 0;
+  const names = existingSources.filter((s) => s.displayName).map((s) => s.displayName);
+  const bios = existingSources.filter((s) => s.bio).map((s) => s.bio as string);
+
+  // If user mentions building/creating something
+  if (/build|creat|mak|ship|launch|found|start/i.test(lower)) {
+    if (hasSources && bios.length > 0) {
+      return `that tracks with what i see in your profiles — "${bios[0].slice(0, 60)}..." and now this. ${questionFn()}`;
+    }
+    return `builders think differently. tell me more — what's the thing you're most obsessed with right now?`;
+  }
+
+  // If user mentions their role/job
+  if (/ceo|founder|engineer|design|market|growth|lead|manag|direct/i.test(lower)) {
+    if (hasSources) {
+      const platforms = existingSources.map((s) => s.platform).join(", ");
+      return `got it — and cross-referencing with your ${platforms} presence, that makes sense. ${questionFn()}`;
+    }
+    return `noted — that shapes how agents should approach you. ${questionFn()}`;
+  }
+
+  // If user is sharing personal values/opinions
+  if (/believ|think|care|passion|obsess|love|hate|value/i.test(lower)) {
+    return `that's the kind of context that changes how an agent represents you. adding it to your identity layer. ${questionFn()}`;
+  }
+
+  // If user gives a short answer
+  if (lower.split(/\s+/).length <= 5) {
+    if (hasSources && names.length > 0) {
+      return `brief but noted. based on what i've pulled from your profiles, ${questionFn()}`;
+    }
+    return `got it. ${questionFn()}`;
+  }
+
+  // Rich contextual fallback
+  if (hasSources) {
+    const sourceList = existingSources.map((s) => s.platform).join(" and ");
+    const options = [
+      () => `that adds depth to what i pulled from your ${sourceList}. ${questionFn()}`,
+      () => `noted — that's context your ${sourceList} profiles don't capture. exactly what i need. ${questionFn()}`,
+      () => `good. i'm weaving that into your identity layer alongside your ${sourceList} data. ${questionFn()}`,
+      () => `interesting — that reframes some of what i saw on your ${sourceList}. ${questionFn()}`,
+    ];
+    return options[Math.floor(Math.random() * options.length)]();
+  }
+
+  // No sources yet fallback
+  const options = [
+    () => `interesting. tell me more about that — how does it connect to what you do day to day?`,
+    () => `noted. that's useful context. ${questionFn()}`,
+    () => `got it. that changes how i'd describe you to an agent. ${questionFn()}`,
+    () => `that's the kind of thing that doesn't show up on a resume. noted. ${questionFn()}`,
+  ];
+  return options[Math.floor(Math.random() * options.length)]();
+}
 
 // --- Progressive Questions ---
 
@@ -165,21 +271,28 @@ export function useYouAgent(username: string) {
     return pick;
   }, []);
 
-  // Get a source-specific reaction based on URL
-  const getSourceReaction = useCallback((url: string) => {
-    const lower = url.toLowerCase();
-    let pool: Array<(u: string) => string>;
-
-    if (lower.includes("github.com")) pool = SOURCE_REACTIONS_GITHUB;
-    else if (lower.includes("linkedin.com")) pool = SOURCE_REACTIONS_LINKEDIN;
-    else if (lower.includes("twitter.com") || lower.includes("x.com")) pool = SOURCE_REACTIONS_TWITTER;
-    else if (lower.includes("blog") || lower.includes("substack") || lower.includes("medium.com")) pool = SOURCE_REACTIONS_BLOG;
-    else pool = SOURCE_REACTIONS_GENERIC;
-
+  // Context-aware source reaction using actual scraped data
+  const getSourceReaction = useCallback((ctx: ScrapedContext, existingSources: ScrapedContext[]) => {
     sourcesAdded.current++;
-    const pick = pool[Math.floor(Math.random() * pool.length)];
-    return pick(username);
-  }, [username]);
+    const reaction = buildSourceReaction(ctx, existingSources);
+    const crossInsight = buildCrossSourceInsight(ctx, existingSources);
+    return crossInsight ? `${reaction}\n\n${crossInsight}` : reaction;
+  }, []);
+
+  // Context-aware conversational response
+  const getConversationalResponse = useCallback((userInput: string, existingSources: ScrapedContext[]) => {
+    const questionFn = () => {
+      const depth = questionDepth.current;
+      let pool: string[];
+      if (depth < 2) pool = QUESTIONS_L1;
+      else if (depth < 5) pool = QUESTIONS_L2;
+      else if (depth < 8) pool = QUESTIONS_L3;
+      else pool = QUESTIONS_L4;
+      questionDepth.current++;
+      return shuffle(pool)[0];
+    };
+    return buildConversationalResponse(userInput, existingSources, questionFn);
+  }, []);
 
   // Get the next question based on conversation depth
   const getNextQuestion = useCallback(() => {
@@ -229,6 +342,7 @@ export function useYouAgent(username: string) {
   return {
     getThinkingPhrase,
     getSourceReaction,
+    getConversationalResponse,
     getNextQuestion,
     getGreeting,
     getSourceFollowUp,
