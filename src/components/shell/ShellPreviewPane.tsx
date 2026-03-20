@@ -14,9 +14,10 @@ interface ShellPreviewPaneProps {
   username: string;
   mode: "public" | "private";
   profileData?: ProfileData;
+  profileId?: string;
 }
 
-const ShellPreviewPane = ({ activePane, username, mode, profileData }: ShellPreviewPaneProps) => {
+const ShellPreviewPane = ({ activePane, username, mode, profileData, profileId }: ShellPreviewPaneProps) => {
   switch (activePane) {
     case "profile":
       return <ProfilePreview username={username} mode={mode} profileData={profileData} />;
@@ -25,9 +26,9 @@ const ShellPreviewPane = ({ activePane, username, mode, profileData }: ShellPrev
     case "billing":
       return <BillingPane />;
     case "tokens":
-      return <TokensPane />;
+      return <TokensPane username={username} profileId={profileId} />;
     case "activity":
-      return <ActivityPane username={username} />;
+      return <ActivityPane username={username} profileId={profileId} />;
     case "help":
       return <HelpPane />;
     case "sources":
