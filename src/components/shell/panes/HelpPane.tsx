@@ -1,13 +1,13 @@
 const HelpPane = () => (
-  <div className="p-8 max-w-xl mx-auto">
-    <div className="flex items-center gap-2 mb-6">
-      <span className="font-mono text-[11px] text-muted-foreground/40">*/help</span>
+  <div className="p-4 sm:p-8 max-w-xl mx-auto">
+    <div className="flex items-center gap-2 mb-4 sm:mb-6">
+      <span className="font-mono text-[10px] sm:text-[11px] text-muted-foreground/40">*/help</span>
     </div>
 
-    <h2 className="font-mono text-base text-foreground mb-6">you.md shell reference</h2>
+    <h2 className="font-mono text-sm sm:text-base text-foreground mb-4 sm:mb-6">you.md shell reference</h2>
 
-    <div className="terminal-panel p-5">
-      <pre className="font-mono text-[12px] leading-loose text-foreground/70">
+    <div className="terminal-panel p-3 sm:p-5">
+      <pre className="font-mono text-[10px] sm:text-[12px] leading-loose text-foreground/70 whitespace-pre-wrap sm:whitespace-pre overflow-x-auto">
 {`NAVIGATION
   /profile          view your identity profile
   /settings         account preferences
@@ -44,7 +44,7 @@ GENERAL
       </pre>
     </div>
 
-    <div className="mt-6 font-mono text-[11px] text-muted-foreground/40">
+    <div className="mt-4 sm:mt-6 font-mono text-[10px] sm:text-[11px] text-muted-foreground/40">
       you can also type naturally — the agent understands free-form input.
     </div>
   </div>
