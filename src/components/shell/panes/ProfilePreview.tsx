@@ -6,6 +6,15 @@ export interface ScrapedSource {
   displayName: string | null;
   bio: string | null;
   profileImageUrl: string | null;
+  location: string | null;
+  website: string | null;
+  followers: number | null;
+  following: number | null;
+  posts: number | null;
+  headline: string | null;
+  company: string | null;
+  links: string[];
+  extras: Record<string, string | number | null>;
   status: "synced" | "verified" | "pending" | "failed";
 }
 
@@ -13,6 +22,12 @@ export interface ProfileData {
   displayName: string | null;
   bio: string | null;
   profileImageUrl: string | null;
+  location: string | null;
+  website: string | null;
+  headline: string | null;
+  company: string | null;
+  followers: number | null;
+  allLinks: string[];
   sources: ScrapedSource[];
 }
 
@@ -42,6 +57,11 @@ const ProfilePreview = ({
   const imgUrl = profileData?.profileImageUrl;
   const sources = profileData?.sources || [];
   const sourceCount = sources.length;
+  const location = profileData?.location;
+  const website = profileData?.website;
+  const headline = profileData?.headline;
+  const company = profileData?.company;
+  const totalFollowers = profileData?.followers ?? (sources.reduce((sum, s) => sum + (s.followers ?? 0), 0) || null);
 
   return (
     <div className="p-4 sm:p-8 max-w-xl mx-auto">
@@ -77,7 +97,6 @@ const ProfilePreview = ({
 
       {/* Identity */}
       <div className="flex items-start gap-3 mb-1">
-        {/* Small real profile photo */}
         {imgUrl && (
           <img
             src={imgUrl}
@@ -95,13 +114,29 @@ const ProfilePreview = ({
               @{username}
             </p>
           )}
-          {bio && (
-            <p className="font-mono text-[12px] sm:text-[13px] text-muted-foreground/70 mt-1">
-              {bio}
+          {(headline || company) && (
+            <p className="font-mono text-[12px] sm:text-[13px] text-muted-foreground/70 mt-0.5">
+              {headline || company}
+            </p>
+          )}
+          {location && (
+            <p className="font-mono text-[10px] sm:text-[11px] text-muted-foreground/50 mt-0.5">
+              📍 {location}
             </p>
           )}
         </div>
       </div>
+
+      {/* Bio */}
+      {bio && (
+        <>
+          <Divider />
+          <SectionLabel>bio</SectionLabel>
+          <p className="font-mono text-[11px] sm:text-[12px] text-foreground/70 leading-relaxed">
+            {bio}
+          </p>
+        </>
+      )}
 
       <Divider />
 
@@ -109,7 +144,7 @@ const ProfilePreview = ({
       <SectionLabel>agent metrics</SectionLabel>
       <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-2">
         {[
-          { label: "reads", value: "0" },
+          { label: "followers", value: totalFollowers ? totalFollowers.toLocaleString() : "—" },
           { label: "freshness", value: sourceCount > 0 ? "94" : "—" },
           { label: "sources", value: String(sourceCount) },
         ].map((m) => (
@@ -119,6 +154,18 @@ const ProfilePreview = ({
           </div>
         ))}
       </div>
+
+      {/* Website */}
+      {website && (
+        <>
+          <div className="mt-2">
+            <a href={website.startsWith('http') ? website : `https://${website}`} target="_blank" rel="noopener noreferrer"
+              className="font-mono text-[11px] sm:text-[12px] text-accent hover:text-accent/80 transition-colors">
+              {website}
+            </a>
+          </div>
+        </>
+      )}
 
       <Divider />
 

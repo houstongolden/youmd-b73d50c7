@@ -41,6 +41,12 @@ const ShellPage = () => {
     displayName: null,
     bio: null,
     profileImageUrl: null,
+    location: null,
+    website: null,
+    headline: null,
+    company: null,
+    followers: null,
+    allLinks: [],
     sources: [],
   });
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -163,13 +169,12 @@ const ShellPage = () => {
       }).then(({ data, error }) => {
         if (error || !data?.success || !data?.data?.profileImageUrl) {
           addLine(<span className="text-muted-foreground/50">→ couldn't grab the profile photo — adding as text source instead</span>);
-          // Still add as a source with failed status
           const newSource: ScrapedSource = {
             platform: platformLabel === "x.com" ? "x" : platformLabel,
             username: val.match(/\/([a-zA-Z0-9_-]+)\/?$/)?.[1] || "unknown",
-            displayName: null,
-            bio: null,
-            profileImageUrl: null,
+            displayName: null, bio: null, profileImageUrl: null,
+            location: null, website: null, followers: null, following: null,
+            posts: null, headline: null, company: null, links: [], extras: {},
             status: "failed",
           };
           setProfileData((prev) => ({
@@ -177,18 +182,41 @@ const ShellPage = () => {
             sources: [...prev.sources.filter((s) => s.platform !== newSource.platform || s.username !== newSource.username), newSource],
           }));
         } else {
-          const imgUrl = data.data.profileImageUrl;
-          const name = data.data.displayName;
-          const fetchedUsername = data.data.username;
-          const fetchedBio = data.data.bio;
-          const fetchedPlatform = data.data.platform || (platformLabel === "x.com" ? "x" : platformLabel);
+          const d = data.data;
+          const imgUrl = d.profileImageUrl;
+          const name = d.displayName;
+          const fetchedUsername = d.username;
+          const fetchedBio = d.bio;
+          const fetchedPlatform = d.platform || (platformLabel === "x.com" ? "x" : platformLabel);
 
           if (name) {
             addLine(<span className="text-foreground/80">found — {name} (@{fetchedUsername})</span>);
           }
-          if (fetchedBio) {
-            addLine(<span className="text-muted-foreground/50">bio: "{fetchedBio}"</span>);
+          // Show scraped details
+          if (fetchedBio) addLine(<span className="text-muted-foreground/50">bio: "{fetchedBio}"</span>);
+          if (d.location) addLine(<span className="text-muted-foreground/50">location: {d.location}</span>);
+          if (d.company) addLine(<span className="text-muted-foreground/50">company: {d.company}</span>);
+          if (d.headline) addLine(<span className="text-muted-foreground/50">headline: {d.headline}</span>);
+          if (d.followers != null) {
+            const stats = [`${d.followers.toLocaleString()} followers`];
+            if (d.following != null) stats.push(`${d.following.toLocaleString()} following`);
+            if (d.posts != null) stats.push(`${d.posts.toLocaleString()} ${fetchedPlatform === 'github' ? 'repos' : 'posts'}`);
+            addLine(<span className="text-muted-foreground/50">{stats.join(" · ")}</span>);
           }
+          if (d.website) addLine(<span className="text-muted-foreground/50">website: {d.website}</span>);
+          if (d.extras?.languages) addLine(<span className="text-muted-foreground/50">languages: {d.extras.languages}</span>);
+          if (d.extras?.topRepos) {
+            try {
+              const repos = JSON.parse(d.extras.topRepos as string);
+              const repoList = repos.map((r: any) => `${r.name}${r.stars ? ` ★${r.stars}` : ''}`).join(', ');
+              addLine(<span className="text-muted-foreground/50">top repos: {repoList}</span>);
+            } catch {}
+          }
+          if (d.links?.length > 0) {
+            const extraLinks = d.links.filter((l: string) => l !== d.website);
+            if (extraLinks.length > 0) addLine(<span className="text-muted-foreground/50">links: {extraLinks.join(', ')}</span>);
+          }
+
           addLine(<span className="text-muted-foreground/50">→ generating ascii portrait...</span>);
           addLine(
             <div className="my-2">
@@ -196,26 +224,41 @@ const ShellPage = () => {
             </div>
           );
 
-          // Narrate what was done to their profile
           addLine(<span className="text-foreground/80">updated your profile with {name ? `${name}'s` : "your"} {fetchedPlatform} data.</span>);
-          addLine(<span className="text-foreground/80">your ascii portrait has been regenerated — this is your identity in code. you'll see it every time you log in.</span>);
+          addLine(<span className="text-foreground/80">your ascii portrait has been regenerated — this is your identity in code.</span>);
 
-          // Update profile data with scraped info
           const newSource: ScrapedSource = {
             platform: fetchedPlatform,
             username: fetchedUsername,
             displayName: name,
             bio: fetchedBio,
             profileImageUrl: imgUrl,
+            location: d.location || null,
+            website: d.website || null,
+            followers: d.followers ?? null,
+            following: d.following ?? null,
+            posts: d.posts ?? null,
+            headline: d.headline || null,
+            company: d.company || null,
+            links: d.links || [],
+            extras: d.extras || {},
             status: "synced",
           };
 
           setProfileData((prev) => {
             const updatedSources = [...prev.sources.filter((s) => s.platform !== newSource.platform || s.username !== newSource.username), newSource];
+            const newLinks = [...prev.allLinks, ...(d.links || []).filter((l: string) => !prev.allLinks.includes(l))];
             return {
+              ...prev,
               displayName: prev.displayName || name,
               bio: prev.bio || fetchedBio,
               profileImageUrl: prev.profileImageUrl || imgUrl,
+              location: prev.location || d.location || null,
+              website: prev.website || d.website || null,
+              headline: prev.headline || d.headline || null,
+              company: prev.company || d.company || null,
+              followers: prev.followers ?? d.followers ?? null,
+              allLinks: newLinks,
               sources: updatedSources,
             };
           });
