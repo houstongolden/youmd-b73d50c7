@@ -69,12 +69,12 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <a
-              href="#get-started"
+            <Link
+              to="/auth"
               className="hidden md:inline-block cta-primary px-3 py-1 text-[10px]"
             >
               &gt; enter system
-            </a>
+            </Link>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="md:hidden text-muted-foreground p-1"
@@ -107,13 +107,13 @@ const Navbar = () => {
           >
             --profiles
           </Link>
-          <a
-            href="#get-started"
+          <Link
+            to="/auth"
             onClick={() => setMobileOpen(false)}
             className="cta-primary px-6 py-2.5 text-[12px] mt-4"
           >
             &gt; enter system
-          </a>
+          </Link>
         </div>
       )}
     </>
