@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Code, Eye, Flag } from "lucide-react";
+import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Code, Eye, Flag, Download } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sampleProfiles, type Profile as SampleProfile, type ActivityItem, type Project, type AgentConnection, type ConnectedSource } from "@/data/sampleProfiles";
@@ -10,6 +10,8 @@ import { getProfileByUsername, getProfileSources, getProfileVerifications, type 
 import { useAuth } from "@/hooks/useAuth";
 import ClaimBanner from "@/components/ClaimBanner";
 import ReportDialog from "@/components/ReportDialog";
+import { computeDimensionFreshness, freshnessLabel } from "@/lib/freshness";
+import { generateYouJson, generateYouMd, downloadFile } from "@/lib/exportProfile";
 
 /* ── Helpers ─────────────────────────────────── */
 
