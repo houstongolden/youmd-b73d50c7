@@ -698,6 +698,36 @@ const ProfilePage = () => {
                   </motion.div>
                 )}
 
+                {/* ═══ EXPORT ═══ */}
+                {dbProfile && (
+                  <>
+                    <Divider />
+                    <motion.div {...delay(12.5)}>
+                      <SectionHeader>export</SectionHeader>
+                      <div className="flex flex-wrap gap-3">
+                        <button
+                          onClick={() => {
+                            const json = generateYouJson(dbProfile, dbSources, dbVerifications);
+                            downloadFile(JSON.stringify(json, null, 2), `${username}.you.json`, "application/json");
+                          }}
+                          className="flex items-center gap-1.5 font-mono text-[11px] px-3 py-1.5 rounded border border-border text-muted-foreground/70 hover:text-accent hover:border-accent/30 transition-colors"
+                        >
+                          <Download size={10} /> you.json
+                        </button>
+                        <button
+                          onClick={() => {
+                            const md = generateYouMd(dbProfile, dbSources, dbVerifications);
+                            downloadFile(md, `${username}.you.md`, "text/markdown");
+                          }}
+                          className="flex items-center gap-1.5 font-mono text-[11px] px-3 py-1.5 rounded border border-border text-muted-foreground/70 hover:text-accent hover:border-accent/30 transition-colors"
+                        >
+                          <Download size={10} /> you.md
+                        </button>
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+
                 {/* Footer */}
                 <motion.div {...delay(13)} className="text-center space-y-2">
                   <p className="text-muted-foreground/50 font-mono text-[9px] italic">
