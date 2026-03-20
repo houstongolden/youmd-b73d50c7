@@ -9,6 +9,7 @@ import ShellPreviewPane from "@/components/shell/ShellPreviewPane";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
 import { getProfileByUsername, getProfileById, getProfileSources, updateProfile, upsertProfileSource } from "@/lib/profiles";
+import { computeFreshnessScore } from "@/lib/freshness";
 import type { ProfileData, ScrapedSource } from "@/components/shell/panes/ProfilePreview";
 
 interface Line {
