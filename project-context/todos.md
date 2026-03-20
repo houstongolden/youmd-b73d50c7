@@ -22,10 +22,10 @@
 
 | # | Task | Ref | Status | Est |
 |---|------|-----|--------|-----|
-| 2.1 | Merge ProfilePage render paths (DB-first, sample fallback) | FR-05 | ⬜ Todo | 3hr |
-| 2.2 | Merge ProfilesDirectory to show DB + sample profiles unified | FR-09 | ⬜ Todo | 1hr |
-| 2.3 | Wire TokensPane to real manage-tokens edge function | FR-07 | ⬜ Todo | 2hr |
-| 2.4 | Wire ActivityPane to real security_logs table | FR-08 | ⬜ Todo | 1hr |
+| 2.1 | Merge ProfilePage render paths (DB-first, sample fallback) | FR-05 | ✅ Done | 3hr |
+| 2.2 | Merge ProfilesDirectory to show DB + sample profiles unified | FR-09 | ✅ Done | 1hr |
+| 2.3 | Wire TokensPane to real manage-tokens edge function | FR-07 | ✅ Done | 2hr |
+| 2.4 | Wire ActivityPane to real security_logs table | FR-08 | ✅ Done | 1hr |
 
 ---
 
