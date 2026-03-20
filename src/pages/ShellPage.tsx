@@ -207,7 +207,9 @@ const ShellPage = () => {
 
     if (cmd === "/private") {
       setPreviewMode("private");
+      setActivePane("private");
       addLine(<span className="text-success">✓ preview switched to private mode</span>);
+      if (isMobile) setTimeout(() => setMobileView("preview"), 300);
       addLine("\u00A0");
       return;
     }

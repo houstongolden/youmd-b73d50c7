@@ -8,6 +8,7 @@ import SourcesPane from "./panes/SourcesPane";
 import PortraitPane from "./panes/PortraitPane";
 import PublishPane from "./panes/PublishPane";
 import AgentsPane from "./panes/AgentsPane";
+import PrivateContextPane from "./panes/PrivateContextPane";
 
 interface ShellPreviewPaneProps {
   activePane: string;
@@ -22,7 +23,7 @@ const ShellPreviewPane = ({ activePane, username, mode, profileData, profileId }
     case "profile":
       return <ProfilePreview username={username} mode={mode} profileData={profileData} />;
     case "settings":
-      return <SettingsPane username={username} />;
+      return <SettingsPane username={username} profileId={profileId} />;
     case "billing":
       return <BillingPane />;
     case "tokens":
@@ -39,6 +40,8 @@ const ShellPreviewPane = ({ activePane, username, mode, profileData, profileId }
       return <PublishPane username={username} />;
     case "agents":
       return <AgentsPane username={username} />;
+    case "private":
+      return <PrivateContextPane username={username} profileId={profileId} />;
     default:
       return <ProfilePreview username={username} mode={mode} profileData={profileData} />;
   }

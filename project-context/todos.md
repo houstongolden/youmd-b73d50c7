@@ -34,8 +34,8 @@
 
 | # | Task | Ref | Status | Est |
 |---|------|-----|--------|-----|
-| 3.1 | Build PrivateContextPane (view/edit private notes, projects, links) | FR-06 | ⬜ Todo | 3hr |
-| 3.2 | Wire public/private toggle to actually filter preview content | FR-06 | ⬜ Todo | 2hr |
+| 3.1 | Build PrivateContextPane (view/edit private notes, projects, links) | FR-06 | ✅ Done | 3hr |
+| 3.2 | Wire public/private toggle to actually filter preview content | FR-06 | ✅ Done | 2hr |
 | 3.3 | Persist freeform chat context to private_contexts table | FR-13 | ⬜ Todo | 2hr |
 | 3.4 | Test token-based agent access (validate-token edge function) | FR-07 | ⬜ Todo | 1hr |
 
@@ -46,12 +46,12 @@
 
 | # | Task | Ref | Status | Est |
 |---|------|-----|--------|-----|
-| 4.1 | Audit & fix all landing page CTAs (primary → /create) | FR-11 | ⬜ Todo | 30min |
+| 4.1 | Audit & fix all landing page CTAs (primary → /create) | FR-11 | ✅ Done | 30min |
 | 4.2 | Improve ClaimBanner copy and auto-claim after auth | FR-12 | ⬜ Todo | 1hr |
 | 4.3 | Wire /sync command to re-fetch all connected sources | FR-15 | ⬜ Todo | 2hr |
 | 4.4 | Add profile matching by name + links before creation | FR-10 | ⬜ Todo | 1hr |
 | 4.5 | Mobile responsiveness audit (375px all flows) | FR-18 | ⬜ Todo | 2hr |
-| 4.6 | Add profile deletion UI in Settings pane | FR-23 | ⬜ Todo | 1hr |
+| 4.6 | Add profile deletion UI in Settings pane | FR-23 | ✅ Done | 1hr |
 
 ---
 
