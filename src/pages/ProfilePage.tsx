@@ -418,6 +418,14 @@ const ProfilePage = () => {
                     {!hasSampleEnrichment && dbSources.length > 0 && (
                       <StatusLine label="connected sources" value={String(dbSources.length)} color="text-accent" />
                     )}
+                    {!hasSampleEnrichment && dbVerifications.length > 0 && (
+                      <div className="pt-1">
+                        <VerifiedBadge
+                          methods={dbVerifications.map((v: any) => v.signal_type)}
+                          level={dbVerifications.length >= 3 ? "high" : dbVerifications.length >= 2 ? "medium" : "basic"}
+                        />
+                      </div>
+                    )}
                   </div>
                 </motion.div>
 
