@@ -186,12 +186,19 @@ const ShellPage = () => {
           if (name) {
             addLine(<span className="text-foreground/80">found — {name} (@{fetchedUsername})</span>);
           }
+          if (fetchedBio) {
+            addLine(<span className="text-muted-foreground/50">bio: "{fetchedBio}"</span>);
+          }
           addLine(<span className="text-muted-foreground/50">→ generating ascii portrait...</span>);
           addLine(
             <div className="my-2">
               <AsciiAvatar src={imgUrl} cols={80} canvasWidth={400} className="max-w-full" />
             </div>
           );
+
+          // Narrate what was done to their profile
+          addLine(<span className="text-foreground/80">updated your profile with {name ? `${name}'s` : "your"} {fetchedPlatform} data.</span>);
+          addLine(<span className="text-foreground/80">your ascii portrait has been regenerated — this is your identity in code. you'll see it every time you log in.</span>);
 
           // Update profile data with scraped info
           const newSource: ScrapedSource = {
@@ -206,7 +213,6 @@ const ShellPage = () => {
           setProfileData((prev) => {
             const updatedSources = [...prev.sources.filter((s) => s.platform !== newSource.platform || s.username !== newSource.username), newSource];
             return {
-              // Use the first available name/bio/photo — prioritize new data if we don't have it yet
               displayName: prev.displayName || name,
               bio: prev.bio || fetchedBio,
               profileImageUrl: prev.profileImageUrl || imgUrl,
@@ -215,46 +221,115 @@ const ShellPage = () => {
           });
         }
 
-        setTimeout(() => {
-          const scrapedCtx: ScrapedContext = {
-            platform: data?.data?.platform || (platformLabel === "x.com" ? "x" : platformLabel),
-            username: data?.data?.username || "unknown",
-            displayName: data?.data?.displayName || null,
-            bio: data?.data?.bio || null,
-          };
-          const existingCtxs = profileData.sources.map((s) => ({
+        // Use AI agent for contextual reaction
+        setTimeout(async () => {
+          const currentSources = profileData.sources.map((s) => ({
             platform: s.platform,
             username: s.username,
             displayName: s.displayName,
             bio: s.bio,
+            status: s.status,
           }));
-          const reaction = agent.getSourceReaction(scrapedCtx, existingCtxs);
-          // Handle multi-line reactions (cross-source insights)
-          reaction.split("\n\n").forEach((line) => {
-            if (line.trim()) addLine(<span className="text-foreground/80">{line}</span>);
-          });
+          // Add the new source to context
+          if (data?.data) {
+            currentSources.push({
+              platform: data.data.platform || platformLabel,
+              username: data.data.username || "unknown",
+              displayName: data.data.displayName || null,
+              bio: data.data.bio || null,
+              status: "synced",
+            });
+          }
+
+          try {
+            const { data: aiData } = await supabase.functions.invoke('you-agent-chat', {
+              body: {
+                messages: [
+                  { role: 'user', content: `i just added my ${platformLabel} profile: ${val}` },
+                ],
+                profileContext: {
+                  displayName: profileData.displayName || data?.data?.displayName,
+                  bio: profileData.bio || data?.data?.bio,
+                  sources: currentSources,
+                },
+              },
+            });
+            if (aiData?.reply) {
+              addLine(<span className="text-foreground/80">{aiData.reply}</span>);
+            }
+          } catch {
+            // Fallback to template reaction
+            const scrapedCtx: ScrapedContext = {
+              platform: data?.data?.platform || (platformLabel === "x.com" ? "x" : platformLabel),
+              username: data?.data?.username || "unknown",
+              displayName: data?.data?.displayName || null,
+              bio: data?.data?.bio || null,
+            };
+            const existingCtxs = profileData.sources.map((s) => ({
+              platform: s.platform, username: s.username, displayName: s.displayName, bio: s.bio,
+            }));
+            const reaction = agent.getSourceReaction(scrapedCtx, existingCtxs);
+            reaction.split("\n\n").forEach((line) => {
+              if (line.trim()) addLine(<span className="text-foreground/80">{line}</span>);
+            });
+          }
           addLine("\u00A0");
-          addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">source added — context updated</span></span>);
+          addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">source added — profile updated</span></span>);
           addLine("\u00A0");
         }, 600);
       });
       return;
     }
 
-    // Natural language — agent responds with context from scraped sources
+    // Natural language — use AI agent for intelligent responses
     const thinkPhrase = agent.getThinkingPhrase("analysis");
     addLine(<span className="text-muted-foreground/50">{thinkPhrase}</span>);
-    setTimeout(() => {
-      const existingCtxs = profileData.sources.map((s) => ({
-        platform: s.platform,
-        username: s.username,
-        displayName: s.displayName,
-        bio: s.bio,
-      }));
-      const reaction = agent.getConversationalResponse(val, existingCtxs);
-      addLine(<span className="text-foreground/80">{reaction}</span>);
+
+    (async () => {
+      try {
+        const currentSources = profileData.sources.map((s) => ({
+          platform: s.platform,
+          username: s.username,
+          displayName: s.displayName,
+          bio: s.bio,
+          status: s.status,
+        }));
+
+        const { data: aiData } = await supabase.functions.invoke('you-agent-chat', {
+          body: {
+            messages: [
+              { role: 'user', content: val },
+            ],
+            profileContext: {
+              displayName: profileData.displayName,
+              bio: profileData.bio,
+              sources: currentSources,
+            },
+          },
+        });
+
+        if (aiData?.reply) {
+          // Split multi-line AI responses
+          aiData.reply.split('\n').forEach((line: string) => {
+            if (line.trim()) {
+              addLine(<span className="text-foreground/80">{line}</span>);
+            } else {
+              addLine("\u00A0");
+            }
+          });
+        } else {
+          throw new Error('No AI reply');
+        }
+      } catch {
+        // Fallback to template responses
+        const existingCtxs = profileData.sources.map((s) => ({
+          platform: s.platform, username: s.username, displayName: s.displayName, bio: s.bio,
+        }));
+        const reaction = agent.getConversationalResponse(val, existingCtxs);
+        addLine(<span className="text-foreground/80">{reaction}</span>);
+      }
       addLine("\u00A0");
-    }, 800);
+    })();
   }, [addLine, showHelp, isMobile, agent, profileData]);
 
   const terminalContent = (
