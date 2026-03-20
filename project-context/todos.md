@@ -60,9 +60,9 @@
 
 | # | Task | Ref | Status | Est |
 |---|------|-----|--------|-----|
-| 5.1 | Generate downloadable you.md and you.json files | FR-20 | ⬜ Todo | 3hr |
-| 5.2 | Display verification signals on profile pages | FR-16 | ⬜ Todo | 2hr |
-| 5.3 | Real freshness scoring based on source sync age | FR-14 | ⬜ Todo | 2hr |
+| 5.1 | Generate downloadable you.md and you.json files | FR-20 | ✅ Done | 3hr |
+| 5.2 | Display verification signals on profile pages | FR-16 | ✅ Done | 2hr |
+| 5.3 | Real freshness scoring based on source sync age | FR-14 | ✅ Done | 2hr |
 | 5.4 | Cache/persist ASCII portrait output | FR-21 | ⬜ Todo | 2hr |
 
 ---
