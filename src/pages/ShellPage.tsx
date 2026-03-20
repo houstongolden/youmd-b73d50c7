@@ -16,6 +16,10 @@ const SLASH_COMMANDS: Record<string, string> = {
   "/billing": "billing",
   "/tokens": "tokens",
   "/activity": "activity",
+  "/sources": "sources",
+  "/portrait": "portrait",
+  "/publish": "publish",
+  "/agents": "agents",
   "/help": "help",
 };
 
@@ -59,6 +63,10 @@ const ShellPage = () => {
       ["/billing", "plan and usage details"],
       ["/tokens", "api keys and access tokens"],
       ["/activity", "agent reads and sync history"],
+      ["/sources", "manage connected data sources"],
+      ["/portrait", "view and regenerate ascii portrait"],
+      ["/publish", "deploy status and version history"],
+      ["/agents", "agent network and access policies"],
       ["/public", "switch preview to public mode"],
       ["/private", "switch preview to private mode"],
       ["/sync", "trigger source re-sync"],
