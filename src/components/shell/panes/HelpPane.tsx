@@ -14,6 +14,10 @@ const HelpPane = () => (
   /billing          plan & usage
   /tokens           api keys management
   /activity         agent reads & sync log
+  /sources          connected data sources
+  /portrait         ascii portrait settings
+  /publish          deploy status & history
+  /agents           agent network & access
 
 VIEW MODES
   /public           preview as public visitors see
