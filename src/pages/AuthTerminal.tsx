@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import TerminalLine from "@/components/shell/TerminalLine";
 import TerminalInput from "@/components/shell/TerminalInput";
 import TerminalHeader from "@/components/shell/TerminalHeader";
 
@@ -63,54 +62,40 @@ const AuthTerminal = () => {
   }, [addLine, navigate, username]);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-3 sm:p-4">
       <div className="w-full max-w-2xl terminal-panel shadow-2xl">
         <TerminalHeader title="you.md — authenticate" />
 
-        <div ref={scrollRef} className="p-6 min-h-[400px] max-h-[70vh] overflow-y-auto">
-          {/* Rendered lines */}
+        <div ref={scrollRef} className="p-4 sm:p-6 min-h-[300px] sm:min-h-[400px] max-h-[80vh] overflow-y-auto">
           {lines.map((line) => (
-            <div key={line.id} className={`font-mono text-[13px] leading-relaxed ${line.className || ""}`}>
+            <div key={line.id} className={`font-mono text-[12px] sm:text-[13px] leading-relaxed ${line.className || ""}`}>
               {line.content || "\u00A0"}
             </div>
           ))}
 
-          {/* Active input */}
           {step === "username" && (
             <div className="mt-1">
-              <span className="font-mono text-[13px] text-muted-foreground/70 block mb-1">
+              <span className="font-mono text-[12px] sm:text-[13px] text-muted-foreground/70 block mb-1">
                 enter your username to begin
               </span>
-              <TerminalInput
-                prompt="username:"
-                placeholder="houston"
-                onSubmit={handleUsername}
-              />
+              <TerminalInput prompt="username:" placeholder="houston" onSubmit={handleUsername} />
             </div>
           )}
 
           {step === "password" && (
             <div className="mt-1">
-              <TerminalInput
-                prompt="password:"
-                type="password"
-                onSubmit={handlePassword}
-              />
+              <TerminalInput prompt="password:" type="password" onSubmit={handlePassword} />
             </div>
           )}
 
           {step === "verify" && (
             <div className="mt-1">
-              <TerminalInput
-                prompt="verification code:"
-                placeholder="000000"
-                onSubmit={handleVerify}
-              />
+              <TerminalInput prompt="verification code:" placeholder="000000" onSubmit={handleVerify} />
             </div>
           )}
 
           {step === "authenticating" && (
-            <div className="font-mono text-[13px] text-muted-foreground/50 flex items-center gap-2">
+            <div className="font-mono text-[12px] sm:text-[13px] text-muted-foreground/50 flex items-center gap-2">
               <span className="animate-pulse">◌</span> verifying...
             </div>
           )}

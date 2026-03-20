@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import TerminalHeader from "@/components/shell/TerminalHeader";
 import TerminalInput from "@/components/shell/TerminalInput";
 import ShellPreviewPane from "@/components/shell/ShellPreviewPane";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Line {
   id: string;
@@ -26,9 +27,11 @@ const SLASH_COMMANDS: Record<string, string> = {
 const ShellPage = () => {
   const location = useLocation();
   const username = (location.state as any)?.username || "houston";
+  const isMobile = useIsMobile();
   const [lines, setLines] = useState<Line[]>([]);
   const [activePane, setActivePane] = useState<string>("profile");
   const [previewMode, setPreviewMode] = useState<"public" | "private">("public");
+  const [mobileView, setMobileView] = useState<"terminal" | "preview">("terminal");
   const scrollRef = useRef<HTMLDivElement>(null);
   const lineCounter = useRef(0);
 
@@ -119,6 +122,10 @@ const ShellPage = () => {
     if (SLASH_COMMANDS[cmd]) {
       setActivePane(SLASH_COMMANDS[cmd]);
       addLine(<span className="text-muted-foreground/50">→ loading {SLASH_COMMANDS[cmd]}...</span>);
+      // On mobile, auto-switch to preview when a pane command is used
+      if (isMobile) {
+        setTimeout(() => setMobileView("preview"), 300);
+      }
       setTimeout(() => {
         addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">{SLASH_COMMANDS[cmd]} loaded in preview</span></span>);
         addLine("\u00A0");
@@ -132,57 +139,97 @@ const ShellPage = () => {
       addLine(<span className="text-foreground/80">i can help with that. try a slash command like <span className="text-accent">/profile</span> to navigate, or just tell me what you'd like to update.</span>);
       addLine("\u00A0");
     }, 800);
-  }, [addLine, showHelp]);
+  }, [addLine, showHelp, isMobile]);
+
+  const terminalContent = (
+    <div className="flex flex-col min-h-0 h-full">
+      <TerminalHeader title={`@${username} — shell`} />
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 sm:p-4">
+        {lines.map((line) => (
+          <div key={line.id} className={`font-mono text-[11px] sm:text-[12px] leading-relaxed ${line.className || ""}`}>
+            {line.content || "\u00A0"}
+          </div>
+        ))}
+        <div className="mt-1">
+          <TerminalInput prompt=">" placeholder="/help" onSubmit={handleCommand} />
+        </div>
+      </div>
+    </div>
+  );
+
+  const previewContent = (
+    <div className="overflow-y-auto h-full bg-background">
+      <ShellPreviewPane
+        activePane={activePane}
+        username={username}
+        mode={previewMode}
+      />
+    </div>
+  );
 
   return (
     <div className="h-screen bg-background flex flex-col">
       {/* Top bar */}
-      <div className="border-b border-border bg-card flex items-center justify-between px-4 py-2">
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-accent text-sm font-semibold">YOU</span>
-          <span className="font-mono text-[11px] text-muted-foreground/50">v0.1.0</span>
+      <div className="border-b border-border bg-card flex items-center justify-between px-3 sm:px-4 py-2">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="font-mono text-accent text-xs sm:text-sm font-semibold">YOU</span>
+          <span className="font-mono text-[10px] sm:text-[11px] text-muted-foreground/50">v0.1.0</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Mobile view toggle */}
+          {isMobile && (
+            <div className="flex items-center border border-border rounded overflow-hidden">
+              <button
+                onClick={() => setMobileView("terminal")}
+                className={`font-mono text-[10px] px-2 py-1 transition-colors ${
+                  mobileView === "terminal"
+                    ? "bg-accent/20 text-accent"
+                    : "text-muted-foreground/50 hover:text-muted-foreground"
+                }`}
+              >
+                terminal
+              </button>
+              <button
+                onClick={() => setMobileView("preview")}
+                className={`font-mono text-[10px] px-2 py-1 transition-colors ${
+                  mobileView === "preview"
+                    ? "bg-accent/20 text-accent"
+                    : "text-muted-foreground/50 hover:text-muted-foreground"
+                }`}
+              >
+                preview
+              </button>
+            </div>
+          )}
           <button
             onClick={() => setPreviewMode(previewMode === "public" ? "private" : "public")}
-            className="font-mono text-[11px] text-muted-foreground/60 hover:text-accent transition-colors"
+            className="font-mono text-[10px] sm:text-[11px] text-muted-foreground/60 hover:text-accent transition-colors"
           >
             {previewMode === "public" ? "◉ public" : "◎ private"}
           </button>
-          <div className="w-6 h-6 rounded-sm bg-accent/20 border border-accent/30 flex items-center justify-center">
-            <span className="font-mono text-[9px] text-accent font-bold">
+          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-sm bg-accent/20 border border-accent/30 flex items-center justify-center">
+            <span className="font-mono text-[8px] sm:text-[9px] text-accent font-bold">
               {username[0]?.toUpperCase()}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Split layout */}
-      <div className="flex-1 flex min-h-0">
-        {/* Left: Terminal — 35% */}
-        <div className="w-[35%] border-r border-border flex flex-col min-h-0">
-          <TerminalHeader title={`@${username} — shell`} />
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4">
-            {lines.map((line) => (
-              <div key={line.id} className={`font-mono text-[12px] leading-relaxed ${line.className || ""}`}>
-                {line.content || "\u00A0"}
-              </div>
-            ))}
-            <div className="mt-1">
-              <TerminalInput prompt=">" placeholder="/help" onSubmit={handleCommand} />
-            </div>
+      {/* Layout */}
+      {isMobile ? (
+        <div className="flex-1 min-h-0">
+          {mobileView === "terminal" ? terminalContent : previewContent}
+        </div>
+      ) : (
+        <div className="flex-1 flex min-h-0">
+          <div className="w-[35%] border-r border-border flex flex-col min-h-0">
+            {terminalContent}
+          </div>
+          <div className="w-[65%] overflow-y-auto bg-background">
+            {previewContent}
           </div>
         </div>
-
-        {/* Right: Preview — 65% */}
-        <div className="w-[65%] overflow-y-auto bg-background">
-          <ShellPreviewPane
-            activePane={activePane}
-            username={username}
-            mode={previewMode}
-          />
-        </div>
-      </div>
+      )}
     </div>
   );
 };
