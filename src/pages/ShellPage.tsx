@@ -182,11 +182,22 @@ const ShellPage = () => {
       return;
     }
 
-    // Treat as natural language / agent chat — use agent personality
+    // Natural language — agent responds conversationally and asks follow-ups
     const thinkPhrase = agent.getThinkingPhrase("analysis");
     addLine(<span className="text-muted-foreground/50">{thinkPhrase}</span>);
     setTimeout(() => {
-      addLine(<span className="text-foreground/80">i hear you. try a slash command like <span className="text-accent">/profile</span> to navigate, or just tell me what you'd like to update and i'll handle it.</span>);
+      // Agent reacts to what the user said, then asks a deeper question
+      const reactions = [
+        () => `interesting. tell me more about that — how does it connect to what you do day to day?`,
+        () => `noted. that's useful context. ${agent.getNextQuestion()}`,
+        () => `i'm adding that to your identity layer. ${agent.getNextQuestion()}`,
+        () => `good — that fills in some gaps. ${agent.getNextQuestion()}`,
+        () => `got it. that changes how i'd describe you to an agent. ${agent.getNextQuestion()}`,
+        () => `that's the kind of thing that doesn't show up on a resume. noted. ${agent.getNextQuestion()}`,
+        () => `interesting angle. let me think about how to weave that in. ${agent.getNextQuestion()}`,
+      ];
+      const reaction = reactions[Math.floor(Math.random() * reactions.length)]();
+      addLine(<span className="text-foreground/80">{reaction}</span>);
       addLine("\u00A0");
     }, 800);
   }, [addLine, showHelp, isMobile, agent]);
