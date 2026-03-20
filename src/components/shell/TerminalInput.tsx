@@ -33,37 +33,25 @@ const TerminalInput = ({
     }
   };
 
-  const displayValue = type === "password" ? "•".repeat(value.length) : value;
-
   return (
     <div
-      className="flex items-center gap-1.5 sm:gap-2 font-mono text-[12px] sm:text-sm cursor-text"
+      className="flex items-start gap-1.5 sm:gap-2 font-mono text-[12px] sm:text-sm cursor-text"
       onClick={() => inputRef.current?.focus()}
     >
-      <span className="text-accent shrink-0">{prompt}</span>
-      <div className="relative flex-1 min-w-0">
-        <input
-          ref={inputRef}
-          type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="absolute inset-0 opacity-0 w-full"
-          autoFocus={autoFocus}
-          disabled={disabled}
-          autoComplete="off"
-          spellCheck={false}
-        />
-        <span className="text-foreground break-all">{displayValue}</span>
-        {!disabled && (
-          <span className="cursor-blink text-accent ml-[1px]">█</span>
-        )}
-        {!value && placeholder && (
-          <span className="text-muted-foreground/40 absolute left-0 top-0 pointer-events-none">
-            {placeholder}
-          </span>
-        )}
-      </div>
+      <span className="text-accent shrink-0 leading-relaxed pt-[1px]">{prompt}</span>
+      <input
+        ref={inputRef}
+        type={type}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={handleKeyDown}
+        className="flex-1 min-w-0 bg-transparent border-none outline-none text-foreground font-mono text-[12px] sm:text-sm leading-relaxed p-0 m-0 caret-accent placeholder:text-muted-foreground/40"
+        autoFocus={autoFocus}
+        disabled={disabled}
+        autoComplete="off"
+        spellCheck={false}
+        placeholder={placeholder}
+      />
     </div>
   );
 };
