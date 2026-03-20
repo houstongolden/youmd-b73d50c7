@@ -1,11 +1,15 @@
 import { useParams, Link } from "react-router-dom";
-import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw, Code, Eye } from "lucide-react";
+import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw, Code, Eye, Flag } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { sampleProfiles, type ActivityItem, type Project, type AgentConnection, type ConnectedSource } from "@/data/sampleProfiles";
 import ProfileAsciiHeader from "@/components/ProfileAsciiHeader";
 import RawJsonView from "@/components/RawJsonView";
 import { useCountUp } from "@/hooks/useCountUp";
+import { getProfileByUsername, getProfileSources, getProfileVerifications, type DbProfile, type DbProfileSource } from "@/lib/profiles";
+import { useAuth } from "@/hooks/useAuth";
+import ClaimBanner from "@/components/ClaimBanner";
+import ReportDialog from "@/components/ReportDialog";
 
 /* ── Helpers ─────────────────────────────────── */
 
@@ -259,22 +263,127 @@ const ActivityTimeline = ({ items }: { items: ActivityItem[] }) => (
 
 const ProfilePage = () => {
   const { username } = useParams();
-  const profile = sampleProfiles.find((p) => p.username === username);
+  const { user } = useAuth();
+  const sampleProfile = sampleProfiles.find((p) => p.username === username);
+  const [dbProfile, setDbProfile] = useState<DbProfile | null>(null);
+  const [dbSources, setDbSources] = useState<DbProfileSource[]>([]);
+  const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [rawView, setRawView] = useState(false);
 
   useEffect(() => { window.scrollTo(0, 0); }, [username]);
 
-  if (!profile) {
+  // Load from DB
+  useEffect(() => {
+    if (!username) return;
+    setLoading(true);
+    getProfileByUsername(username).then(async (p) => {
+      setDbProfile(p);
+      if (p) {
+        const sources = await getProfileSources(p.id);
+        setDbSources(sources);
+      }
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, [username]);
+
+  // Determine which data to show — DB profile takes precedence, sample as fallback
+  const profile = sampleProfile;
+  const isDbOnly = !sampleProfile && !!dbProfile;
+  const isOwner = user && dbProfile?.owner_id === user.id;
+  const showClaimBanner = dbProfile && !dbProfile.is_claimed;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="font-mono text-[12px] text-muted-foreground/50 animate-pulse">loading profile...</span>
+      </div>
+    );
+  }
+
+  if (!profile && !dbProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <div className="text-center">
           <p className="text-destructive font-mono text-[11px] mb-2">✗ ERROR 404</p>
           <h1 className="text-foreground font-mono text-xl font-light mb-3">Profile not found</h1>
           <p className="text-muted-foreground font-body text-[13px] mb-6">This you.md username doesn't exist yet.</p>
+          <Link to="/create" className="cta-primary px-5 py-2 text-[11px] inline-block mr-3">
+            &gt; create profile
+          </Link>
           <Link to="/profiles" className="cta-primary px-5 py-2 text-[11px] inline-block">
             &gt; ls /profiles
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // For DB-only profiles (no sample data), render a simpler view
+  if (isDbOnly && dbProfile) {
+    return (
+      <div className="min-h-screen">
+        <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:pt-4">
+          <div className="max-w-[680px] mx-auto flex items-center justify-between px-4 py-2 glass-nav rounded">
+            <Link to="/" className="text-accent font-mono text-[12px]">you.md</Link>
+            <Link to="/profiles" className="text-muted-foreground/60 font-mono text-[10px] hover:text-accent transition-colors">/profiles</Link>
+          </div>
+        </nav>
+        <div className="pt-20 pb-20 px-6">
+          <div className="max-w-[680px] mx-auto">
+            {showClaimBanner && <ClaimBanner profileId={dbProfile.id} username={dbProfile.username} />}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 mb-6">
+              <div className="flex items-end gap-4 mb-4">
+                {dbProfile.avatar_url && (
+                  <img src={dbProfile.avatar_url} alt={dbProfile.name || dbProfile.username}
+                    className="w-16 h-16 md:w-20 md:h-20 rounded border-2 border-background object-cover" loading="lazy" />
+                )}
+                <div className="pb-1 flex-1 min-w-0">
+                  <h1 className="text-foreground font-mono text-lg md:text-xl font-medium tracking-tight truncate">
+                    {dbProfile.name || `@${dbProfile.username}`}
+                  </h1>
+                  {dbProfile.tagline && <p className="text-muted-foreground font-body text-[12px] mt-0.5 truncate">{dbProfile.tagline}</p>}
+                  {dbProfile.location && (
+                    <div className="flex items-center gap-1 text-muted-foreground/60 font-mono text-[10px] mt-1">
+                      <MapPin size={9} /> {dbProfile.location}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {dbProfile.bio_medium && (
+                <p className="text-foreground/90 font-body text-[14px] leading-[1.7] mb-4">{dbProfile.bio_medium}</p>
+              )}
+
+              {dbSources.length > 0 && (
+                <div className="terminal-panel p-4 space-y-2 mb-4">
+                  <h2 className="text-accent font-mono text-[11px] uppercase tracking-wider mb-2">&gt; connected sources</h2>
+                  {dbSources.map((s) => (
+                    <div key={s.id} className="flex items-center justify-between font-mono text-[11px]">
+                      <span className="text-foreground/70">{s.platform} — @{s.platform_username}</span>
+                      <span className={s.status === "synced" ? "text-accent" : "text-muted-foreground/50"}>
+                        {s.status === "synced" ? "↻ synced" : s.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center gap-2 mt-4">
+                <ReportDialog profileId={dbProfile.id}>
+                  <button className="font-mono text-[10px] text-muted-foreground/40 hover:text-destructive transition-colors flex items-center gap-1">
+                    <Flag size={9} /> report
+                  </button>
+                </ReportDialog>
+              </div>
+            </motion.div>
+
+            <div className="text-center mt-10">
+              <Link to="/" className="text-muted-foreground/50 font-mono text-[11px] hover:text-accent transition-colors">
+                &gt; cd ~/you.md
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -288,8 +397,17 @@ const ProfilePage = () => {
 
   const delay = (i: number) => ({ initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: i * 0.04 } });
 
+  // Render sample profile (existing rich view)
   return (
     <div className="min-h-screen">
+      {/* Claim banner for sample profiles that also exist in DB */}
+      {dbProfile && showClaimBanner && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-3">
+          <div className="max-w-[680px] mx-auto">
+            <ClaimBanner profileId={dbProfile.id} username={dbProfile.username} />
+          </div>
+        </div>
+      )}
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:pt-4">
         <div className="max-w-[680px] mx-auto flex items-center justify-between px-4 py-2 glass-nav rounded">
@@ -639,10 +757,19 @@ const ProfilePage = () => {
             <p className="text-muted-foreground/50 font-mono text-[10px]">
               Powered by <Link to="/" className="text-accent/60 hover:text-accent transition-colors">you.md</Link>
             </p>
-            <Link to="/#get-started"
-              className="text-muted-foreground/40 font-mono text-[10px] hover:text-accent/70 transition-colors">
-              &gt; claim yours
-            </Link>
+            <div className="flex items-center justify-center gap-4 mt-2">
+              <Link to="/create"
+                className="text-muted-foreground/40 font-mono text-[10px] hover:text-accent/70 transition-colors">
+                &gt; create yours
+              </Link>
+              {profile && (
+                <ReportDialog profileId={dbProfile?.id || profile.username}>
+                  <button className="font-mono text-[10px] text-muted-foreground/30 hover:text-destructive transition-colors flex items-center gap-1">
+                    <Flag size={9} /> report
+                  </button>
+                </ReportDialog>
+              )}
+            </div>
           </motion.div>
 
               </motion.div>

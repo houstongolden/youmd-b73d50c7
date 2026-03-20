@@ -399,6 +399,7 @@ const ShellPage = () => {
         username={username}
         mode={previewMode}
         profileData={profileData}
+        profileId={undefined}
       />
     </div>
   );
