@@ -119,22 +119,26 @@ const InitializePage = () => {
     setTimeout(() => {
       addLine(<span className="text-muted-foreground/50">→ {thinkingPhrase}</span>);
 
-      // Detect x.com / twitter.com URLs and fetch real profile photo
-      const xMatch = val.match(/(?:x\.com|twitter\.com)\/([a-zA-Z0-9_]+)/i);
-      if (xMatch) {
-        const xUsername = xMatch[1];
-        addLine(<span className="text-muted-foreground/50">→ fetching @{xUsername}'s profile from x.com...</span>);
+      // Detect supported platform URLs (x.com, github.com, linkedin.com)
+      const isX = /(?:x\.com|twitter\.com)\/[a-zA-Z0-9_]+/i.test(val);
+      const isGH = /github\.com\/[a-zA-Z0-9_-]+/i.test(val);
+      const isLI = /linkedin\.com\/in\/[a-zA-Z0-9_-]+/i.test(val);
+
+      if (isX || isGH || isLI) {
+        const platformLabel = isX ? "x.com" : isGH ? "github" : "linkedin";
+        addLine(<span className="text-muted-foreground/50">→ fetching profile from {platformLabel}...</span>);
 
         supabase.functions.invoke('fetch-x-profile', {
-          body: { username: xUsername },
+          body: { url: val },
         }).then(({ data, error }) => {
           if (error || !data?.success || !data?.data?.profileImageUrl) {
             addLine(<span className="text-muted-foreground/50">→ couldn't grab the profile photo — i'll use the default portrait</span>);
           } else {
             const imgUrl = data.data.profileImageUrl;
             const name = data.data.displayName;
+            const fetchedUsername = data.data.username;
             if (name) {
-              addLine(<span className="text-foreground/80">found you — {name} (@{xUsername})</span>);
+              addLine(<span className="text-foreground/80">found you — {name} (@{fetchedUsername})</span>);
             }
             addLine(<span className="text-muted-foreground/50">→ generating ascii portrait from your real photo...</span>);
             addLine(
