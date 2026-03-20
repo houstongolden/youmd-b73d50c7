@@ -37,6 +37,12 @@ const ShellPage = () => {
   const [activePane, setActivePane] = useState<string>("profile");
   const [previewMode, setPreviewMode] = useState<"public" | "private">("public");
   const [mobileView, setMobileView] = useState<"terminal" | "preview">("terminal");
+  const [profileData, setProfileData] = useState<ProfileData>({
+    displayName: null,
+    bio: null,
+    profileImageUrl: null,
+    sources: [],
+  });
   const scrollRef = useRef<HTMLDivElement>(null);
   const lineCounter = useRef(0);
 
