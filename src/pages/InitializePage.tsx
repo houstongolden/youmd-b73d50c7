@@ -119,11 +119,14 @@ const InitializePage = () => {
     setTimeout(() => {
       addLine(<span className="text-muted-foreground/50">→ {thinkingPhrase}</span>);
 
-      // Detect x.com / twitter.com URLs and fetch real profile photo
-      const xMatch = val.match(/(?:x\.com|twitter\.com)\/([a-zA-Z0-9_]+)/i);
-      if (xMatch) {
-        const xUsername = xMatch[1];
-        addLine(<span className="text-muted-foreground/50">→ fetching @{xUsername}'s profile from x.com...</span>);
+      // Detect supported platform URLs (x.com, github.com, linkedin.com)
+      const isX = /(?:x\.com|twitter\.com)\/[a-zA-Z0-9_]+/i.test(val);
+      const isGH = /github\.com\/[a-zA-Z0-9_-]+/i.test(val);
+      const isLI = /linkedin\.com\/in\/[a-zA-Z0-9_-]+/i.test(val);
+
+      if (isX || isGH || isLI) {
+        const platformLabel = isX ? "x.com" : isGH ? "github" : "linkedin";
+        addLine(<span className="text-muted-foreground/50">→ fetching profile from {platformLabel}...</span>);
 
         supabase.functions.invoke('fetch-x-profile', {
           body: { username: xUsername },
