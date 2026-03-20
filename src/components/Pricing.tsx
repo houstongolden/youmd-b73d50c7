@@ -30,8 +30,8 @@ const Pricing = () => (
               <p>  ✓ Shareable context link — works with any agent</p>
               <p>  ✓ 3 auto-syncs/month from connected sources</p>
             </div>
-            <a href="#get-started" className="cta-outline block text-center px-4 py-2.5 text-[11px]">
-              &gt; youmd init
+            <a href="/create" className="cta-outline block text-center px-4 py-2.5 text-[11px]">
+              &gt; create profile
             </a>
           </motion.div>
         </FadeUp>
