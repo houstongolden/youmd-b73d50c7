@@ -34,8 +34,8 @@
 
 | # | Task | Ref | Status | Est |
 |---|------|-----|--------|-----|
-| 3.1 | Build PrivateContextPane (view/edit private notes, projects, links) | FR-06 | ⬜ Todo | 3hr |
-| 3.2 | Wire public/private toggle to actually filter preview content | FR-06 | ⬜ Todo | 2hr |
+| 3.1 | Build PrivateContextPane (view/edit private notes, projects, links) | FR-06 | ✅ Done | 3hr |
+| 3.2 | Wire public/private toggle to actually filter preview content | FR-06 | ✅ Done | 2hr |
 | 3.3 | Persist freeform chat context to private_contexts table | FR-13 | ⬜ Todo | 2hr |
 | 3.4 | Test token-based agent access (validate-token edge function) | FR-07 | ⬜ Todo | 1hr |
 
