@@ -7,6 +7,7 @@ import TerminalHeader from "@/components/shell/TerminalHeader";
 import TerminalInput from "@/components/shell/TerminalInput";
 import ShellPreviewPane from "@/components/shell/ShellPreviewPane";
 import { useIsMobile } from "@/hooks/use-mobile";
+import type { ProfileData, ScrapedSource } from "@/components/shell/panes/ProfilePreview";
 
 interface Line {
   id: string;
