@@ -9,11 +9,11 @@
 
 | # | Task | Ref | Status | Est |
 |---|------|-----|--------|-----|
-| 1.1 | Seed 6 sample profiles into DB via migration | FR-01 | ⬜ Todo | 1hr |
-| 1.2 | Remove InitializePage (dead code, already aliased to CreateProfilePage) | FR-19 | ⬜ Todo | 15min |
-| 1.3 | Fix auth → shell redirect to load user's owned profile | FR-03 | ⬜ Todo | 1hr |
+| 1.1 | Seed 6 sample profiles into DB via migration | FR-01 | ✅ Done | 1hr |
+| 1.2 | Remove InitializePage (dead code, already aliased to CreateProfilePage) | FR-19 | ✅ Done | 15min |
+| 1.3 | Fix auth → shell redirect to load user's owned profile | FR-03 | ✅ Done | 1hr |
 | 1.4 | Test & fix full claim flow (ClaimBanner → auth → claim-profile → redirect) | FR-04 | ⬜ Todo | 2hr |
-| 1.5 | Wire ShellPage to load/save profile data from DB | FR-02 | ⬜ Todo | 3hr |
+| 1.5 | Wire ShellPage to load/save profile data from DB | FR-02 | ✅ Done | 3hr |
 
 ---
 
