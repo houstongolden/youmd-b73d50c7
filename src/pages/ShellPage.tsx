@@ -258,6 +258,7 @@ const ShellPage = () => {
       </div>
       <div className="shrink-0 border-t border-border px-3 sm:px-4 py-2.5 bg-card">
         <TerminalInput prompt=">" placeholder="/help" onSubmit={handleCommand} />
+        <div className="h-16 sm:h-20" />
       </div>
     </div>
   );
