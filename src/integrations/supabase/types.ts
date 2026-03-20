@@ -14,13 +14,367 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      access_tokens: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_revoked: boolean
+          last_used_at: string | null
+          name: string
+          profile_id: string
+          scopes: string[]
+          token_hash: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_revoked?: boolean
+          last_used_at?: string | null
+          name: string
+          profile_id: string
+          scopes?: string[]
+          token_hash: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_revoked?: boolean
+          last_used_at?: string | null
+          name?: string
+          profile_id?: string
+          scopes?: string[]
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_tokens_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      private_contexts: {
+        Row: {
+          context_data: Json | null
+          created_at: string
+          id: string
+          notes: string | null
+          private_links: Json | null
+          private_projects: Json | null
+          profile_id: string
+          updated_at: string
+        }
+        Insert: {
+          context_data?: Json | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          private_links?: Json | null
+          private_projects?: Json | null
+          profile_id: string
+          updated_at?: string
+        }
+        Update: {
+          context_data?: Json | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          private_links?: Json | null
+          private_projects?: Json | null
+          profile_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "private_contexts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          profile_id: string
+          reason: string
+          reporter_id: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          profile_id: string
+          reason: string
+          reporter_id?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          profile_id?: string
+          reason?: string
+          reporter_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_reports_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_sources: {
+        Row: {
+          bio: string | null
+          company: string | null
+          created_at: string
+          display_name: string | null
+          extras: Json | null
+          followers: number | null
+          following: number | null
+          headline: string | null
+          id: string
+          last_synced_at: string | null
+          links: string[] | null
+          location: string | null
+          platform: string
+          platform_username: string | null
+          posts: number | null
+          profile_id: string
+          profile_image_url: string | null
+          status: string
+          website: string | null
+        }
+        Insert: {
+          bio?: string | null
+          company?: string | null
+          created_at?: string
+          display_name?: string | null
+          extras?: Json | null
+          followers?: number | null
+          following?: number | null
+          headline?: string | null
+          id?: string
+          last_synced_at?: string | null
+          links?: string[] | null
+          location?: string | null
+          platform: string
+          platform_username?: string | null
+          posts?: number | null
+          profile_id: string
+          profile_image_url?: string | null
+          status?: string
+          website?: string | null
+        }
+        Update: {
+          bio?: string | null
+          company?: string | null
+          created_at?: string
+          display_name?: string | null
+          extras?: Json | null
+          followers?: number | null
+          following?: number | null
+          headline?: string | null
+          id?: string
+          last_synced_at?: string | null
+          links?: string[] | null
+          location?: string | null
+          platform?: string
+          platform_username?: string | null
+          posts?: number | null
+          profile_id?: string
+          profile_image_url?: string | null
+          status?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_sources_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_verifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          profile_id: string
+          signal_type: string
+          signal_value: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          profile_id: string
+          signal_type: string
+          signal_value?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          profile_id?: string
+          signal_type?: string
+          signal_value?: string | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_verifications_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio_medium: string | null
+          bio_short: string | null
+          claimed_at: string | null
+          cover_url: string | null
+          created_at: string
+          credibility: string[] | null
+          id: string
+          is_claimed: boolean
+          links: Json | null
+          location: string | null
+          name: string | null
+          now_items: string[] | null
+          owner_id: string | null
+          preferences: Json | null
+          tagline: string | null
+          topics: string[] | null
+          updated_at: string
+          username: string
+          values_list: string[] | null
+          voice: string | null
+          website: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio_medium?: string | null
+          bio_short?: string | null
+          claimed_at?: string | null
+          cover_url?: string | null
+          created_at?: string
+          credibility?: string[] | null
+          id?: string
+          is_claimed?: boolean
+          links?: Json | null
+          location?: string | null
+          name?: string | null
+          now_items?: string[] | null
+          owner_id?: string | null
+          preferences?: Json | null
+          tagline?: string | null
+          topics?: string[] | null
+          updated_at?: string
+          username: string
+          values_list?: string[] | null
+          voice?: string | null
+          website?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio_medium?: string | null
+          bio_short?: string | null
+          claimed_at?: string | null
+          cover_url?: string | null
+          created_at?: string
+          credibility?: string[] | null
+          id?: string
+          is_claimed?: boolean
+          links?: Json | null
+          location?: string | null
+          name?: string | null
+          now_items?: string[] | null
+          owner_id?: string | null
+          preferences?: Json | null
+          tagline?: string | null
+          topics?: string[] | null
+          updated_at?: string
+          username?: string
+          values_list?: string[] | null
+          voice?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      security_logs: {
+        Row: {
+          created_at: string
+          details: Json | null
+          event_type: string
+          id: string
+          profile_id: string | null
+          token_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          event_type: string
+          id?: string
+          profile_id?: string | null
+          token_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          event_type?: string
+          id?: string
+          profile_id?: string | null
+          token_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_logs_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_logs_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "access_tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_profile_owner: { Args: { _profile_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
