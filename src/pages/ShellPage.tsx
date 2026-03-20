@@ -16,6 +16,10 @@ const SLASH_COMMANDS: Record<string, string> = {
   "/billing": "billing",
   "/tokens": "tokens",
   "/activity": "activity",
+  "/sources": "sources",
+  "/portrait": "portrait",
+  "/publish": "publish",
+  "/agents": "agents",
   "/help": "help",
 };
 
