@@ -1,4 +1,4 @@
-const SectionLabel = ({ children }: { children: string }) => (
+const SectionLabel = ({ children }: { children: React.ReactNode }) => (
   <h3 className="font-mono text-[11px] text-accent uppercase tracking-wider mb-3">&gt; {children}</h3>
 );
 
