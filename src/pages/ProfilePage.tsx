@@ -239,6 +239,7 @@ const ProfilePage = () => {
   const sampleProfile = sampleProfiles.find((p) => p.username === username);
   const [dbProfile, setDbProfile] = useState<DbProfile | null>(null);
   const [dbSources, setDbSources] = useState<DbProfileSource[]>([]);
+  const [dbVerifications, setDbVerifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [rawView, setRawView] = useState(false);
@@ -251,8 +252,12 @@ const ProfilePage = () => {
     getProfileByUsername(username).then(async (p) => {
       setDbProfile(p);
       if (p) {
-        const sources = await getProfileSources(p.id);
+        const [sources, verifications] = await Promise.all([
+          getProfileSources(p.id),
+          getProfileVerifications(p.id),
+        ]);
         setDbSources(sources);
+        setDbVerifications(verifications);
       }
       setLoading(false);
     }).catch(() => setLoading(false));
