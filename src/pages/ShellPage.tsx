@@ -138,6 +138,45 @@ const ShellPage = () => {
       return;
     }
 
+    // Detect profile URLs (x.com, github.com, linkedin.com) and fetch photo
+    const isProfileUrl = /(?:x\.com|twitter\.com|github\.com|linkedin\.com\/in)\/[a-zA-Z0-9_-]+/i.test(cmd);
+    if (isProfileUrl) {
+      const platformLabel = /x\.com|twitter\.com/i.test(cmd) ? "x.com" : /github\.com/i.test(cmd) ? "github" : "linkedin";
+      const thinkPhrase = agent.getThinkingPhrase("discovery");
+      addLine(<span className="text-muted-foreground/50">→ {thinkPhrase}</span>);
+      addLine(<span className="text-muted-foreground/50">→ fetching profile from {platformLabel}...</span>);
+
+      supabase.functions.invoke('fetch-x-profile', {
+        body: { url: val },
+      }).then(({ data, error }) => {
+        if (error || !data?.success || !data?.data?.profileImageUrl) {
+          addLine(<span className="text-muted-foreground/50">→ couldn't grab the profile photo — adding as text source instead</span>);
+        } else {
+          const imgUrl = data.data.profileImageUrl;
+          const name = data.data.displayName;
+          const fetchedUsername = data.data.username;
+          if (name) {
+            addLine(<span className="text-foreground/80">found — {name} (@{fetchedUsername})</span>);
+          }
+          addLine(<span className="text-muted-foreground/50">→ generating ascii portrait...</span>);
+          addLine(
+            <div className="my-2">
+              <AsciiAvatar src={imgUrl} cols={80} canvasWidth={400} className="max-w-full" />
+            </div>
+          );
+        }
+
+        setTimeout(() => {
+          const reaction = agent.getSourceReaction(val);
+          addLine(<span className="text-foreground/80">{reaction}</span>);
+          addLine("\u00A0");
+          addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">source added — context updated</span></span>);
+          addLine("\u00A0");
+        }, 600);
+      });
+      return;
+    }
+
     // Treat as natural language / agent chat — use agent personality
     const thinkPhrase = agent.getThinkingPhrase("analysis");
     addLine(<span className="text-muted-foreground/50">{thinkPhrase}</span>);
@@ -145,7 +184,7 @@ const ShellPage = () => {
       addLine(<span className="text-foreground/80">i hear you. try a slash command like <span className="text-accent">/profile</span> to navigate, or just tell me what you'd like to update and i'll handle it.</span>);
       addLine("\u00A0");
     }, 800);
-  }, [addLine, showHelp, isMobile]);
+  }, [addLine, showHelp, isMobile, agent]);
 
   const terminalContent = (
     <div className="flex flex-col min-h-0 h-full">
