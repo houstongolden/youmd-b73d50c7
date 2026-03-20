@@ -76,20 +76,31 @@ const ProfilePreview = ({
       </div>
 
       {/* Identity */}
-      <div className="mb-1">
-        <h1 className="font-mono text-base sm:text-lg text-foreground">
-          {name ? `${name}` : `@${username}`}
-        </h1>
-        {name && (
-          <p className="font-mono text-[11px] sm:text-[12px] text-muted-foreground/50 mt-0.5">
-            @{username}
-          </p>
+      <div className="flex items-start gap-3 mb-1">
+        {/* Small real profile photo */}
+        {imgUrl && (
+          <img
+            src={imgUrl}
+            alt={name || username}
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-sm border border-border object-cover shrink-0 mt-0.5"
+            crossOrigin="anonymous"
+          />
         )}
-        {bio && (
-          <p className="font-mono text-[12px] sm:text-[13px] text-muted-foreground/70 mt-1">
-            {bio}
-          </p>
-        )}
+        <div className="min-w-0">
+          <h1 className="font-mono text-base sm:text-lg text-foreground">
+            {name ? `${name}` : `@${username}`}
+          </h1>
+          {name && (
+            <p className="font-mono text-[11px] sm:text-[12px] text-muted-foreground/50 mt-0.5">
+              @{username}
+            </p>
+          )}
+          {bio && (
+            <p className="font-mono text-[12px] sm:text-[13px] text-muted-foreground/70 mt-1">
+              {bio}
+            </p>
+          )}
+        </div>
       </div>
 
       <Divider />
