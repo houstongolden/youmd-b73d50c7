@@ -69,8 +69,8 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <a
-              href="#get-started"
+            <Link
+              to="/auth"
               className="hidden md:inline-block cta-primary px-3 py-1 text-[10px]"
             >
               &gt; enter system
