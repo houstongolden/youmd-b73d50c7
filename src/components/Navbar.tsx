@@ -74,7 +74,7 @@ const Navbar = () => {
               className="hidden md:inline-block cta-primary px-3 py-1 text-[10px]"
             >
               &gt; enter system
-            </a>
+            </Link>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="md:hidden text-muted-foreground p-1"
