@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useYouAgent } from "@/hooks/useYouAgent";
 import TerminalHeader from "@/components/shell/TerminalHeader";
 import TerminalInput from "@/components/shell/TerminalInput";
 import ShellPreviewPane from "@/components/shell/ShellPreviewPane";
@@ -27,6 +28,7 @@ const SLASH_COMMANDS: Record<string, string> = {
 const ShellPage = () => {
   const location = useLocation();
   const username = (location.state as any)?.username || "houston";
+  const agent = useYouAgent(username);
   const isMobile = useIsMobile();
   const [lines, setLines] = useState<Line[]>([]);
   const [activePane, setActivePane] = useState<string>("profile");
@@ -111,7 +113,8 @@ const ShellPage = () => {
     }
 
     if (cmd === "/sync") {
-      addLine(<span className="text-muted-foreground/50">syncing connected sources...</span>);
+      const syncPhrase = agent.getThinkingPhrase("sync");
+      addLine(<span className="text-muted-foreground/50">{syncPhrase}</span>);
       setTimeout(() => {
         addLine(<span><span className="text-success">✓</span> <span className="text-muted-foreground/50">4 sources synced — freshness score: 94</span></span>);
         addLine("\u00A0");
@@ -133,10 +136,11 @@ const ShellPage = () => {
       return;
     }
 
-    // Treat as natural language / agent chat
-    addLine(<span className="text-muted-foreground/50">thinking...</span>);
+    // Treat as natural language / agent chat — use agent personality
+    const thinkPhrase = agent.getThinkingPhrase("analysis");
+    addLine(<span className="text-muted-foreground/50">{thinkPhrase}</span>);
     setTimeout(() => {
-      addLine(<span className="text-foreground/80">i can help with that. try a slash command like <span className="text-accent">/profile</span> to navigate, or just tell me what you'd like to update.</span>);
+      addLine(<span className="text-foreground/80">i hear you. try a slash command like <span className="text-accent">/profile</span> to navigate, or just tell me what you'd like to update and i'll handle it.</span>);
       addLine("\u00A0");
     }, 800);
   }, [addLine, showHelp, isMobile]);
