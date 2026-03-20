@@ -2,7 +2,9 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TerminalHeader from "@/components/shell/TerminalHeader";
 import TerminalInput from "@/components/shell/TerminalInput";
+import AsciiAvatar from "@/components/AsciiAvatar";
 import { useYouAgent } from "@/hooks/useYouAgent";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Line {
   id: string;
