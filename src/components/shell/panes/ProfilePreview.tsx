@@ -144,7 +144,7 @@ const ProfilePreview = ({
       <SectionLabel>agent metrics</SectionLabel>
       <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-2">
         {[
-          { label: "reads", value: "0" },
+          { label: "followers", value: totalFollowers ? totalFollowers.toLocaleString() : "—" },
           { label: "freshness", value: sourceCount > 0 ? "94" : "—" },
           { label: "sources", value: String(sourceCount) },
         ].map((m) => (
@@ -154,6 +154,18 @@ const ProfilePreview = ({
           </div>
         ))}
       </div>
+
+      {/* Website */}
+      {website && (
+        <>
+          <div className="mt-2">
+            <a href={website.startsWith('http') ? website : `https://${website}`} target="_blank" rel="noopener noreferrer"
+              className="font-mono text-[11px] sm:text-[12px] text-accent hover:text-accent/80 transition-colors">
+              {website}
+            </a>
+          </div>
+        </>
+      )}
 
       <Divider />
 
