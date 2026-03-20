@@ -129,15 +129,16 @@ const InitializePage = () => {
         addLine(<span className="text-muted-foreground/50">→ fetching profile from {platformLabel}...</span>);
 
         supabase.functions.invoke('fetch-x-profile', {
-          body: { username: xUsername },
+          body: { url: val },
         }).then(({ data, error }) => {
           if (error || !data?.success || !data?.data?.profileImageUrl) {
             addLine(<span className="text-muted-foreground/50">→ couldn't grab the profile photo — i'll use the default portrait</span>);
           } else {
             const imgUrl = data.data.profileImageUrl;
             const name = data.data.displayName;
+            const fetchedUsername = data.data.username;
             if (name) {
-              addLine(<span className="text-foreground/80">found you — {name} (@{xUsername})</span>);
+              addLine(<span className="text-foreground/80">found you — {name} (@{fetchedUsername})</span>);
             }
             addLine(<span className="text-muted-foreground/50">→ generating ascii portrait from your real photo...</span>);
             addLine(
