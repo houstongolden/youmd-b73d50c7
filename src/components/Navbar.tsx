@@ -107,13 +107,13 @@ const Navbar = () => {
           >
             --profiles
           </Link>
-          <a
-            href="#get-started"
+          <Link
+            to="/auth"
             onClick={() => setMobileOpen(false)}
             className="cta-primary px-6 py-2.5 text-[12px] mt-4"
           >
             &gt; enter system
-          </a>
+          </Link>
         </div>
       )}
     </>
