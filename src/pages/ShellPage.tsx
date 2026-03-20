@@ -158,7 +158,7 @@ const ShellPage = () => {
   );
 
   const previewContent = (
-    <div className="overflow-y-auto h-full bg-background">
+    <div className="overflow-y-auto h-full bg-card">
       <ShellPreviewPane
         activePane={activePane}
         username={username}
