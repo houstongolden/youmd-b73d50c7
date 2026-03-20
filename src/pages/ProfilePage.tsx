@@ -1,11 +1,15 @@
 import { useParams, Link } from "react-router-dom";
-import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw, Code, Eye } from "lucide-react";
+import { MapPin, ExternalLink, Copy, Check, Star, ArrowUpRight, Shield, Zap, RefreshCw, Code, Eye, Flag } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { sampleProfiles, type ActivityItem, type Project, type AgentConnection, type ConnectedSource } from "@/data/sampleProfiles";
 import ProfileAsciiHeader from "@/components/ProfileAsciiHeader";
 import RawJsonView from "@/components/RawJsonView";
 import { useCountUp } from "@/hooks/useCountUp";
+import { getProfileByUsername, getProfileSources, getProfileVerifications, type DbProfile, type DbProfileSource } from "@/lib/profiles";
+import { useAuth } from "@/hooks/useAuth";
+import ClaimBanner from "@/components/ClaimBanner";
+import ReportDialog from "@/components/ReportDialog";
 
 /* ── Helpers ─────────────────────────────────── */
 
