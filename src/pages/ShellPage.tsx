@@ -28,6 +28,7 @@ const SLASH_COMMANDS: Record<string, string> = {
 const ShellPage = () => {
   const location = useLocation();
   const username = (location.state as any)?.username || "houston";
+  const agent = useYouAgent(username);
   const isMobile = useIsMobile();
   const [lines, setLines] = useState<Line[]>([]);
   const [activePane, setActivePane] = useState<string>("profile");
