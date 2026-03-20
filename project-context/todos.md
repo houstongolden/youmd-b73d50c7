@@ -46,12 +46,12 @@
 
 | # | Task | Ref | Status | Est |
 |---|------|-----|--------|-----|
-| 4.1 | Audit & fix all landing page CTAs (primary → /create) | FR-11 | ⬜ Todo | 30min |
+| 4.1 | Audit & fix all landing page CTAs (primary → /create) | FR-11 | ✅ Done | 30min |
 | 4.2 | Improve ClaimBanner copy and auto-claim after auth | FR-12 | ⬜ Todo | 1hr |
 | 4.3 | Wire /sync command to re-fetch all connected sources | FR-15 | ⬜ Todo | 2hr |
 | 4.4 | Add profile matching by name + links before creation | FR-10 | ⬜ Todo | 1hr |
 | 4.5 | Mobile responsiveness audit (375px all flows) | FR-18 | ⬜ Todo | 2hr |
-| 4.6 | Add profile deletion UI in Settings pane | FR-23 | ⬜ Todo | 1hr |
+| 4.6 | Add profile deletion UI in Settings pane | FR-23 | ✅ Done | 1hr |
 
 ---
 
