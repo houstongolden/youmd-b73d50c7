@@ -10,6 +10,7 @@ import ProfilePage from "./pages/ProfilePage.tsx";
 import AuthTerminal from "./pages/AuthTerminal.tsx";
 import CreateProfilePage from "./pages/CreateProfilePage.tsx";
 import ShellPage from "./pages/ShellPage.tsx";
+import TestLanding from "./pages/TestLanding.tsx";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/shell" element={<ShellPage />} />
           <Route path="/profiles" element={<ProfilesDirectory />} />
           <Route path="/profile/:username" element={<ProfilePage />} />
+          <Route path="/test" element={<TestLanding />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
