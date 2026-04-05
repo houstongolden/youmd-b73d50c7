@@ -29,6 +29,7 @@ const App = () => (
           <Route path="/shell" element={<ShellPage />} />
           <Route path="/profiles" element={<ProfilesDirectory />} />
           <Route path="/profile/:username" element={<ProfilePage />} />
+          <Route path="/test" element={<TestLanding />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
