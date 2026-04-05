@@ -10,6 +10,7 @@ import ProfilePage from "./pages/ProfilePage.tsx";
 import AuthTerminal from "./pages/AuthTerminal.tsx";
 import CreateProfilePage from "./pages/CreateProfilePage.tsx";
 import ShellPage from "./pages/ShellPage.tsx";
+import TestLanding from "./pages/TestLanding.tsx";
 
 const queryClient = new QueryClient();
 
