@@ -1,21 +1,30 @@
 
 
-## Export Sample Profiles as JSON Seed File
+# ASCII Portrait Generator — Full Replication Guide
 
-**What**: Generate a JSON file at `/mnt/documents/` containing all 6 sample profiles from `src/data/sampleProfiles.ts` in a clean, database-ready format.
+## What this document will contain
 
-**Profiles included**:
-1. **houston** — Houston Golden (Founder, BAMF Media)
-2. **priya** — Priya Sharma (ML Engineer @ Anthropic)
-3. **jmarcus** — Jordan Marcus (Indie hacker, 3 exits)
-4. **sato.yuki** — Yuki Sato (Staff Engineer @ Stripe)
-5. **emmawright** — Emma Wright (Creative Director)
-6. **kai** — Kai Andersen (DevRel Lead @ Vercel)
+A single comprehensive markdown file at `project-context/ascii-portrait-replication-guide.md` with everything needed to replicate the ASCII portrait system in another project:
 
-**Output format**: A single `profiles_seed.json` file with a top-level array of profile objects. Keys will use the `you/v1` schema format (snake_case, matching the JSON view already rendered in `RawJsonView.tsx`), plus all additional fields (activity, agent connections, top queries, etc.) so nothing is lost.
+1. **Core Algorithm** — The complete `imgToAscii` pipeline, luminance ramp, and color mapping functions (copy-paste ready)
+2. **Three component variants** — `AsciiAvatar` (thumbnail), `AsciiPortraitGenerator` (full interactive widget with upload/URL fetch/download), and `ProfileAsciiHeader` (responsive page header)
+3. **HTTP Profile Fetching** — The full Edge Function code for `fetch-x-profile` that scrapes X/Twitter, GitHub, and LinkedIn for profile photos and metadata, with the default example URL set to `x.com/houstongolden`
+4. **Client-side URL fetch** — The `allorigins.win` proxy approach used in the generator for browser-side image fetching
+5. **Design system** — Complete CSS variables (burnt orange accent system), Tailwind config, font imports, and utility classes (`terminal-panel`, `cta-primary`, `cta-outline`, ASCII color classes)
+6. **Prompt-ready instructions** — Written as a full implementation prompt you can paste into another Lovable project
 
-**Technical steps**:
-1. Write a small Node script that imports the TypeScript profile data and serializes it to JSON
-2. Output to `/mnt/documents/profiles_seed.json`
-3. Verify the file is valid JSON with all 6 profiles
+## File to create
+
+**`project-context/ascii-portrait-replication-guide.md`** — ~4000 lines covering:
+
+- Section 1: Quick Start prompt (paste-ready for another Lovable project)
+- Section 2: Core algorithm code (`RAMP`, `lumToColor`, `imgToAscii`, `renderToCanvas`)
+- Section 3: `AsciiAvatar` component (small thumbnails)
+- Section 4: `AsciiPortraitGenerator` component (full interactive widget)
+- Section 5: `ProfileAsciiHeader` component (page-width responsive header)
+- Section 6: Edge Function — `fetch-x-profile/index.ts` (X, GitHub, LinkedIn scraping)
+- Section 7: CSS & Tailwind design tokens (full `index.css` + `tailwind.config.ts`)
+- Section 8: Default example — fetching `x.com/houstongolden` as the seed portrait
+
+No existing files will be modified. This is purely a new reference document.
 
